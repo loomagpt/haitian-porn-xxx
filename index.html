@@ -3,8 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Website</title>
+    <title>BlueView - Modern Video Platform</title>
+    
+    <!-- Video.js CSS -->
+    <link href="https://vjs.zencdn.net/8.6.1/video-js.css" rel="stylesheet">
+    
+    <!-- Video.js VAST Plugin CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/videojs-vast-vpaid@2.0.2/dist/videojs.vast.vpaid.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --primary-blue: #0d6efd;
+            --secondary-blue: #3d8bfd;
+            --dark-blue: #0a58ca;
+            --light-blue: #e7f1ff;
+            --background: #ffffff;
+            --surface: #f8f9fa;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border: #dee2e6;
+            --like-color: #0d6efd;
+            --dislike-color: #6c757d;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --border-radius: 8px;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,155 +43,1370 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
-            background: #1a1a1a;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        /* Header Styles */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--background);
+            box-shadow: var(--shadow-sm);
+            padding: 0 16px;
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+
+        .logo i {
+            margin-right: 8px;
+            font-size: 28px;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 600px;
+            margin: 0 24px;
+        }
+
+        .search-form {
+            display: flex;
+            width: 100%;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .search-button {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-left: none;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            padding: 0 20px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .search-button:hover {
+            background-color: var(--border);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .signin-button {
+            background-color: var(--primary-blue);
             color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
         }
 
-        .header {
-            background: #000;
-            padding: 1rem;
-            text-align: center;
+        .signin-button:hover {
+            background-color: var(--dark-blue);
         }
 
-        .video-container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        /* Homepage Styles */
+        #homepage {
+            width: 100%;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .video-card {
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .video-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .thumbnail-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 aspect ratio */
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .thumbnail {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-info {
+            padding: 16px;
+        }
+
+        .video-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-channel {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .video-meta {
+            color: var(--text-secondary);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Video Detail Page */
+        #video-detail {
+            display: none;
+            width: 100%;
+        }
+
+        .video-detail-container {
+            display: flex;
+            gap: 24px;
+        }
+
+        .video-main {
+            flex: 1;
+            min-width: 0; /* Prevents flex overflow */
+        }
+
+        .video-sidebar {
+            width: 360px;
+        }
+
+        .video-player-container {
+            width: 100%;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
         }
 
         .video-player {
             width: 100%;
-            background: #000;
-            border-radius: 8px;
-            overflow: hidden;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            position: relative;
+            background-color: #000;
         }
 
-        video {
+        .video-player video,
+        .video-js {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: auto;
+            height: 100%;
         }
 
-        .video-controls {
-            background: rgba(0,0,0,0.8);
-            padding: 1rem;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .control-btn {
-            background: #ff4757;
+        .ad-notice {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
             color: white;
-            border: none;
-            padding: 0.5rem 1rem;
+            padding: 4px 8px;
             border-radius: 4px;
+            font-size: 12px;
+            z-index: 10;
+        }
+
+        .video-info-section {
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+        }
+
+        .video-title-large {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+
+        .video-meta-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .video-stats {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .video-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Modern Buttons */
+        .btn-moderne {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-primary);
         }
 
-        .video-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
+        .btn-moderne.like {
+            color: var(--like-color);
         }
 
-        .video-thumbnail {
-            background: #333;
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s;
+        .btn-moderne.like.active {
+            background-color: var(--light-blue);
+            border-color: var(--primary-blue);
         }
 
-        .video-thumbnail:hover {
-            transform: scale(1.05);
+        .btn-moderne.dislike {
+            color: var(--dislike-color);
         }
 
-        .thumbnail-img {
-            width: 100%;
-            height: 200px;
-            background: #555;
+        .btn-moderne.dislike.active {
+            background-color: #f8f9fa;
+            border-color: var(--dislike-color);
+        }
+
+        .btn-moderne.share {
+            color: var(--primary-blue);
+        }
+
+        .btn-moderne.comment {
+            color: var(--primary-blue);
+        }
+
+        .btn-moderne:hover {
+            background-color: var(--light-blue);
+        }
+
+        .btn-moderne:active {
+            transform: scale(0.97);
+        }
+
+        .video-description {
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .video-description h3 {
+            margin-bottom: 12px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Comments Section */
+        .comments-section {
+            background-color: var(--background);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+        }
+
+        .comments-section h3 {
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--light-blue);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
+            color: var(--primary-blue);
+            font-weight: 600;
+            flex-shrink: 0;
         }
 
-        .video-info {
-            padding: 1rem;
+        .comment-input-container {
+            flex: 1;
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            outline: none;
+            resize: none;
+            min-height: 40px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .comment-input:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .comment-submit {
+            align-self: flex-start;
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .comment-submit:hover {
+            background-color: var(--dark-blue);
+        }
+
+        .comment {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comment:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .comment-content h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .comment-content p {
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .comment-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        .comment-action {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .comment-action:hover {
+            color: var(--primary-blue);
+        }
+
+        /* Sidebar */
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .related-videos {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .related-video {
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .related-thumbnail {
+            width: 160px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            flex-shrink: 0;
+        }
+
+        .related-video-info h4 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .related-video-info p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--surface);
+            padding: 40px 16px;
+            margin-top: 60px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 16px;
+        }
+
+        .footer-logo i {
+            margin-right: 8px;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .video-detail-container {
+                flex-direction: column;
+            }
+            
+            .video-sidebar {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 12px 0;
+            }
+            
+            .search-container {
+                order: 3;
+                margin: 16px 0 0 0;
+                width: 100%;
+            }
+            
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 16px;
+            }
+            
+            .video-meta-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .video-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .btn-moderne {
+                flex: 1;
+                justify-content: center;
+            }
+            
+            .comment-form {
+                flex-direction: column;
+            }
+            
+            .comment-submit {
+                align-self: flex-end;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-moderne span {
+                display: none;
+            }
+            
+            .btn-moderne {
+                padding: 8px 12px;
+            }
+            
+            .video-title-large {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <h1>My Video Website</h1>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <a href="#" class="logo" id="home-link">
+                <i class="fas fa-play-circle"></i>
+                <span>BlueView</span>
+            </a>
+            
+            <div class="search-container">
+                <form class="search-form" id="search-form">
+                    <input type="text" class="search-input" placeholder="Search videos..." id="search-input">
+                    <button type="submit" class="search-button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+            
+            <div class="user-actions">
+                <button class="signin-button" id="signin-btn">
+                    <i class="fas fa-user"></i>
+                    <span>Sign In</span>
+                </button>
+            </div>
+        </div>
     </header>
-
-    <div class="video-container">
-        <div class="video-player">
-            <video id="mainVideo" controls>
-                <source src="your-video.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <div class="video-controls">
-                <button class="control-btn" onclick="playPause()">Play/Pause</button>
-                <button class="control-btn" onclick="makeBig()">Big</button>
-                <button class="control-btn" onclick="makeNormal()">Normal</button>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Homepage with video thumbnails -->
+        <section id="homepage">
+            <h2 class="section-title">Recommended Videos</h2>
+            <div class="video-grid" id="video-grid">
+                <!-- Video thumbnails will be dynamically generated here -->
             </div>
-        </div>
-
-        <div class="video-list">
-            <div class="video-thumbnail" onclick="changeVideo('video1.mp4')">
-                <div class="thumbnail-img">🎬</div>
-                <div class="video-info">
-                    <h3>Video Title 1</h3>
-                    <p>Video description goes here</p>
+        </section>
+        
+        <!-- Video Detail Page (hidden by default) -->
+        <section id="video-detail">
+            <div class="video-detail-container">
+                <div class="video-main">
+                    <div class="video-player-container">
+                        <div class="video-player">
+                            <div class="ad-notice">VAST Ads Enabled</div>
+                            <!-- Video.js player will be inserted here -->
+                            <video id="video-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto">
+                                <p class="vjs-no-js">
+                                    To view this video please enable JavaScript, and consider upgrading to a web browser that
+                                    <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                                </p>
+                            </video>
+                        </div>
+                    </div>
+                    
+                    <div class="video-info-section">
+                        <h1 class="video-title-large" id="detail-video-title">Video Title</h1>
+                        
+                        <div class="video-meta-section">
+                            <div class="video-stats">
+                                <span id="view-count">250,000 views</span> • 
+                                <span id="upload-date">2 days ago</span>
+                            </div>
+                            
+                            <div class="video-actions">
+                                <button class="btn-moderne like" id="like-btn">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span id="like-count">12K</span>
+                                </button>
+                                <button class="btn-moderne dislike" id="dislike-btn">
+                                    <i class="fas fa-thumbs-down"></i>
+                                    <span id="dislike-count">350</span>
+                                </button>
+                                <button class="btn-moderne share" id="share-btn">
+                                    <i class="fas fa-share"></i>
+                                    <span>Share</span>
+                                </button>
+                                <button class="btn-moderne comment" id="comment-btn">
+                                    <i class="fas fa-comment"></i>
+                                    <span>Comment</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="video-description">
+                            <h3>Description</h3>
+                            <p id="detail-video-description">This is where the video description will appear. It provides details about the video content, creators, and any relevant information.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="comments-section">
+                        <h3 id="comments-count">Comments (24)</h3>
+                        
+                        <div class="comment-form">
+                            <div class="comment-avatar">Y</div>
+                            <div class="comment-input-container">
+                                <textarea class="comment-input" id="comment-input" placeholder="Add a comment..." rows="1"></textarea>
+                            </div>
+                            <button class="comment-submit" id="comment-submit-btn">Comment</button>
+                        </div>
+                        
+                        <div class="comments-list" id="comments-list">
+                            <!-- Comments will be dynamically generated here -->
+                        </div>
+                    </div>
                 </div>
+                
+                <!-- Sidebar for related videos -->
+                <aside class="video-sidebar">
+                    <h3 class="sidebar-title">Related Videos</h3>
+                    <div class="related-videos" id="related-videos">
+                        <!-- Related videos will be dynamically generated here -->
+                    </div>
+                </aside>
             </div>
-
-            <div class="video-thumbnail" onclick="changeVideo('video2.mp4')">
-                <div class="thumbnail-img">🎬</div>
-                <div class="video-info">
-                    <h3>Video Title 2</h3>
-                    <p>Video description goes here</p>
-                </div>
-            </div>
-
-            <div class="video-thumbnail" onclick="changeVideo('video3.mp4')">
-                <div class="thumbnail-img">🎬</div>
-                <div class="video-info">
-                    <h3>Video Title 3</h3>
-                    <p>Video description goes here</p>
-                </div>
-            </div>
-        </div>
+        </section>
     </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-play-circle"></i>
+                <span>BlueView</span>
+            </div>
+            <p class="footer-text">© 2023 BlueView. All rights reserved. This site is optimized for VAST ads and CrackRevenue approval. A modern, clean, and fast video platform.</p>
+        </div>
+    </footer>
 
+    <!-- Video.js and VAST Plugin Scripts -->
+    <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-vast-vpaid@2.0.2/dist/videojs_4.vast.vpaid.min.js"></script>
+    
     <script>
-        const video = document.getElementById('mainVideo');
+        // Video data
+        const videos = [
+            {
+                id: 1,
+                title: "Exploring the Future of Web Development",
+                thumbnail: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                channel: "Tech Innovations",
+                views: "125K",
+                date: "3 days ago",
+                description: "Join us as we explore the latest trends in web development, including AI integration, responsive design, and modern frameworks. Learn about the tools that will shape the future of the web.",
+                likes: "8.2K",
+                dislikes: "210",
+                comments: 42
+            },
+            {
+                id: 2,
+                title: "Mountain Biking Adventures in the Alps",
+                thumbnail: "https://images.unsplash.com/photo-1536240478700-b869070f9279?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1332&q=80",
+                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                channel: "Outdoor Explorers",
+                views: "850K",
+                date: "1 week ago",
+                description: "Experience the thrill of mountain biking through the breathtaking landscapes of the Swiss Alps. Follow our journey as we tackle challenging trails and capture stunning views.",
+                likes: "45K",
+                dislikes: "890",
+                comments: 123
+            },
+            {
+                id: 3,
+                title: "Beginner's Guide to Digital Painting",
+                thumbnail: "https://images.unsplash.com/photo-1579546929662-711aa81148cf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                channel: "Creative Studio",
+                views: "320K",
+                date: "5 days ago",
+                description: "Learn the fundamentals of digital painting with this comprehensive beginner's guide. We cover brushes, layers, color theory, and techniques to get you started on your artistic journey.",
+                likes: "22K",
+                dislikes: "310",
+                comments: 78
+            },
+            {
+                id: 4,
+                title: "Healthy Meal Prep for Busy Professionals",
+                thumbnail: "https://images.unsplash.com/photo-1490818387583-1baba5e638af?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1332&q=80",
+                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+                channel: "Nutrition Hub",
+                views: "540K",
+                date: "2 weeks ago",
+                description: "Discover time-saving meal prep strategies that will help you maintain a healthy diet even with a busy schedule. We share recipes, storage tips, and planning techniques.",
+                likes: "31K",
+                dislikes: "420",
+                comments: 92
+            },
+            {
+                id: 5,
+                title: "Modern Home Office Setup Tour 2023",
+                thumbnail: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1258&q=80",
+                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+                channel: "Workspace Design",
+                views: "780K",
+                date: "4 days ago",
+                description: "Take a tour of a perfectly optimized home office setup. We showcase ergonomic furniture, productivity tools, cable management solutions, and aesthetic design choices.",
+                likes: "52K",
+                dislikes: "650",
+                comments: 156
+            },
+            {
+                id: 6,
+                title: "Advanced JavaScript Techniques",
+                thumbnail: "https://images.unsplash.com/photo-1627398242454-45a1465c2479?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1274&q=80",
+                videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+                channel: "Code Masters",
+                views: "410K",
+                date: "6 days ago",
+                description: "Dive deep into advanced JavaScript concepts including closures, prototypes, async/await patterns, and performance optimization techniques for modern web applications.",
+                likes: "28K",
+                dislikes: "380",
+                comments: 87
+            }
+        ];
 
-        function playPause() {
-            if (video.paused) {
-                video.play();
+        // Comments data
+        const comments = [
+            {
+                id: 1,
+                author: "Alex Johnson",
+                authorInitial: "A",
+                text: "This is an amazing video! Really helped me understand the concepts better.",
+                time: "2 hours ago",
+                likes: 24,
+                replies: 2
+            },
+            {
+                id: 2,
+                author: "Sam Rivera",
+                authorInitial: "S",
+                text: "Great content as always. Looking forward to the next tutorial!",
+                time: "1 day ago",
+                likes: 18,
+                replies: 0
+            },
+            {
+                id: 3,
+                author: "Taylor Morgan",
+                authorInitial: "T",
+                text: "Could you make a video about responsive design techniques? That would be really helpful.",
+                time: "3 days ago",
+                likes: 42,
+                replies: 5
+            }
+        ];
+
+        // DOM elements
+        const homepage = document.getElementById('homepage');
+        const videoDetail = document.getElementById('video-detail');
+        const videoGrid = document.getElementById('video-grid');
+        const relatedVideos = document.getElementById('related-videos');
+        const commentsList = document.getElementById('comments-list');
+        const homeLink = document.getElementById('home-link');
+        const searchForm = document.getElementById('search-form');
+        const searchInput = document.getElementById('search-input');
+        const likeBtn = document.getElementById('like-btn');
+        const dislikeBtn = document.getElementById('dislike-btn');
+        const shareBtn = document.getElementById('share-btn');
+        const commentBtn = document.getElementById('comment-btn');
+        const commentInput = document.getElementById('comment-input');
+        const commentSubmitBtn = document.getElementById('comment-submit-btn');
+        const signinBtn = document.getElementById('signin-btn');
+        
+        // Current video state
+        let currentVideoId = null;
+        let likedVideos = JSON.parse(localStorage.getItem('likedVideos') || '[]');
+        let dislikedVideos = JSON.parse(localStorage.getItem('dislikedVideos') || '[]');
+        let player = null;
+
+        // Initialize the homepage with video thumbnails
+        function initHomepage() {
+            videoGrid.innerHTML = '';
+            
+            videos.forEach(video => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.dataset.id = video.id;
+                
+                videoCard.innerHTML = `
+                    <div class="thumbnail-container">
+                        <img src="${video.thumbnail}" alt="${video.title}" class="thumbnail">
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <p class="video-channel">${video.channel}</p>
+                        <div class="video-meta">
+                            <span>${video.views} views</span>
+                            <span>•</span>
+                            <span>${video.date}</span>
+                        </div>
+                    </div>
+                `;
+                
+                videoCard.addEventListener('click', () => openVideoDetail(video.id));
+                videoGrid.appendChild(videoCard);
+            });
+        }
+
+        // Initialize Video.js player with VAST plugin
+        function initVideoPlayer(videoUrl, title) {
+            // Destroy existing player if it exists
+            if (player) {
+                player.dispose();
+            }
+            
+            // Create new player
+            player = videojs('video-player', {
+                controls: true,
+                autoplay: false,
+                preload: 'auto',
+                fluid: true,
+                playbackRates: [0.5, 1, 1.5, 2],
+                controlBar: {
+                    children: [
+                        'playToggle',
+                        'volumePanel',
+                        'currentTimeDisplay',
+                        'timeDivider',
+                        'durationDisplay',
+                        'progressControl',
+                        'remainingTimeDisplay',
+                        'playbackRateMenuButton',
+                        'fullscreenToggle'
+                    ]
+                }
+            });
+            
+            // Configure VAST plugin for CrackRevenue ads
+            player.vastClient({
+                // VAST tag URL - Replace with your actual CrackRevenue VAST tag
+                adTagUrl: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dpreonly&ciu_szs=300x250&gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&env=vp&impl=s&correlator=',
+                playAdAlways: true,
+                adCancelTimeout: 5000,
+                adsEnabled: true
+            });
+            
+            // Set video source
+            player.src({
+                src: videoUrl,
+                type: 'video/mp4'
+            });
+            
+            // Set poster image
+            const currentVideo = videos.find(v => v.id === currentVideoId);
+            if (currentVideo) {
+                player.poster(currentVideo.thumbnail);
+            }
+            
+            // Set title for accessibility
+            player.el().setAttribute('aria-label', `Video player: ${title}`);
+            
+            // Handle player ready
+            player.ready(function() {
+                console.log('Video.js player with VAST plugin is ready');
+            });
+        }
+
+        // Open video detail page
+        function openVideoDetail(videoId) {
+            const video = videos.find(v => v.id === videoId);
+            if (!video) return;
+            
+            currentVideoId = videoId;
+            
+            // Hide homepage, show video detail
+            homepage.style.display = 'none';
+            videoDetail.style.display = 'block';
+            
+            // Initialize Video.js player with VAST ads
+            initVideoPlayer(video.videoUrl, video.title);
+            
+            // Update video details
+            document.getElementById('detail-video-title').textContent = video.title;
+            document.getElementById('detail-video-description').textContent = video.description;
+            document.getElementById('view-count').textContent = `${video.views} views`;
+            document.getElementById('upload-date').textContent = video.date;
+            document.getElementById('like-count').textContent = video.likes;
+            document.getElementById('dislike-count').textContent = video.dislikes;
+            document.getElementById('comments-count').textContent = `Comments (${video.comments})`;
+            
+            // Update like/dislike button states
+            updateLikeDislikeButtons();
+            
+            // Load comments
+            loadComments();
+            
+            // Load related videos (excluding current video)
+            loadRelatedVideos(videoId);
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            // Update URL without reloading page
+            history.pushState({videoId: videoId}, '', `?v=${videoId}`);
+        }
+
+        // Load related videos in sidebar
+        function loadRelatedVideos(currentVideoId) {
+            relatedVideos.innerHTML = '';
+            
+            // Get 4 random videos excluding current video
+            const filteredVideos = videos.filter(v => v.id !== currentVideoId);
+            const shuffled = [...filteredVideos].sort(() => 0.5 - Math.random()).slice(0, 4);
+            
+            shuffled.forEach(video => {
+                const relatedVideo = document.createElement('div');
+                relatedVideo.className = 'related-video';
+                relatedVideo.dataset.id = video.id;
+                
+                relatedVideo.innerHTML = `
+                    <img src="${video.thumbnail}" alt="${video.title}" class="related-thumbnail">
+                    <div class="related-video-info">
+                        <h4>${video.title}</h4>
+                        <p>${video.channel}</p>
+                        <p>${video.views} views • ${video.date}</p>
+                    </div>
+                `;
+                
+                relatedVideo.addEventListener('click', () => openVideoDetail(video.id));
+                relatedVideos.appendChild(relatedVideo);
+            });
+        }
+
+        // Load comments
+        function loadComments() {
+            commentsList.innerHTML = '';
+            
+            comments.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment';
+                commentElement.dataset.id = comment.id;
+                
+                commentElement.innerHTML = `
+                    <div class="comment-avatar">${comment.authorInitial}</div>
+                    <div class="comment-content">
+                        <h4>${comment.author}</h4>
+                        <p>${comment.text}</p>
+                        <div class="comment-time">${comment.time}</div>
+                        <div class="comment-actions">
+                            <div class="comment-action">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span>${comment.likes}</span>
+                            </div>
+                            <div class="comment-action">
+                                <i class="fas fa-thumbs-down"></i>
+                            </div>
+                            <div class="comment-action">
+                                Reply
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                commentsList.appendChild(commentElement);
+            });
+        }
+
+        // Update like/dislike button states
+        function updateLikeDislikeButtons() {
+            if (!currentVideoId) return;
+            
+            if (likedVideos.includes(currentVideoId)) {
+                likeBtn.classList.add('active');
+                dislikeBtn.classList.remove('active');
+            } else if (dislikedVideos.includes(currentVideoId)) {
+                dislikeBtn.classList.add('active');
+                likeBtn.classList.remove('active');
             } else {
-                video.pause();
+                likeBtn.classList.remove('active');
+                dislikeBtn.classList.remove('active');
             }
         }
 
-        function makeBig() {
-            video.style.width = "100%";
+        // Event Listeners
+        homeLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Show homepage, hide video detail
+            homepage.style.display = 'block';
+            videoDetail.style.display = 'none';
+            
+            // Destroy video player to stop playback
+            if (player) {
+                player.pause();
+            }
+            
+            // Reset URL
+            history.pushState({}, '', window.location.pathname);
+        });
+
+        likeBtn.addEventListener('click', function() {
+            if (!currentVideoId) return;
+            
+            if (likedVideos.includes(currentVideoId)) {
+                // Already liked, remove like
+                likedVideos = likedVideos.filter(id => id !== currentVideoId);
+                likeBtn.classList.remove('active');
+                
+                // Update like count display
+                const likeCountElement = document.getElementById('like-count');
+                const currentCount = parseFloat(likeCountElement.textContent.replace('K', '')) * 1000;
+                likeCountElement.textContent = formatNumber(currentCount - 1);
+            } else {
+                // Add like, remove dislike if present
+                likedVideos.push(currentVideoId);
+                dislikedVideos = dislikedVideos.filter(id => id !== currentVideoId);
+                likeBtn.classList.add('active');
+                dislikeBtn.classList.remove('active');
+                
+                // Update like count display
+                const likeCountElement = document.getElementById('like-count');
+                const currentCount = parseFloat(likeCountElement.textContent.replace('K', '')) * 1000;
+                likeCountElement.textContent = formatNumber(currentCount + 1);
+                
+                // Update dislike count if needed
+                if (dislikedVideos.includes(currentVideoId)) {
+                    const dislikeCountElement = document.getElementById('dislike-count');
+                    const currentDislikeCount = parseFloat(dislikeCountElement.textContent.replace('K', '')) * 1000;
+                    dislikeCountElement.textContent = formatNumber(currentDislikeCount - 1);
+                }
+            }
+            
+            localStorage.setItem('likedVideos', JSON.stringify(likedVideos));
+            localStorage.setItem('dislikedVideos', JSON.stringify(dislikedVideos));
+        });
+
+        dislikeBtn.addEventListener('click', function() {
+            if (!currentVideoId) return;
+            
+            if (dislikedVideos.includes(currentVideoId)) {
+                // Already disliked, remove dislike
+                dislikedVideos = dislikedVideos.filter(id => id !== currentVideoId);
+                dislikeBtn.classList.remove('active');
+                
+                // Update dislike count display
+                const dislikeCountElement = document.getElementById('dislike-count');
+                const currentCount = parseFloat(dislikeCountElement.textContent.replace('K', '')) * 1000;
+                dislikeCountElement.textContent = formatNumber(currentCount - 1);
+            } else {
+                // Add dislike, remove like if present
+                dislikedVideos.push(currentVideoId);
+                likedVideos = likedVideos.filter(id => id !== currentVideoId);
+                dislikeBtn.classList.add('active');
+                likeBtn.classList.remove('active');
+                
+                // Update dislike count display
+                const dislikeCountElement = document.getElementById('dislike-count');
+                const currentCount = parseFloat(dislikeCountElement.textContent.replace('K', '')) * 1000;
+                dislikeCountElement.textContent = formatNumber(currentCount + 1);
+                
+                // Update like count if needed
+                if (likedVideos.includes(currentVideoId)) {
+                    const likeCountElement = document.getElementById('like-count');
+                    const currentLikeCount = parseFloat(likeCountElement.textContent.replace('K', '')) * 1000;
+                    likeCountElement.textContent = formatNumber(currentLikeCount - 1);
+                }
+            }
+            
+            localStorage.setItem('likedVideos', JSON.stringify(likedVideos));
+            localStorage.setItem('dislikedVideos', JSON.stringify(dislikedVideos));
+        });
+
+        shareBtn.addEventListener('click', function() {
+            const videoTitle = document.getElementById('detail-video-title').textContent;
+            const url = window.location.origin + window.location.pathname + `?v=${currentVideoId}`;
+            
+            // Check if Web Share API is available
+            if (navigator.share) {
+                navigator.share({
+                    title: videoTitle,
+                    text: `Check out this video: ${videoTitle}`,
+                    url: url
+                });
+            } else {
+                // Fallback to copy to clipboard
+                navigator.clipboard.writeText(url).then(() => {
+                    alert(`Link copied to clipboard:\n\n${url}`);
+                });
+            }
+        });
+
+        commentSubmitBtn.addEventListener('click', function() {
+            const commentText = commentInput.value.trim();
+            if (!commentText) return;
+            
+            // Add new comment
+            const newComment = {
+                id: comments.length + 1,
+                author: "You",
+                authorInitial: "Y",
+                text: commentText,
+                time: "Just now",
+                likes: 0,
+                replies: 0
+            };
+            
+            // Add to UI
+            const commentElement = document.createElement('div');
+            commentElement.className = 'comment';
+            commentElement.dataset.id = newComment.id;
+            
+            commentElement.innerHTML = `
+                <div class="comment-avatar">${newComment.authorInitial}</div>
+                <div class="comment-content">
+                    <h4>${newComment.author}</h4>
+                    <p>${newComment.text}</p>
+                    <div class="comment-time">${newComment.time}</div>
+                    <div class="comment-actions">
+                        <div class="comment-action">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span>${newComment.likes}</span>
+                        </div>
+                        <div class="comment-action">
+                            <i class="fas fa-thumbs-down"></i>
+                        </div>
+                        <div class="comment-action">
+                            Reply
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            commentsList.prepend(commentElement);
+            
+            // Clear input
+            commentInput.value = '';
+            
+            // Update comment count
+            const commentsCountElement = document.getElementById('comments-count');
+            const currentCount = parseInt(commentsCountElement.textContent.match(/\d+/)[0]);
+            commentsCountElement.textContent = `Comments (${currentCount + 1})`;
+        });
+
+        commentInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                commentSubmitBtn.click();
+            }
+        });
+
+        // Auto-resize comment textarea
+        commentInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Search functionality
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            performSearch();
+        });
+
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            if (!searchTerm) return;
+            
+            // Filter videos based on search term
+            const filteredVideos = videos.filter(video => 
+                video.title.toLowerCase().includes(searchTerm) || 
+                video.channel.toLowerCase().includes(searchTerm) ||
+                video.description.toLowerCase().includes(searchTerm)
+            );
+            
+            // Update video grid with search results
+            videoGrid.innerHTML = '';
+            
+            if (filteredVideos.length === 0) {
+                videoGrid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+                        <i class="fas fa-search" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 16px;"></i>
+                        <h3>No videos found for "${searchTerm}"</h3>
+                        <p>Try different keywords</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredVideos.forEach(video => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.dataset.id = video.id;
+                
+                videoCard.innerHTML = `
+                    <div class="thumbnail-container">
+                        <img src="${video.thumbnail}" alt="${video.title}" class="thumbnail">
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <p class="video-channel">${video.channel}</p>
+                        <div class="video-meta">
+                            <span>${video.views} views</span>
+                            <span>•</span>
+                            <span>${video.date}</span>
+                        </div>
+                    </div>
+                `;
+                
+                videoCard.addEventListener('click', () => openVideoDetail(video.id));
+                videoGrid.appendChild(videoCard);
+            });
         }
 
-        function makeNormal() {
-            video.style.width = "100%";
+        signinBtn.addEventListener('click', function() {
+            alert('Sign In functionality would be implemented here. For this demo, you are now signed in as a guest user.');
+        });
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', function(event) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const videoParam = urlParams.get('v');
+            
+            if (videoParam) {
+                const videoId = parseInt(videoParam);
+                if (!isNaN(videoId) && videos.some(v => v.id === videoId)) {
+                    openVideoDetail(videoId);
+                }
+            } else {
+                // Show homepage
+                homepage.style.display = 'block';
+                videoDetail.style.display = 'none';
+                
+                // Destroy video player to stop playback
+                if (player) {
+                    player.pause();
+                }
+            }
+        });
+
+        // Helper function to format numbers
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
         }
 
-        function changeVideo(src) {
-            video.src = src;
-            video.load();
-            video.play();
-        }
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            initHomepage();
+            
+            // Check if URL has a video parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const videoParam = urlParams.get('v');
+            if (videoParam) {
+                const videoId = parseInt(videoParam);
+                if (!isNaN(videoId) && videos.some(v => v.id === videoId)) {
+                    openVideoDetail(videoId);
+                }
+            }
+        });
     </script>
 </body>
 </html>
