@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="jUFvWg6T0RGd45tCoerev16CHRJYJ7j_fBJXesmxztE" />
     <title>HaitianTube - Modern Video Platform</title>
     
     <!-- Video.js CSS -->
@@ -119,6 +120,46 @@
             font-size: 14px;
             color: #bbb;
             text-decoration: underline;
+        }
+
+        /* Cookie Consent */
+        #cookieConsent {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #111;
+            color: #fff;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            z-index: 999999;
+        }
+
+        #cookieConsent a {
+            color: #e50914;
+            text-decoration: none;
+        }
+
+        #cookieConsent a:hover {
+            text-decoration: underline;
+        }
+
+        #cookieConsent button {
+            padding: 8px 20px;
+            background: #e50914;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #cookieConsent button:hover {
+            background: #ff0a16;
         }
 
         /* Premium Badge */
@@ -1564,6 +1605,12 @@
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
+            #cookieConsent {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1755,7 +1802,8 @@
                     
                     <div class="form-group" id="price-group" style="display: none;">
                         <label for="video-price">Price ($)</label>
-                        <input type="number" id="video-price" class="form-control" placeholder="Enter price (e.g., 4.99)" min="1" max="100" step="0.01">
+                        <input type="number" id="video-price" class="form-control" placeholder="Minimum: $10.99" min="10.99" max="999" step="0.01" value="10.99">
+                        <small style="color: var(--text-secondary);">Minimum price: $10.99. You earn 80% ($8.79 per sale)</small>
                     </div>
                     
                     <button class="btn-primary" id="upload-start-btn">Start Upload</button>
@@ -1786,8 +1834,8 @@
                     <h3>Processing Video</h3>
                     <p>Your video is being processed. This may take a few minutes...</p>
                     <div id="processing-steps">
-                        <p><i class="fas fa-check" style="color: var(--success);"></i> Video uploaded successfully</p>
-                        <p><i class="fas fa-spinner fa-spin"></i> Generating thumbnail</p>
+                        <p><i class="fas fa-spinner fa-spin"></i> Uploading video file</p>
+                        <p><i class="fas fa-spinner"></i> Generating thumbnail</p>
                         <p><i class="fas fa-spinner"></i> Creating video slug</p>
                         <p><i class="fas fa-spinner"></i> Preparing for playback</p>
                     </div>
@@ -1828,7 +1876,8 @@
                 
                 <div class="form-group" id="edit-price-group" style="display: none;">
                     <label for="edit-video-price">Price ($)</label>
-                    <input type="number" id="edit-video-price" class="form-control" min="1" max="100" step="0.01">
+                    <input type="number" id="edit-video-price" class="form-control" min="10.99" max="999" step="0.01">
+                    <small style="color: var(--text-secondary);">Minimum price: $10.99</small>
                 </div>
                 
                 <div class="form-group">
@@ -1877,7 +1926,7 @@
                     <h3 style="margin-bottom: 8px;" id="payment-video-title">Premium Video</h3>
                     <p style="color: var(--text-secondary); margin-bottom: 24px;">Unlock exclusive content</p>
                     
-                    <div class="payment-price" id="payment-price">$4.99</div>
+                    <div class="payment-price" id="payment-price">$10.99</div>
                     
                     <div style="background: var(--surface); padding: 16px; border-radius: var(--border-radius); margin-bottom: 24px;">
                         <h4 style="margin-bottom: 8px;">What you get:</h4>
@@ -1959,7 +2008,7 @@
                             <i class="fas fa-lock" style="font-size: 48px; margin-bottom: 16px; color: var(--premium);"></i>
                             <h3>Premium Content Locked</h3>
                             <p>This video is only available to premium subscribers. Unlock access to watch this exclusive content.</p>
-                            <div class="payment-price" id="lock-price">$4.99</div>
+                            <div class="payment-price" id="lock-price">$10.99</div>
                             <button class="btn-premium" id="unlock-btn">
                                 <i class="fas fa-unlock"></i> Unlock Video
                             </button>
@@ -2301,6 +2350,7 @@
                                 <ul style="color: var(--text-secondary); padding-left: 20px;">
                                     <li>Premium videos are locked behind a paywall</li>
                                     <li>Viewers pay once for lifetime access</li>
+                                    <li>Minimum price: $10.99 (You earn $8.79 per sale)</li>
                                     <li>You keep 80% of the revenue, 20% platform fee</li>
                                     <li>No ads are shown on premium videos</li>
                                     <li>Payments are processed through PayPal</li>
@@ -2322,14 +2372,48 @@
                 <span>HaitianTube</span>
             </div>
             <p class="footer-text">© 2023 HaitianTube. All rights reserved. This site is optimized for VAST ads and CrackRevenue approval. A modern, clean, and fast video platform.</p>
+            
+            <!-- Privacy Policy Section -->
+            <div style="margin-top: 30px; padding: 20px; background: var(--surface); border-radius: var(--border-radius); text-align: left;">
+                <h3 style="margin-bottom: 15px; font-size: 18px;">Privacy Policy</h3>
+                <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
+                    This website respects your privacy. We do not collect personal data except basic analytics such as browser, device, and pages visited. We use third-party advertisers who may use cookies to deliver relevant ads. By using this website, you consent to these practices.
+                </p>
+                <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.6; margin-top: 10px;">
+                    If you do not agree with our policy, please leave the site immediately.
+                </p>
+            </div>
         </div>
     </footer>
+    
+    <!-- COOKIE CONSENT -->
+    <div id="cookieConsent">
+        <span>
+            This site uses cookies to enhance user experience.  
+            By continuing, you accept our  
+            <a href="#privacy-policy">Privacy Policy</a> and  
+            <a href="#terms-of-use">Terms of Use</a>.
+        </span>
+        <button onclick="acceptCookies()">
+            Accept
+        </button>
+    </div>
 
     <!-- Video.js and VAST Plugin Scripts -->
     <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/videojs-vast-vpaid@2.0.2/dist/videojs_4.vast.vpaid.min.js"></script>
     
     <script>
+        // Cookie Consent
+        function acceptCookies() {
+            document.getElementById("cookieConsent").style.display = "none";
+            localStorage.setItem("cookiesAccepted", "true");
+        }
+
+        if (localStorage.getItem("cookiesAccepted") === "true") {
+            document.getElementById("cookieConsent").style.display = "none";
+        }
+
         // Age Verification
         function enterSite() {
             document.getElementById("ageGate").style.display = "none";
@@ -3053,8 +3137,8 @@
             adRevenueDisplay.textContent = `Ad Revenue: $${adRevenue.toFixed(2)}`;
         }
 
-        // Upload video with progress - FIXED VERSION
-        async function uploadVideoWithProgress(videoFile, title, description, visibility, price = 0) {
+        // Upload video with progress - FIXED WORKING VERSION
+        async function uploadVideoWithProgress(videoFile, title, description, visibility, price = 10.99) {
             if (!currentUser) {
                 showError(uploadError, 'You must be signed in to upload videos');
                 return null;
@@ -3085,9 +3169,15 @@
                 return new Promise((resolve, reject) => {
                     videoUploadTask.on('state_changed',
                         (snapshot) => {
-                            // Update progress
+                            // Update progress - REAL PROGRESS
                             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            updateUploadProgress(progress, 'upload');
+                            const roundedProgress = Math.round(progress);
+                            updateUploadProgress(roundedProgress, 'upload');
+                            
+                            // Update UI
+                            progressPercentage.textContent = `${roundedProgress}%`;
+                            progressPercentageText.textContent = `${roundedProgress}%`;
+                            uploadProgressFill.style.width = `${roundedProgress}%`;
                         },
                         (error) => {
                             console.error('Upload error:', error);
@@ -3102,8 +3192,8 @@
                             // Get download URL
                             const videoUrl = await videoUploadTask.snapshot.ref.getDownloadURL();
                             
-                            // Simulate processing
-                            simulateProcessing(videoId, videoUrl, {
+                            // Process video
+                            await processVideo(videoId, videoUrl, {
                                 title,
                                 description,
                                 thumbnailUrl,
@@ -3111,7 +3201,9 @@
                                 visibility,
                                 slug,
                                 price: visibility === 'premium' ? parseFloat(price) : 0
-                            }, resolve, reject);
+                            });
+                            
+                            resolve(videoId);
                         }
                     );
                 });
@@ -3121,6 +3213,81 @@
                 showError(uploadError, 'Failed to upload: ' + error.message);
                 resetUploadUI();
                 return null;
+            }
+        }
+
+        // Process video after upload
+        async function processVideo(videoId, videoUrl, videoData) {
+            try {
+                // Switch to processing view
+                uploadProgressContainer.style.display = 'none';
+                processingContainer.style.display = 'block';
+                
+                // Start processing animation
+                let progress = 100;
+                const steps = processingContainer.querySelectorAll('#processing-steps p');
+                
+                // Animate through processing steps
+                for (let i = 0; i < steps.length; i++) {
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    
+                    // Update step icon
+                    const stepIcon = steps[i].querySelector('i');
+                    stepIcon.className = 'fas fa-check';
+                    stepIcon.style.color = 'var(--success)';
+                    
+                    // Update progress
+                    progress += 25;
+                    updateUploadProgress(Math.min(progress, 100), 'process');
+                    
+                    if (i === steps.length - 1) {
+                        // All steps complete
+                        updateUploadProgress(100, 'publish');
+                        await new Promise(resolve => setTimeout(resolve, 500));
+                        
+                        // Create video document
+                        await createVideoDocument(videoId, videoUrl, videoData);
+                        
+                        // Show success
+                        showSuccess(uploadSuccess, 'Video published successfully!');
+                        
+                        // Add to local videos array
+                        const newVideo = {
+                            id: videoId,
+                            title: videoData.title,
+                            description: videoData.description,
+                            thumbnail: videoData.thumbnailUrl,
+                            videoUrl: videoUrl,
+                            channel: videoData.channelName,
+                            views: 0,
+                            likes: 0,
+                            dislikes: 0,
+                            comments: 0,
+                            userId: currentUser.uid,
+                            visibility: videoData.visibility,
+                            price: videoData.price || 0,
+                            purchases: 0,
+                            timestamp: new Date(),
+                            duration: 300,
+                            slug: videoData.slug,
+                            monetized: videoData.visibility !== 'premium'
+                        };
+                        
+                        videos.unshift(newVideo);
+                        
+                        // Redirect to video after 3 seconds
+                        setTimeout(() => {
+                            uploadModal.classList.remove('show');
+                            processingContainer.style.display = 'none';
+                            uploadSuccess.style.display = 'none';
+                            resetUploadUI();
+                            openVideoDetail(videoId);
+                        }, 3000);
+                    }
+                }
+            } catch (error) {
+                console.error('Error processing video:', error);
+                showError(uploadError, 'Failed to process video: ' + error.message);
             }
         }
 
@@ -3147,88 +3314,6 @@
                     stageElement.classList.remove('active', 'completed');
                 }
             });
-        }
-
-        // Simulate processing
-        function simulateProcessing(videoId, videoUrl, videoData, resolve, reject) {
-            // Switch to processing view
-            uploadProgressContainer.style.display = 'none';
-            processingContainer.style.display = 'block';
-            
-            const steps = processingContainer.querySelectorAll('#processing-steps p');
-            let currentStep = 0;
-            
-            const processingInterval = setInterval(() => {
-                if (currentStep < steps.length) {
-                    // Update current step
-                    const currentIcon = steps[currentStep].querySelector('i');
-                    currentIcon.className = 'fas fa-check';
-                    currentIcon.style.color = 'var(--success)';
-                    
-                    // Move to next step
-                    currentStep++;
-                    if (currentStep < steps.length) {
-                        const nextIcon = steps[currentStep].querySelector('i');
-                        nextIcon.className = 'fas fa-spinner fa-spin';
-                    }
-                    
-                    // Update progress
-                    const progress = 100 + (currentStep * 20);
-                    updateUploadProgress(Math.min(progress, 100), 'process');
-                    
-                } else {
-                    // Processing complete
-                    clearInterval(processingInterval);
-                    
-                    // Create video document
-                    createVideoDocument(videoId, videoUrl, videoData)
-                        .then(() => {
-                            updateUploadProgress(100, 'publish');
-                            
-                            // Show success
-                            showSuccess(uploadSuccess, 'Video published successfully!');
-                            
-                            // Add to local videos array
-                            const newVideo = {
-                                id: videoId,
-                                title: videoData.title,
-                                description: videoData.description,
-                                thumbnail: videoData.thumbnailUrl,
-                                videoUrl: videoUrl,
-                                channel: videoData.channelName,
-                                views: 0,
-                                likes: 0,
-                                dislikes: 0,
-                                comments: 0,
-                                userId: currentUser.uid,
-                                visibility: videoData.visibility,
-                                price: videoData.price || 0,
-                                purchases: 0,
-                                timestamp: new Date(),
-                                duration: 300,
-                                slug: videoData.slug,
-                                monetized: videoData.visibility !== 'premium'
-                            };
-                            
-                            videos.unshift(newVideo);
-                            
-                            // Redirect to video after 3 seconds
-                            setTimeout(() => {
-                                uploadModal.classList.remove('show');
-                                processingContainer.style.display = 'none';
-                                uploadSuccess.style.display = 'none';
-                                resetUploadUI();
-                                openVideoDetail(videoId);
-                            }, 3000);
-                            
-                            resolve(videoId);
-                        })
-                        .catch(error => {
-                            showError(uploadError, 'Failed to publish video: ' + error.message);
-                            reject(error);
-                        });
-                }
-            }, 1000);
         }
 
         // Create video document in Firestore
@@ -3279,7 +3364,7 @@
             videoTitleInput.value = '';
             videoDescriptionInput.value = '';
             videoFileInput.value = '';
-            videoPriceInput.value = '';
+            videoPriceInput.value = '10.99';
             selectedVideoFile = null;
             priceGroup.style.display = 'none';
             
@@ -3297,13 +3382,8 @@
             // Reset processing steps
             const steps = processingContainer.querySelectorAll('#processing-steps p i');
             steps.forEach((icon, index) => {
-                if (index === 0) {
-                    icon.className = 'fas fa-check';
-                    icon.style.color = 'var(--success)';
-                } else {
-                    icon.className = 'fas fa-spinner';
-                    icon.style.color = '';
-                }
+                icon.className = 'fas fa-spinner';
+                icon.style.color = '';
             });
             
             // Reset upload area
@@ -3409,7 +3489,7 @@
             // Show/hide payment lock
             if (isPremium && !hasAccess) {
                 paymentLock.style.display = 'block';
-                lockPrice.textContent = `$${video.price || 4.99}`;
+                lockPrice.textContent = `$${video.price || 10.99}`;
             } else {
                 paymentLock.style.display = 'none';
             }
@@ -3624,7 +3704,7 @@
                             <span>${formatNumber(video.views || 0)} views</span>
                             <span>•</span>
                             <span>${formatTimeAgo(video.timestamp?.toDate() || new Date())}</span>
-                            ${video.visibility === 'premium' ? '<span>•</span><span><i class="fas fa-dollar-sign"></i> ' + (video.price || 0) + '</span>' : ''}
+                            ${video.visibility === 'premium' ? '<span>•</span><span><i class="fas fa-dollar-sign"></i> ' + (video.price || 10.99) + '</span>' : ''}
                         </div>
                     </div>
                 `;
@@ -3816,7 +3896,7 @@
                         <div class="video-title-small">${video.title}</div>
                         <div class="video-meta-small">
                             <span class="${visibilityClass}">${visibilityText}</span>
-                            ${video.visibility === 'premium' ? `<br><small>$${video.price || 0}</small>` : ''}
+                            ${video.visibility === 'premium' ? `<br><small>$${video.price || 10.99}</small>` : ''}
                         </div>
                     </td>
                     <td>${formatNumber(video.views || 0)}</td>
@@ -3863,15 +3943,15 @@
                 row.className = 'video-row';
                 row.dataset.id = video.id;
                 
-                const creatorShare = ((video.purchases || 0) * (video.price || 0)) * 0.8;
+                const creatorShare = ((video.purchases || 0) * (video.price || 10.99)) * 0.8;
                 
                 row.innerHTML = `
                     <td class="video-title-cell">
                         <div class="video-title-small">${video.title}</div>
                     </td>
-                    <td>$${video.price || 0}</td>
+                    <td>$${video.price || 10.99}</td>
                     <td>${video.purchases || 0}</td>
-                    <td>$${((video.purchases || 0) * (video.price || 0)).toFixed(2)}</td>
+                    <td>$${((video.purchases || 0) * (video.price || 10.99)).toFixed(2)}</td>
                     <td>$${creatorShare.toFixed(2)}</td>
                     <td class="video-actions-cell">
                         <div class="action-buttons">
@@ -4073,11 +4153,11 @@
             // Show/hide price field
             if (video.visibility === 'premium') {
                 editPriceGroup.style.display = 'block';
-                editVideoPrice.value = video.price || 4.99;
+                editVideoPrice.value = video.price || 10.99;
                 premiumStats.style.display = 'block';
                 totalPurchases.textContent = video.purchases || 0;
-                totalRevenue.textContent = ((video.purchases || 0) * (video.price || 0)).toFixed(2);
-                creatorRevenue.textContent = (((video.purchases || 0) * (video.price || 0)) * 0.8).toFixed(2);
+                totalRevenue.textContent = ((video.purchases || 0) * (video.price || 10.99)).toFixed(2);
+                creatorRevenue.textContent = (((video.purchases || 0) * (video.price || 10.99)) * 0.8).toFixed(2);
             } else {
                 editPriceGroup.style.display = 'none';
                 premiumStats.style.display = 'none';
@@ -4361,12 +4441,13 @@
         videoVisibilityInput.addEventListener('change', function() {
             if (this.value === 'premium') {
                 priceGroup.style.display = 'block';
+                videoPriceInput.value = '10.99';
             } else {
                 priceGroup.style.display = 'none';
             }
         });
 
-        // Start upload
+        // Start upload - FIXED WORKING VERSION
         uploadStartBtn.addEventListener('click', async function() {
             if (!selectedVideoFile) {
                 showError(uploadError, 'Please select a video file');
@@ -4381,10 +4462,10 @@
             
             const description = videoDescriptionInput.value.trim();
             const visibility = videoVisibilityInput.value;
-            const price = videoPriceInput.value;
+            const price = parseFloat(videoPriceInput.value) || 10.99;
             
-            if (visibility === 'premium' && (!price || parseFloat(price) <= 0)) {
-                showError(uploadError, 'Please enter a valid price for premium video');
+            if (visibility === 'premium' && price < 10.99) {
+                showError(uploadError, 'Minimum price for premium videos is $10.99');
                 return;
             }
             
@@ -4392,7 +4473,10 @@
             uploadError.style.display = 'none';
             
             // Start upload
-            await uploadVideoWithProgress(selectedVideoFile, title, description, visibility, price);
+            const videoId = await uploadVideoWithProgress(selectedVideoFile, title, description, visibility, price);
+            if (videoId) {
+                console.log('Video uploaded successfully:', videoId);
+            }
         });
 
         // Studio navigation
@@ -4455,7 +4539,7 @@
             
             // Show payment modal
             paymentVideoTitle.textContent = video.title;
-            paymentPrice.textContent = `$${video.price || 4.99}`;
+            paymentPrice.textContent = `$${video.price || 10.99}`;
             paymentModal.classList.add('show');
             
             // Initialize PayPal button
@@ -4465,7 +4549,7 @@
                     return actions.order.create({
                         purchase_units: [{
                             amount: {
-                                value: video.price || 4.99
+                                value: video.price || 10.99
                             }
                         }]
                     });
@@ -4473,7 +4557,7 @@
                 onApprove: function(data, actions) {
                     return actions.order.capture().then(function(details) {
                         // Process payment
-                        processPayment(currentVideoId, video.price || 4.99);
+                        processPayment(currentVideoId, video.price || 10.99);
                     });
                 },
                 onError: function(err) {
@@ -4662,15 +4746,15 @@
             const title = editVideoTitle.value.trim();
             const description = editVideoDescription.value.trim();
             const visibility = editVideoVisibility.value;
-            const price = editVideoPrice.value;
+            const price = parseFloat(editVideoPrice.value) || 10.99;
             
             if (!title) {
                 showError(editVideoError, 'Please enter a video title');
                 return;
             }
             
-            if (visibility === 'premium' && (!price || parseFloat(price) <= 0)) {
-                showError(editVideoError, 'Please enter a valid price for premium video');
+            if (visibility === 'premium' && price < 10.99) {
+                showError(editVideoError, 'Minimum price for premium videos is $10.99');
                 return;
             }
             
