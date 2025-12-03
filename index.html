@@ -26,6 +26,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
     
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AYSq3RDGsmBLJE-ornT4tYgXrQdyLQwFf9WVFjj96G5EE9g-oUz2UQzh0xbInqNS-3pbhCfeHxikePxg&vault=true&intent=subscription"></script>
+    
     <style>
         :root {
             --primary-blue: #0d6efd;
@@ -47,6 +50,8 @@
             --danger: #dc3545;
             --warning: #ffc107;
             --info: #0dcaf0;
+            --premium: #ffd700;
+            --premium-dark: #ffc107;
         }
 
         * {
@@ -60,6 +65,160 @@
             background-color: var(--background);
             color: var(--text-primary);
             line-height: 1.5;
+        }
+
+        /* AGE VERIFICATION 18+ */
+        #ageGate {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000f2;
+            z-index: 999999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #ageGate h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        #ageGate p {
+            max-width: 380px;
+            font-size: 16px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        #ageGate button {
+            padding: 12px 35px;
+            font-size: 18px;
+            background: #e50914;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #ageGate button:hover {
+            background: #ff0a16;
+        }
+
+        #ageGate a {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #bbb;
+            text-decoration: underline;
+        }
+
+        /* Premium Badge */
+        .premium-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, var(--premium), var(--premium-dark));
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .premium-badge i {
+            margin-right: 4px;
+        }
+
+        /* Payment Lock */
+        .payment-lock {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            z-index: 100;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .payment-lock h3 {
+            margin-bottom: 16px;
+            font-size: 24px;
+            color: var(--premium);
+        }
+
+        .payment-lock p {
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+
+        .payment-price {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--premium);
+            margin: 20px 0;
+        }
+
+        #paypal-button-container {
+            margin: 20px 0;
+        }
+
+        .payment-success {
+            background-color: var(--success);
+            color: white;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            display: none;
+        }
+
+        /* Video Card Premium Overlay */
+        .premium-overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--premium);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .premium-thumbnail-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255, 215, 0, 0.1), rgba(255, 193, 7, 0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        .premium-thumbnail-overlay i {
+            font-size: 48px;
+            color: var(--premium);
+            opacity: 0.8;
         }
 
         /* Header Styles */
@@ -337,6 +496,21 @@
             background-color: #bb2d3b;
         }
 
+        .btn-premium {
+            background: linear-gradient(135deg, var(--premium), var(--premium-dark));
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-premium:hover {
+            transform: scale(1.05);
+        }
+
         .text-center {
             text-align: center;
         }
@@ -383,7 +557,7 @@
             margin-bottom: 16px;
         }
 
-        /* Upload Progress Animation */
+        /* Upload Progress Animation - FIXED */
         .upload-progress-container {
             margin: 20px 0;
             display: none;
@@ -433,6 +607,7 @@
             z-index: 1;
             background-size: 50px 50px;
             animation: move 2s linear infinite;
+            border-radius: 10px;
         }
 
         @keyframes move {
@@ -475,6 +650,11 @@
         }
 
         .stage.completed {
+            color: var(--success);
+        }
+
+        .stage.completed::before {
+            content: '✓ ';
             color: var(--success);
         }
 
@@ -780,6 +960,7 @@
             box-shadow: var(--shadow-sm);
             transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer;
+            position: relative;
         }
 
         .video-card:hover {
@@ -859,6 +1040,7 @@
             overflow: hidden;
             margin-bottom: 24px;
             box-shadow: var(--shadow-md);
+            position: relative;
         }
 
         .video-player {
@@ -1408,6 +1590,21 @@
     </style>
 </head>
 <body>
+    <!-- AGE VERIFICATION 18+ -->
+    <div id="ageGate">
+        <h2>Adults Only – 18+</h2>
+        <p>
+            This website contains explicit adult material.  
+            You must be at least 18 years old to access this content.
+        </p>
+        <button onclick="enterSite()">
+            I Confirm I Am 18+
+        </button>
+        <a href="https://google.com">
+            I am under 18 – Leave
+        </a>
+    </div>
+    
     <!-- Header -->
     <header>
         <div class="header-container">
@@ -1552,7 +1749,13 @@
                         <select id="video-visibility" class="form-control">
                             <option value="public">Public</option>
                             <option value="private">Private</option>
+                            <option value="premium">Premium (Paid Access)</option>
                         </select>
+                    </div>
+                    
+                    <div class="form-group" id="price-group" style="display: none;">
+                        <label for="video-price">Price ($)</label>
+                        <input type="number" id="video-price" class="form-control" placeholder="Enter price (e.g., 4.99)" min="1" max="100" step="0.01">
                     </div>
                     
                     <button class="btn-primary" id="upload-start-btn">Start Upload</button>
@@ -1619,7 +1822,13 @@
                     <select id="edit-video-visibility" class="form-control">
                         <option value="public">Public</option>
                         <option value="private">Private</option>
+                        <option value="premium">Premium (Paid Access)</option>
                     </select>
+                </div>
+                
+                <div class="form-group" id="edit-price-group" style="display: none;">
+                    <label for="edit-video-price">Price ($)</label>
+                    <input type="number" id="edit-video-price" class="form-control" min="1" max="100" step="0.01">
                 </div>
                 
                 <div class="form-group">
@@ -1635,10 +1844,61 @@
                     </button>
                 </div>
                 
+                <div class="form-group" id="premium-stats" style="display: none;">
+                    <label>Premium Video Stats</label>
+                    <div class="stat-card" style="text-align: left; padding: 12px;">
+                        <div>Total Purchases: <span id="total-purchases">0</span></div>
+                        <div>Total Revenue: $<span id="total-revenue">0.00</span></div>
+                        <div>Revenue Share: 80% (You keep $<span id="creator-revenue">0.00</span>)</div>
+                    </div>
+                </div>
+                
                 <button class="btn-primary" id="edit-video-submit">Save Changes</button>
                 <button class="btn-danger mt-3" id="delete-video-btn">
                     <i class="fas fa-trash"></i> Delete Video
                 </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Payment Modal -->
+    <div class="modal" id="payment-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Unlock Premium Video</h2>
+                <button class="modal-close" id="payment-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="payment-error" class="error-message"></div>
+                <div id="payment-success" class="success-message"></div>
+                
+                <div class="text-center">
+                    <i class="fas fa-crown" style="font-size: 48px; color: var(--premium); margin-bottom: 16px;"></i>
+                    <h3 style="margin-bottom: 8px;" id="payment-video-title">Premium Video</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 24px;">Unlock exclusive content</p>
+                    
+                    <div class="payment-price" id="payment-price">$4.99</div>
+                    
+                    <div style="background: var(--surface); padding: 16px; border-radius: var(--border-radius); margin-bottom: 24px;">
+                        <h4 style="margin-bottom: 8px;">What you get:</h4>
+                        <ul style="text-align: left; padding-left: 20px; color: var(--text-secondary);">
+                            <li>Lifetime access to this video</li>
+                            <li>No advertisements</li>
+                            <li>High quality streaming</li>
+                            <li>Download option (if available)</li>
+                        </ul>
+                    </div>
+                    
+                    <div id="paypal-button-container"></div>
+                    
+                    <div class="payment-success" id="payment-success-message">
+                        <i class="fas fa-check-circle"></i> Payment successful! Video is now unlocked.
+                    </div>
+                    
+                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 24px;">
+                        By purchasing, you agree to our Terms of Service. 80% goes to the creator, 20% platform fee.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -1694,8 +1954,22 @@
             <div class="video-detail-container">
                 <div class="video-main">
                     <div class="video-player-container">
+                        <!-- Payment Lock Overlay (shown for premium videos) -->
+                        <div class="payment-lock" id="payment-lock" style="display: none;">
+                            <i class="fas fa-lock" style="font-size: 48px; margin-bottom: 16px; color: var(--premium);"></i>
+                            <h3>Premium Content Locked</h3>
+                            <p>This video is only available to premium subscribers. Unlock access to watch this exclusive content.</p>
+                            <div class="payment-price" id="lock-price">$4.99</div>
+                            <button class="btn-premium" id="unlock-btn">
+                                <i class="fas fa-unlock"></i> Unlock Video
+                            </button>
+                            <p style="margin-top: 16px; font-size: 14px; color: #ddd;">
+                                No ads • Lifetime access • Supports the creator
+                            </p>
+                        </div>
+                        
                         <div class="video-player">
-                            <div class="ad-notice">CrackRevenue VAST Ads Enabled</div>
+                            <div class="ad-notice" id="ad-notice">CrackRevenue VAST Ads Enabled</div>
                             <div class="ad-revenue" id="ad-revenue">Ad Revenue: $0.00</div>
                             <!-- Video.js player will be inserted here -->
                             <video id="video-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto">
@@ -1816,6 +2090,10 @@
                             <li class="studio-nav-item" data-tab="earnings">
                                 <i class="fas fa-dollar-sign"></i>
                                 <span>Earnings</span>
+                            </li>
+                            <li class="studio-nav-item" data-tab="premium">
+                                <i class="fas fa-crown"></i>
+                                <span>Premium Videos</span>
                             </li>
                         </ul>
                     </div>
@@ -1974,6 +2252,62 @@
                                 </p>
                             </div>
                         </div>
+                        
+                        <!-- Premium Videos Tab -->
+                        <div id="premium-tab" class="studio-tab" style="display: none;">
+                            <h3>Premium Videos</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 24px;">
+                                Manage your premium videos and track purchases. Premium videos are locked behind a paywall and generate direct revenue.
+                            </p>
+                            
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-value" id="premium-videos-count">0</div>
+                                    <div class="stat-label">Premium Videos</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value" id="total-premium-sales">0</div>
+                                    <div class="stat-label">Total Sales</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value" id="premium-revenue">$0.00</div>
+                                    <div class="stat-label">Premium Revenue</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value" id="conversion-rate">0%</div>
+                                    <div class="stat-label">Conversion Rate</div>
+                                </div>
+                            </div>
+                            
+                            <h3 style="margin: 32px 0 16px 0;">Your Premium Videos</h3>
+                            <table class="videos-table" id="premium-videos-table">
+                                <thead>
+                                    <tr>
+                                        <th>Video</th>
+                                        <th>Price</th>
+                                        <th>Purchases</th>
+                                        <th>Revenue</th>
+                                        <th>Your Share</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="premium-videos-body">
+                                    <!-- Premium videos will be loaded here -->
+                                </tbody>
+                            </table>
+                            
+                            <div style="margin-top: 32px; padding: 20px; background: var(--surface); border-radius: var(--border-radius);">
+                                <h4 style="margin-bottom: 16px;">How Premium Videos Work</h4>
+                                <ul style="color: var(--text-secondary); padding-left: 20px;">
+                                    <li>Premium videos are locked behind a paywall</li>
+                                    <li>Viewers pay once for lifetime access</li>
+                                    <li>You keep 80% of the revenue, 20% platform fee</li>
+                                    <li>No ads are shown on premium videos</li>
+                                    <li>Payments are processed through PayPal</li>
+                                    <li>Funds are transferred to your PayPal account</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1996,6 +2330,16 @@
     <script src="https://cdn.jsdelivr.net/npm/videojs-vast-vpaid@2.0.2/dist/videojs_4.vast.vpaid.min.js"></script>
     
     <script>
+        // Age Verification
+        function enterSite() {
+            document.getElementById("ageGate").style.display = "none";
+            localStorage.setItem("ageVerified", "true");
+        }
+
+        if (localStorage.getItem("ageVerified") === "true") {
+            document.getElementById("ageGate").style.display = "none";
+        }
+
         // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyABmWKGHOihq-2A_oywlKke-H4l7Pq_UvM",
@@ -2022,6 +2366,8 @@
         let player = null;
         let selectedVideoFile = null;
         let videoBeingEdited = null;
+        let premiumVideos = [];
+        let userPurchases = [];
         
         // Chart instances
         let viewsChart = null;
@@ -2066,6 +2412,19 @@
         const myChannelBtn = document.getElementById('my-channel-btn');
         const sectionTitle = document.getElementById('section-title');
         
+        // Payment elements
+        const paymentLock = document.getElementById('payment-lock');
+        const unlockBtn = document.getElementById('unlock-btn');
+        const lockPrice = document.getElementById('lock-price');
+        const paymentModal = document.getElementById('payment-modal');
+        const paymentModalClose = document.getElementById('payment-modal-close');
+        const paymentVideoTitle = document.getElementById('payment-video-title');
+        const paymentPrice = document.getElementById('payment-price');
+        const paypalButtonContainer = document.getElementById('paypal-button-container');
+        const paymentSuccessMessage = document.getElementById('payment-success-message');
+        const paymentError = document.getElementById('payment-error');
+        const paymentSuccess = document.getElementById('payment-success');
+        
         // Studio elements
         const studioNavItems = document.querySelectorAll('.studio-nav-item');
         const studioTabs = document.querySelectorAll('.studio-tab');
@@ -2074,6 +2433,7 @@
         const recentVideosList = document.getElementById('recent-videos-list');
         const topVideosList = document.getElementById('top-videos-list');
         const editChannelBtn = document.getElementById('edit-channel-btn');
+        const premiumVideosBody = document.getElementById('premium-videos-body');
         
         // Studio stats
         const totalVideosStat = document.getElementById('total-videos');
@@ -2094,6 +2454,12 @@
         const cpmRate = document.getElementById('cpm-rate');
         const estimatedMonthly = document.getElementById('estimated-monthly');
         const studioUsername = document.getElementById('studio-username');
+        
+        // Premium stats
+        const premiumVideosCount = document.getElementById('premium-videos-count');
+        const totalPremiumSales = document.getElementById('total-premium-sales');
+        const premiumRevenue = document.getElementById('premium-revenue');
+        const conversionRate = document.getElementById('conversion-rate');
         
         // Modal elements
         const authModal = document.getElementById('auth-modal');
@@ -2121,6 +2487,8 @@
         const videoTitleInput = document.getElementById('video-title');
         const videoDescriptionInput = document.getElementById('video-description');
         const videoVisibilityInput = document.getElementById('video-visibility');
+        const videoPriceInput = document.getElementById('video-price');
+        const priceGroup = document.getElementById('price-group');
         const uploadStartBtn = document.getElementById('upload-start-btn');
         const uploadProgressContainer = document.getElementById('upload-progress-container');
         const processingContainer = document.getElementById('processing-container');
@@ -2135,6 +2503,8 @@
         const editVideoTitle = document.getElementById('edit-video-title');
         const editVideoDescription = document.getElementById('edit-video-description');
         const editVideoVisibility = document.getElementById('edit-video-visibility');
+        const editVideoPrice = document.getElementById('edit-video-price');
+        const editPriceGroup = document.getElementById('edit-price-group');
         const editVideoThumbnail = document.getElementById('edit-video-thumbnail');
         const editVideoUrl = document.getElementById('edit-video-url');
         const copyVideoUrlBtn = document.getElementById('copy-video-url');
@@ -2142,6 +2512,10 @@
         const deleteVideoBtn = document.getElementById('delete-video-btn');
         const editVideoError = document.getElementById('edit-video-error');
         const editVideoSuccess = document.getElementById('edit-video-success');
+        const premiumStats = document.getElementById('premium-stats');
+        const totalPurchases = document.getElementById('total-purchases');
+        const totalRevenue = document.getElementById('total-revenue');
+        const creatorRevenue = document.getElementById('creator-revenue');
         
         const editChannelModal = document.getElementById('edit-channel-modal');
         const editChannelModalClose = document.getElementById('edit-channel-modal-close');
@@ -2168,6 +2542,7 @@
         const videoIdDisplay = document.getElementById('video-id');
         const videoSlugUrl = document.getElementById('video-slug-url');
         const adRevenueDisplay = document.getElementById('ad-revenue');
+        const adNotice = document.getElementById('ad-notice');
 
         // Initialize the homepage with trending videos
         async function initHomepage() {
@@ -2191,7 +2566,7 @@
         async function loadPublicVideos() {
             try {
                 const snapshot = await db.collection('videos')
-                    .where('visibility', '==', 'public')
+                    .where('visibility', 'in', ['public', 'premium'])
                     .orderBy('timestamp', 'desc')
                     .limit(50)
                     .get();
@@ -2242,6 +2617,61 @@
             }
         }
 
+        // Load premium videos for studio
+        async function loadPremiumVideos() {
+            if (!currentUser) return [];
+            
+            try {
+                const snapshot = await db.collection('videos')
+                    .where('userId', '==', currentUser.uid)
+                    .where('visibility', '==', 'premium')
+                    .orderBy('timestamp', 'desc')
+                    .get();
+                
+                if (snapshot.empty) {
+                    return [];
+                }
+                
+                const videos = [];
+                snapshot.forEach(doc => {
+                    const video = doc.data();
+                    video.id = doc.id;
+                    videos.push(video);
+                });
+                
+                return videos;
+            } catch (error) {
+                console.error('Error loading premium videos:', error);
+                return [];
+            }
+        }
+
+        // Load user's purchases
+        async function loadUserPurchases() {
+            if (!currentUser) return [];
+            
+            try {
+                const snapshot = await db.collection('purchases')
+                    .where('userId', '==', currentUser.uid)
+                    .get();
+                
+                const purchases = [];
+                snapshot.forEach(doc => {
+                    purchases.push(doc.data().videoId);
+                });
+                
+                return purchases;
+            } catch (error) {
+                console.error('Error loading user purchases:', error);
+                return [];
+            }
+        }
+
+        // Check if user has purchased a video
+        function hasUserPurchased(videoId) {
+            return userPurchases.includes(videoId);
+        }
+
         // Load channel data
         async function loadChannelData(userId) {
             try {
@@ -2268,6 +2698,7 @@
                         totalViews: 0,
                         totalVideos: 0,
                         earnings: 0,
+                        premiumEarnings: 0,
                         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                         updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                         bannerImage: null,
@@ -2288,6 +2719,7 @@
             if (!currentUser) return;
             
             const videos = await loadUserVideos();
+            const premiumVideos = await loadPremiumVideos();
             const channelData = await loadChannelData(currentUser.uid);
             
             if (channelData) {
@@ -2295,17 +2727,25 @@
                 let totalViews = 0;
                 let totalLikes = 0;
                 let totalComments = 0;
+                let totalPremiumRevenue = 0;
+                let totalPremiumPurchases = 0;
                 
                 videos.forEach(video => {
                     totalViews += video.views || 0;
                     totalLikes += video.likes || 0;
                     totalComments += video.comments || 0;
+                    
+                    if (video.visibility === 'premium') {
+                        totalPremiumPurchases += video.purchases || 0;
+                        totalPremiumRevenue += (video.purchases || 0) * (video.price || 0);
+                    }
                 });
                 
                 // Update channel in database
                 await db.collection('channels').doc(currentUser.uid).update({
                     totalViews: totalViews,
                     totalVideos: videos.length,
+                    premiumEarnings: totalPremiumRevenue * 0.8, // 80% for creator
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
@@ -2330,6 +2770,10 @@
                 totalViewsStat.textContent = formatNumber(totalViews);
                 totalSubsStat.textContent = channelData.subscribers || 0;
                 
+                // Calculate total earnings (ads + premium)
+                const totalEarnings = (channelData.earnings || 0) + (channelData.premiumEarnings || 0);
+                totalEarningsStat.textContent = `$${totalEarnings.toFixed(2)}`;
+                
                 channelTotalViews.textContent = formatNumber(totalViews);
                 channelSubsGrowth.textContent = '0%';
                 channelEngagement.textContent = videos.length > 0 ? `${Math.round((totalLikes / totalViews) * 100) || 0}%` : '0%';
@@ -2343,12 +2787,18 @@
                     channelAvgWatchTime.textContent = '0:00';
                 }
                 
-                // Calculate earnings (based on views)
+                // Calculate earnings
                 const earnings = channelData.earnings || 0;
-                totalEarningsStat.textContent = `$${earnings.toFixed(2)}`;
-                monthlyEarnings.textContent = `$${(earnings / 12).toFixed(2)}`;
-                totalEarningsTab.textContent = `$${earnings.toFixed(2)}`;
-                estimatedMonthly.textContent = `$${(earnings).toFixed(2)}`;
+                const premiumEarnings = channelData.premiumEarnings || 0;
+                totalEarningsTab.textContent = `$${totalEarnings.toFixed(2)}`;
+                monthlyEarnings.textContent = `$${(totalEarnings / 12).toFixed(2)}`;
+                estimatedMonthly.textContent = `$${totalEarnings.toFixed(2)}`;
+                
+                // Update premium stats
+                premiumVideosCount.textContent = premiumVideos.length;
+                totalPremiumSales.textContent = totalPremiumPurchases;
+                premiumRevenue.textContent = `$${totalPremiumRevenue.toFixed(2)}`;
+                conversionRate.textContent = totalViews > 0 ? `${Math.round((totalPremiumPurchases / totalViews) * 100)}%` : '0%';
             }
         }
 
@@ -2370,8 +2820,6 @@
 
         // Generate thumbnail from video (simulated)
         function generateThumbnail(videoId) {
-            // In a real app, you would generate a thumbnail from the video
-            // For now, use a placeholder with gradient
             const colors = ['0d6efd', '198754', 'dc3545', 'ffc107', '0dcaf0', '6f42c1'];
             const colorIndex = parseInt(videoId) % colors.length;
             const color = colors[colorIndex];
@@ -2384,12 +2832,10 @@
             const placements = [0]; // Always pre-roll
             
             if (videoDurationSeconds <= 60) {
-                // Short videos (≤1 minute): Only pre-roll
                 return placements;
             }
             
             if (videoDurationSeconds <= 300) {
-                // Medium videos (1-5 minutes): Add mid-rolls
                 const midRollCount = Math.min(2, Math.floor(videoDurationSeconds / 60));
                 for (let i = 1; i <= midRollCount; i++) {
                     placements.push(Math.floor((i / (midRollCount + 1)) * videoDurationSeconds));
@@ -2397,18 +2843,16 @@
                 return placements;
             }
             
-            // Long videos (>5 minutes): More mid-rolls
             const midRollCount = Math.min(6, Math.floor(videoDurationSeconds / 60));
             for (let i = 1; i <= midRollCount; i++) {
                 placements.push(Math.floor((i / (midRollCount + 1)) * videoDurationSeconds));
             }
             
-            return placements.slice(0, 7); // Max 7 ads total
+            return placements.slice(0, 7);
         }
 
         // Get CrackRevenue VAST tag
         function getCrackRevenueVastTag(position = 'pre') {
-            // Replace with your actual CrackRevenue VAST tags
             const tags = {
                 pre: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ar%3Dpreonly&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&correlator=',
                 mid: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ar%3Dmidroll&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&correlator=',
@@ -2419,7 +2863,7 @@
         }
 
         // Initialize Video.js player with CrackRevenue VAST ads
-        function initVideoPlayer(videoUrl, title, videoId, videoDuration) {
+        function initVideoPlayer(videoUrl, title, videoId, videoDuration, isPremium = false) {
             // Destroy existing player if it exists
             if (player) {
                 player.dispose();
@@ -2465,57 +2909,64 @@
                 player.poster(currentVideo.thumbnail);
             }
             
-            // Configure VAST plugin for CrackRevenue ads
-            player.vastClient({
-                // Pre-roll ad from CrackRevenue
-                adTagUrl: getCrackRevenueVastTag('pre'),
-                playAdAlways: true,
-                adCancelTimeout: 5000,
-                adsEnabled: true
-            });
+            // Configure VAST plugin for CrackRevenue ads (only for non-premium videos)
+            if (!isPremium) {
+                player.vastClient({
+                    adTagUrl: getCrackRevenueVastTag('pre'),
+                    playAdAlways: true,
+                    adCancelTimeout: 5000,
+                    adsEnabled: true
+                });
+                
+                adNotice.style.display = 'block';
+            } else {
+                adNotice.style.display = 'none';
+            }
             
             // Set title for accessibility
             player.el().setAttribute('aria-label', `Video player: ${title}`);
             
-            // Calculate mid-roll ad placements
-            const midRollPlacements = calculateAdPlacements(videoDuration).slice(1);
-            
-            // Track when video reaches mid-roll points
-            player.on('timeupdate', function() {
-                const currentTime = player.currentTime();
+            // Calculate mid-roll ad placements (only for non-premium videos)
+            if (!isPremium) {
+                const midRollPlacements = calculateAdPlacements(videoDuration).slice(1);
                 
-                // Check if we're at a mid-roll ad placement
-                midRollPlacements.forEach((adTime, index) => {
-                    if (Math.abs(currentTime - adTime) < 1 && !playedAds[index]) {
-                        // Trigger mid-roll ad
-                        player.vastClient({
-                            adTagUrl: getCrackRevenueVastTag('mid'),
-                            playAdAlways: true
-                        });
-                        
-                        playedAds[index] = true;
-                        
-                        // Record ad impression
-                        recordAdImpression(videoId, adTime, 'mid-roll');
-                    }
+                // Track when video reaches mid-roll points
+                player.on('timeupdate', function() {
+                    const currentTime = player.currentTime();
+                    
+                    // Check if we're at a mid-roll ad placement
+                    midRollPlacements.forEach((adTime, index) => {
+                        if (Math.abs(currentTime - adTime) < 1 && !playedAds[index]) {
+                            // Trigger mid-roll ad
+                            player.vastClient({
+                                adTagUrl: getCrackRevenueVastTag('mid'),
+                                playAdAlways: true
+                            });
+                            
+                            playedAds[index] = true;
+                            
+                            // Record ad impression
+                            recordAdImpression(videoId, adTime, 'mid-roll');
+                        }
+                    });
                 });
-            });
-            
-            // Track ad events
-            player.on('vast.adStart', function() {
-                adImpressions++;
-                // Calculate ad revenue (varies by ad type)
-                const revenue = calculateAdRevenue();
-                adRevenue += revenue;
-                updateAdRevenueDisplay();
                 
-                // Update creator's earnings
-                updateCreatorEarnings(videoId, revenue);
-            });
-            
-            player.on('vast.adEnd', function() {
-                console.log('Ad ended');
-            });
+                // Track ad events
+                player.on('vast.adStart', function() {
+                    adImpressions++;
+                    // Calculate ad revenue (varies by ad type)
+                    const revenue = calculateAdRevenue();
+                    adRevenue += revenue;
+                    updateAdRevenueDisplay();
+                    
+                    // Update creator's earnings
+                    updateCreatorEarnings(videoId, revenue);
+                });
+                
+                player.on('vast.adEnd', function() {
+                    console.log('Ad ended');
+                });
+            }
             
             // Track watch time
             player.on('play', () => {
@@ -2544,19 +2995,20 @@
                 // Save watch time to database
                 saveWatchTime(videoId, totalWatchTime);
                 
-                // Play post-roll ad
-                player.vastClient({
-                    adTagUrl: getCrackRevenueVastTag('post'),
-                    playAdAlways: true
-                });
+                // Play post-roll ad (only for non-premium videos)
+                if (!isPremium) {
+                    player.vastClient({
+                        adTagUrl: getCrackRevenueVastTag('post'),
+                        playAdAlways: true
+                    });
+                }
             });
         }
 
         // Calculate ad revenue (simulated based on CPM)
         function calculateAdRevenue() {
-            // Base CPM of $5, with variations
             const baseCPM = 5.00;
-            return baseCPM / 1000; // CPM to per-impression
+            return baseCPM / 1000;
         }
 
         // Record ad impression
@@ -2577,7 +3029,6 @@
         // Update creator's earnings
         async function updateCreatorEarnings(videoId, amount) {
             try {
-                // Get video to find creator
                 const videoDoc = await db.collection('videos').doc(videoId).get();
                 if (!videoDoc.exists) return;
                 
@@ -2602,8 +3053,8 @@
             adRevenueDisplay.textContent = `Ad Revenue: $${adRevenue.toFixed(2)}`;
         }
 
-        // Enhanced Upload System with Progress Animation
-        async function uploadVideoWithProgress(videoFile, title, description, visibility) {
+        // Upload video with progress - FIXED VERSION
+        async function uploadVideoWithProgress(videoFile, title, description, visibility, price = 0) {
             if (!currentUser) {
                 showError(uploadError, 'You must be signed in to upload videos');
                 return null;
@@ -2630,6 +3081,7 @@
                 const videoRef = storage.ref(videoPath);
                 const videoUploadTask = videoRef.put(videoFile);
                 
+                // Create a promise that resolves when upload is complete
                 return new Promise((resolve, reject) => {
                     videoUploadTask.on('state_changed',
                         (snapshot) => {
@@ -2644,7 +3096,7 @@
                             reject(error);
                         },
                         async () => {
-                            // Upload complete
+                            // Upload complete - update progress to 100%
                             updateUploadProgress(100, 'upload');
                             
                             // Get download URL
@@ -2657,7 +3109,8 @@
                                 thumbnailUrl,
                                 channelName,
                                 visibility,
-                                slug
+                                slug,
+                                price: visibility === 'premium' ? parseFloat(price) : 0
                             }, resolve, reject);
                         }
                     );
@@ -2686,9 +3139,12 @@
                 const stageElement = document.getElementById(`stage-${s}`);
                 if (s === stage) {
                     stageElement.classList.add('active');
+                    stageElement.classList.remove('completed');
                 } else if (stages.indexOf(stage) > index) {
                     stageElement.classList.remove('active');
                     stageElement.classList.add('completed');
+                } else {
+                    stageElement.classList.remove('active', 'completed');
                 }
             });
         }
@@ -2717,8 +3173,8 @@
                     }
                     
                     // Update progress
-                    const progress = 100 + (currentStep * 20); // Start from 100% for upload
-                    updateUploadProgress(Math.min(progress, 100), currentStep === 0 ? 'upload' : 'process');
+                    const progress = 100 + (currentStep * 20);
+                    updateUploadProgress(Math.min(progress, 100), 'process');
                     
                 } else {
                     // Processing complete
@@ -2746,9 +3202,12 @@
                                 comments: 0,
                                 userId: currentUser.uid,
                                 visibility: videoData.visibility,
+                                price: videoData.price || 0,
+                                purchases: 0,
                                 timestamp: new Date(),
-                                duration: 300, // Default 5 minutes
-                                slug: videoData.slug
+                                duration: 300,
+                                slug: videoData.slug,
+                                monetized: videoData.visibility !== 'premium'
                             };
                             
                             videos.unshift(newVideo);
@@ -2765,6 +3224,7 @@
                             resolve(videoId);
                         })
                         .catch(error => {
+                            showError(uploadError, 'Failed to publish video: ' + error.message);
                             reject(error);
                         });
                 }
@@ -2773,7 +3233,7 @@
 
         // Create video document in Firestore
         async function createVideoDocument(videoId, videoUrl, videoData) {
-            const videoDuration = 300; // Default 5 minutes (would extract from video in real app)
+            const videoDuration = 300;
             
             const videoDoc = {
                 title: videoData.title,
@@ -2788,11 +3248,13 @@
                 comments: 0,
                 userId: currentUser.uid,
                 visibility: videoData.visibility,
+                price: videoData.price || 0,
+                purchases: 0,
                 duration: videoDuration,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                 totalWatchTime: 0,
                 avgWatchTime: 0,
-                monetized: true,
+                monetized: videoData.visibility !== 'premium',
                 slug: videoData.slug,
                 adPlacements: calculateAdPlacements(videoDuration),
                 url: generateVideoUrl(videoId, videoData.title)
@@ -2817,7 +3279,9 @@
             videoTitleInput.value = '';
             videoDescriptionInput.value = '';
             videoFileInput.value = '';
+            videoPriceInput.value = '';
             selectedVideoFile = null;
+            priceGroup.style.display = 'none';
             
             // Reset progress
             uploadProgressFill.style.width = '0%';
@@ -2841,6 +3305,16 @@
                     icon.style.color = '';
                 }
             });
+            
+            // Reset upload area
+            uploadArea.innerHTML = `
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Select a video file</h3>
+                <p>Drag and drop or click to browse</p>
+                <p style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">
+                    MP4, WebM, or OGG up to 2GB
+                </p>
+            `;
         }
 
         // Record a view for a video
@@ -2928,11 +3402,26 @@
             studioDashboard.style.display = 'none';
             videoDetail.style.display = 'block';
             
-            // Initialize Video.js player with CrackRevenue VAST ads
-            initVideoPlayer(video.videoUrl, video.title, videoId, video.duration || 300);
+            // Check if video is premium and if user has access
+            const isPremium = video.visibility === 'premium';
+            const hasAccess = !isPremium || (currentUser && hasUserPurchased(videoId));
+            
+            // Show/hide payment lock
+            if (isPremium && !hasAccess) {
+                paymentLock.style.display = 'block';
+                lockPrice.textContent = `$${video.price || 4.99}`;
+            } else {
+                paymentLock.style.display = 'none';
+            }
+            
+            // Initialize Video.js player
+            initVideoPlayer(video.videoUrl, video.title, videoId, video.duration || 300, isPremium);
             
             // Update video details
             detailVideoTitle.textContent = video.title;
+            if (isPremium) {
+                detailVideoTitle.innerHTML = `${video.title} <span class="premium-badge"><i class="fas fa-crown"></i> PREMIUM</span>`;
+            }
             detailVideoDescription.textContent = video.description || 'No description';
             viewCount.textContent = `${formatNumber(video.views || 0)} views`;
             uploadDate.textContent = formatTimeAgo(video.timestamp?.toDate() || new Date());
@@ -3002,7 +3491,7 @@
             // Filter videos from same channel and other public videos
             const filteredVideos = videos.filter(v => 
                 v.id !== currentVideoId && 
-                v.visibility === 'public'
+                v.visibility !== 'private'
             );
             
             // Sort by relevance (same channel first, then views)
@@ -3019,11 +3508,17 @@
                 relatedVideo.className = 'related-video';
                 relatedVideo.dataset.id = video.id;
                 
+                const premiumBadge = video.visibility === 'premium' ? 
+                    '<span class="premium-badge" style="font-size: 10px;"><i class="fas fa-crown"></i> PREMIUM</span>' : '';
+                
                 relatedVideo.innerHTML = `
-                    <img src="${video.thumbnail || generateThumbnail(video.id)}" 
-                         alt="${video.title}" class="related-thumbnail">
+                    <div style="position: relative;">
+                        <img src="${video.thumbnail || generateThumbnail(video.id)}" 
+                             alt="${video.title}" class="related-thumbnail">
+                        ${video.visibility === 'premium' ? '<div class="premium-overlay"><i class="fas fa-lock"></i></div>' : ''}
+                    </div>
                     <div class="related-video-info">
-                        <h4>${video.title}</h4>
+                        <h4>${video.title} ${premiumBadge}</h4>
                         <p>${video.channel}</p>
                         <p>${formatNumber(video.views || 0)} views • ${formatTimeAgo(video.timestamp?.toDate() || new Date())}</p>
                     </div>
@@ -3108,10 +3603,17 @@
                 videoCard.dataset.id = video.id;
                 
                 const visibilityBadge = video.visibility === 'private' ? 
-                    '<span class="visibility-badge visibility-private">Private</span>' : '';
+                    '<span class="visibility-badge visibility-private">Private</span>' :
+                    video.visibility === 'premium' ?
+                    '<span class="premium-badge"><i class="fas fa-crown"></i> PREMIUM</span>' : '';
+                
+                const premiumOverlay = video.visibility === 'premium' ? 
+                    '<div class="premium-overlay"><i class="fas fa-lock"></i> Premium</div>' +
+                    '<div class="premium-thumbnail-overlay"><i class="fas fa-crown"></i></div>' : '';
                 
                 videoCard.innerHTML = `
                     <div class="thumbnail-container">
+                        ${premiumOverlay}
                         <img src="${video.thumbnail || generateThumbnail(video.id)}" 
                              alt="${video.title}" class="thumbnail">
                     </div>
@@ -3122,6 +3624,7 @@
                             <span>${formatNumber(video.views || 0)} views</span>
                             <span>•</span>
                             <span>${formatTimeAgo(video.timestamp?.toDate() || new Date())}</span>
+                            ${video.visibility === 'premium' ? '<span>•</span><span><i class="fas fa-dollar-sign"></i> ' + (video.price || 0) + '</span>' : ''}
                         </div>
                     </div>
                 `;
@@ -3147,6 +3650,9 @@
                 userName.textContent = displayName;
                 userAvatar.textContent = displayName.charAt(0).toUpperCase();
                 studioUsername.textContent = displayName;
+                
+                // Load user purchases
+                userPurchases = await loadUserPurchases();
                 
                 // Load channel data
                 await updateChannelStats();
@@ -3212,12 +3718,16 @@
             
             // Load user videos
             const userVideos = await loadUserVideos();
+            premiumVideos = await loadPremiumVideos();
             
             // Update dashboard
             updateDashboard(userVideos);
             
             // Update videos table
             updateVideosTable(userVideos);
+            
+            // Update premium videos table
+            updatePremiumVideosTable(premiumVideos);
             
             // Update analytics
             updateAnalytics(userVideos);
@@ -3245,6 +3755,8 @@
                 
                 const visibilityBadge = video.visibility === 'private' ? 
                     '<span class="visibility-badge visibility-private" style="font-size: 10px;">Private</span>' : 
+                    video.visibility === 'premium' ?
+                    '<span class="premium-badge" style="font-size: 10px;"><i class="fas fa-crown"></i> PREMIUM</span>' :
                     '<span class="visibility-badge visibility-public" style="font-size: 10px;">Public</span>';
                 
                 videoItem.innerHTML = `
@@ -3283,8 +3795,17 @@
                 row.className = 'video-row';
                 row.dataset.id = video.id;
                 
-                const visibilityText = video.visibility === 'public' ? 'Public' : 'Private';
-                const visibilityClass = video.visibility === 'public' ? 'visibility-public' : 'visibility-private';
+                let visibilityText, visibilityClass;
+                if (video.visibility === 'public') {
+                    visibilityText = 'Public';
+                    visibilityClass = 'visibility-public';
+                } else if (video.visibility === 'private') {
+                    visibilityText = 'Private';
+                    visibilityClass = 'visibility-private';
+                } else if (video.visibility === 'premium') {
+                    visibilityText = 'Premium';
+                    visibilityClass = 'premium-badge';
+                }
                 
                 row.innerHTML = `
                     <td class="video-thumbnail-cell">
@@ -3294,7 +3815,8 @@
                     <td class="video-title-cell">
                         <div class="video-title-small">${video.title}</div>
                         <div class="video-meta-small">
-                            <span class="visibility-badge ${visibilityClass}">${visibilityText}</span>
+                            <span class="${visibilityClass}">${visibilityText}</span>
+                            ${video.visibility === 'premium' ? `<br><small>$${video.price || 0}</small>` : ''}
                         </div>
                     </td>
                     <td>${formatNumber(video.views || 0)}</td>
@@ -3316,6 +3838,52 @@
                 `;
                 
                 videosTableBody.appendChild(row);
+            });
+        }
+
+        // Update premium videos table
+        function updatePremiumVideosTable(premiumVideos) {
+            premiumVideosBody.innerHTML = '';
+            
+            if (premiumVideos.length === 0) {
+                premiumVideosBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                            <i class="fas fa-crown" style="font-size: 48px; margin-bottom: 16px; display: block; color: var(--premium);"></i>
+                            <h4>No premium videos yet</h4>
+                            <p>Upload a premium video to start earning directly from your content!</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            premiumVideos.forEach(video => {
+                const row = document.createElement('tr');
+                row.className = 'video-row';
+                row.dataset.id = video.id;
+                
+                const creatorShare = ((video.purchases || 0) * (video.price || 0)) * 0.8;
+                
+                row.innerHTML = `
+                    <td class="video-title-cell">
+                        <div class="video-title-small">${video.title}</div>
+                    </td>
+                    <td>$${video.price || 0}</td>
+                    <td>${video.purchases || 0}</td>
+                    <td>$${((video.purchases || 0) * (video.price || 0)).toFixed(2)}</td>
+                    <td>$${creatorShare.toFixed(2)}</td>
+                    <td class="video-actions-cell">
+                        <div class="action-buttons">
+                            <button class="action-btn edit" data-action="edit">
+                                <i class="fas fa-edit"></i>
+                                Edit
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                premiumVideosBody.appendChild(row);
             });
         }
 
@@ -3502,6 +4070,19 @@
             editVideoVisibility.value = video.visibility || 'public';
             editVideoUrl.value = video.url || generateVideoUrl(videoId, video.title);
             
+            // Show/hide price field
+            if (video.visibility === 'premium') {
+                editPriceGroup.style.display = 'block';
+                editVideoPrice.value = video.price || 4.99;
+                premiumStats.style.display = 'block';
+                totalPurchases.textContent = video.purchases || 0;
+                totalRevenue.textContent = ((video.purchases || 0) * (video.price || 0)).toFixed(2);
+                creatorRevenue.textContent = (((video.purchases || 0) * (video.price || 0)) * 0.8).toFixed(2);
+            } else {
+                editPriceGroup.style.display = 'none';
+                premiumStats.style.display = 'none';
+            }
+            
             editVideoModal.classList.add('show');
         }
 
@@ -3536,6 +4117,72 @@
             } catch (error) {
                 console.error('Error deleting video:', error);
                 alert('Failed to delete video: ' + error.message);
+            }
+        }
+
+        // Process payment for premium video
+        async function processPayment(videoId, amount) {
+            if (!currentUser) {
+                showError(paymentError, 'You must be signed in to purchase videos');
+                return;
+            }
+            
+            try {
+                // Record purchase
+                const purchaseData = {
+                    videoId: videoId,
+                    userId: currentUser.uid,
+                    amount: amount,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    status: 'completed'
+                };
+                
+                await db.collection('purchases').add(purchaseData);
+                
+                // Update video purchase count
+                const videoRef = db.collection('videos').doc(videoId);
+                await videoRef.update({
+                    purchases: firebase.firestore.FieldValue.increment(1)
+                });
+                
+                // Update channel premium earnings (80% for creator)
+                const videoDoc = await videoRef.get();
+                if (videoDoc.exists) {
+                    const videoData = videoDoc.data();
+                    const creatorId = videoData.userId;
+                    
+                    if (creatorId) {
+                        await db.collection('channels').doc(creatorId).update({
+                            premiumEarnings: firebase.firestore.FieldValue.increment(amount * 0.8),
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                }
+                
+                // Update local data
+                userPurchases.push(videoId);
+                const videoIndex = videos.findIndex(v => v.id === videoId);
+                if (videoIndex !== -1) {
+                    videos[videoIndex].purchases = (videos[videoIndex].purchases || 0) + 1;
+                }
+                
+                // Show success message
+                showSuccess(paymentSuccess, 'Payment successful! Video is now unlocked.');
+                paymentSuccessMessage.style.display = 'block';
+                
+                // Close payment modal after 2 seconds
+                setTimeout(() => {
+                    paymentModal.classList.remove('show');
+                    paymentSuccessMessage.style.display = 'none';
+                    paymentSuccess.style.display = 'none';
+                    
+                    // Reload video detail to unlock it
+                    openVideoDetail(videoId);
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error processing payment:', error);
+                showError(paymentError, 'Payment failed: ' + error.message);
             }
         }
 
@@ -3710,6 +4357,15 @@
             }
         });
 
+        // Show/hide price field based on visibility selection
+        videoVisibilityInput.addEventListener('change', function() {
+            if (this.value === 'premium') {
+                priceGroup.style.display = 'block';
+            } else {
+                priceGroup.style.display = 'none';
+            }
+        });
+
         // Start upload
         uploadStartBtn.addEventListener('click', async function() {
             if (!selectedVideoFile) {
@@ -3725,12 +4381,18 @@
             
             const description = videoDescriptionInput.value.trim();
             const visibility = videoVisibilityInput.value;
+            const price = videoPriceInput.value;
+            
+            if (visibility === 'premium' && (!price || parseFloat(price) <= 0)) {
+                showError(uploadError, 'Please enter a valid price for premium video');
+                return;
+            }
             
             // Clear any previous errors
             uploadError.style.display = 'none';
             
             // Start upload
-            await uploadVideoWithProgress(selectedVideoFile, title, description, visibility);
+            await uploadVideoWithProgress(selectedVideoFile, title, description, visibility, price);
         });
 
         // Studio navigation
@@ -3779,6 +4441,51 @@
             } else if (action === 'delete') {
                 deleteVideo(videoId);
             }
+        });
+
+        // Unlock premium video button
+        unlockBtn.addEventListener('click', function() {
+            if (!currentUser) {
+                authModal.classList.add('show');
+                return;
+            }
+            
+            const video = videos.find(v => v.id === currentVideoId);
+            if (!video || video.visibility !== 'premium') return;
+            
+            // Show payment modal
+            paymentVideoTitle.textContent = video.title;
+            paymentPrice.textContent = `$${video.price || 4.99}`;
+            paymentModal.classList.add('show');
+            
+            // Initialize PayPal button
+            paypalButtonContainer.innerHTML = '';
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: video.price || 4.99
+                            }
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        // Process payment
+                        processPayment(currentVideoId, video.price || 4.99);
+                    });
+                },
+                onError: function(err) {
+                    showError(paymentError, 'Payment failed: ' + err);
+                }
+            }).render('#paypal-button-container');
+        });
+
+        // Close payment modal
+        paymentModalClose.addEventListener('click', function() {
+            paymentModal.classList.remove('show');
+            paypalButtonContainer.innerHTML = '';
         });
 
         // Like button
@@ -3955,22 +4662,37 @@
             const title = editVideoTitle.value.trim();
             const description = editVideoDescription.value.trim();
             const visibility = editVideoVisibility.value;
+            const price = editVideoPrice.value;
             
             if (!title) {
                 showError(editVideoError, 'Please enter a video title');
                 return;
             }
             
+            if (visibility === 'premium' && (!price || parseFloat(price) <= 0)) {
+                showError(editVideoError, 'Please enter a valid price for premium video');
+                return;
+            }
+            
             try {
-                const videoRef = db.collection('videos').doc(videoBeingEdited);
-                await videoRef.update({
+                const updates = {
                     title: title,
                     description: description,
                     visibility: visibility,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     slug: generateSlug(title),
                     url: generateVideoUrl(videoBeingEdited, title)
-                });
+                };
+                
+                if (visibility === 'premium') {
+                    updates.price = parseFloat(price);
+                    updates.monetized = false;
+                } else {
+                    updates.monetized = true;
+                }
+                
+                const videoRef = db.collection('videos').doc(videoBeingEdited);
+                await videoRef.update(updates);
                 
                 // Update local data
                 const videoIndex = videos.findIndex(v => v.id === videoBeingEdited);
@@ -3980,6 +4702,13 @@
                     videos[videoIndex].visibility = visibility;
                     videos[videoIndex].slug = generateSlug(title);
                     videos[videoIndex].url = generateVideoUrl(videoBeingEdited, title);
+                    
+                    if (visibility === 'premium') {
+                        videos[videoIndex].price = parseFloat(price);
+                        videos[videoIndex].monetized = false;
+                    } else {
+                        videos[videoIndex].monetized = true;
+                    }
                     
                     // Update detail page if open
                     if (currentVideoId === videoBeingEdited) {
@@ -4265,6 +4994,7 @@
                     totalViews: 0,
                     totalVideos: 0,
                     earnings: 0,
+                    premiumEarnings: 0,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
                     bannerImage: null,
