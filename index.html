@@ -2442,6 +2442,11 @@
         const db = firebase.firestore();
         const storage = firebase.storage();
 
+        // Back4App Configuration
+        const BACK4APP_APP_ID = "mCybChhCSYcmdMrXrsEm1RvAt7jM3tbhbg6fVbAH";
+        const BACK4APP_CLIENT_KEY = "8yMBTygiuMKo7PoUgPzJygkluBYeRw8weGWW5CoA";
+        const BACK4APP_REST_KEY = "8yMBTygiuMKo7PoUgPzJygkluBYeRw8weGWW5CoA";
+
         // Global variables
         let videos = [];
         let currentUser = null;
@@ -2646,86 +2651,150 @@
             }
         }
 
-        // Load public videos from Firestore
+        // Load public videos from Back4App
         async function loadPublicVideos() {
             try {
-                const snapshot = await db.collection('videos')
-                    .where('visibility', 'in', ['public', 'premium'])
-                    .orderBy('timestamp', 'desc')
-                    .limit(50)
-                    .get();
-                
-                if (snapshot.empty) {
-                    return [];
-                }
-                
-                const videos = [];
-                snapshot.forEach(doc => {
-                    const video = doc.data();
-                    video.id = doc.id;
-                    videos.push(video);
+                const response = await fetch("https://parseapi.back4app.com/classes/Videos?where=%7B%22visibility%22%3A%22public%22%7D&order=-timestamp&limit=50", {
+                    headers: {
+                        "X-Parse-Application-Id": BACK4APP_APP_ID,
+                        "X-Parse-REST-API-Key": BACK4APP_REST_KEY
+                    }
                 });
                 
-                return videos;
+                const data = await response.json();
+                
+                if (data.results) {
+                    return data.results.map(video => ({
+                        id: video.objectId,
+                        title: video.title,
+                        description: video.description,
+                        thumbnail: video.thumbnail,
+                        videoUrl: video.videoUrl,
+                        channel: video.channel,
+                        views: video.views || 0,
+                        likes: video.likes || 0,
+                        dislikes: video.dislikes || 0,
+                        comments: video.comments || 0,
+                        userId: video.userId,
+                        visibility: video.visibility,
+                        price: video.price || 0,
+                        purchases: video.purchases || 0,
+                        duration: video.duration || 300,
+                        timestamp: video.timestamp ? new Date(video.timestamp) : new Date(),
+                        totalWatchTime: video.totalWatchTime || 0,
+                        avgWatchTime: video.avgWatchTime || 0,
+                        monetized: video.monetized !== false,
+                        slug: video.slug || generateSlug(video.title),
+                        url: video.url || generateVideoUrl(video.objectId, video.title)
+                    }));
+                }
+                
+                return [];
             } catch (error) {
-                console.error('Error loading public videos:', error);
+                console.error('Error loading videos from Back4App:', error);
                 return [];
             }
         }
 
-        // Load user's videos for studio
+        // Load user's videos from Back4App
         async function loadUserVideos() {
             if (!currentUser) return [];
             
             try {
-                const snapshot = await db.collection('videos')
-                    .where('userId', '==', currentUser.uid)
-                    .orderBy('timestamp', 'desc')
-                    .get();
+                const encodedWhere = encodeURIComponent(JSON.stringify({
+                    userId: currentUser.uid
+                }));
                 
-                if (snapshot.empty) {
-                    return [];
-                }
-                
-                const videos = [];
-                snapshot.forEach(doc => {
-                    const video = doc.data();
-                    video.id = doc.id;
-                    videos.push(video);
+                const response = await fetch(`https://parseapi.back4app.com/classes/Videos?where=${encodedWhere}&order=-timestamp`, {
+                    headers: {
+                        "X-Parse-Application-Id": BACK4APP_APP_ID,
+                        "X-Parse-REST-API-Key": BACK4APP_REST_KEY
+                    }
                 });
                 
-                return videos;
+                const data = await response.json();
+                
+                if (data.results) {
+                    return data.results.map(video => ({
+                        id: video.objectId,
+                        title: video.title,
+                        description: video.description,
+                        thumbnail: video.thumbnail,
+                        videoUrl: video.videoUrl,
+                        channel: video.channel,
+                        views: video.views || 0,
+                        likes: video.likes || 0,
+                        dislikes: video.dislikes || 0,
+                        comments: video.comments || 0,
+                        userId: video.userId,
+                        visibility: video.visibility,
+                        price: video.price || 0,
+                        purchases: video.purchases || 0,
+                        duration: video.duration || 300,
+                        timestamp: video.timestamp ? new Date(video.timestamp) : new Date(),
+                        totalWatchTime: video.totalWatchTime || 0,
+                        avgWatchTime: video.avgWatchTime || 0,
+                        monetized: video.monetized !== false,
+                        slug: video.slug || generateSlug(video.title),
+                        url: video.url || generateVideoUrl(video.objectId, video.title)
+                    }));
+                }
+                
+                return [];
             } catch (error) {
-                console.error('Error loading user videos:', error);
+                console.error('Error loading user videos from Back4App:', error);
                 return [];
             }
         }
 
-        // Load premium videos for studio
+        // Load premium videos from Back4App
         async function loadPremiumVideos() {
             if (!currentUser) return [];
             
             try {
-                const snapshot = await db.collection('videos')
-                    .where('userId', '==', currentUser.uid)
-                    .where('visibility', '==', 'premium')
-                    .orderBy('timestamp', 'desc')
-                    .get();
+                const encodedWhere = encodeURIComponent(JSON.stringify({
+                    userId: currentUser.uid,
+                    visibility: "premium"
+                }));
                 
-                if (snapshot.empty) {
-                    return [];
-                }
-                
-                const videos = [];
-                snapshot.forEach(doc => {
-                    const video = doc.data();
-                    video.id = doc.id;
-                    videos.push(video);
+                const response = await fetch(`https://parseapi.back4app.com/classes/Videos?where=${encodedWhere}&order=-timestamp`, {
+                    headers: {
+                        "X-Parse-Application-Id": BACK4APP_APP_ID,
+                        "X-Parse-REST-API-Key": BACK4APP_REST_KEY
+                    }
                 });
                 
-                return videos;
+                const data = await response.json();
+                
+                if (data.results) {
+                    return data.results.map(video => ({
+                        id: video.objectId,
+                        title: video.title,
+                        description: video.description,
+                        thumbnail: video.thumbnail,
+                        videoUrl: video.videoUrl,
+                        channel: video.channel,
+                        views: video.views || 0,
+                        likes: video.likes || 0,
+                        dislikes: video.dislikes || 0,
+                        comments: video.comments || 0,
+                        userId: video.userId,
+                        visibility: video.visibility,
+                        price: video.price || 0,
+                        purchases: video.purchases || 0,
+                        duration: video.duration || 300,
+                        timestamp: video.timestamp ? new Date(video.timestamp) : new Date(),
+                        totalWatchTime: video.totalWatchTime || 0,
+                        avgWatchTime: video.avgWatchTime || 0,
+                        monetized: video.monetized !== false,
+                        slug: video.slug || generateSlug(video.title),
+                        url: video.url || generateVideoUrl(video.objectId, video.title)
+                    }));
+                }
+                
+                return [];
             } catch (error) {
-                console.error('Error loading premium videos:', error);
+                console.error('Error loading premium videos from Back4App:', error);
                 return [];
             }
         }
@@ -2735,15 +2804,9 @@
             if (!currentUser) return [];
             
             try {
-                const snapshot = await db.collection('purchases')
-                    .where('userId', '==', currentUser.uid)
-                    .get();
-                
-                const purchases = [];
-                snapshot.forEach(doc => {
-                    purchases.push(doc.data().videoId);
-                });
-                
+                // This would need to be implemented in Back4App
+                // For now, using local storage
+                const purchases = JSON.parse(localStorage.getItem(`purchases_${currentUser.uid}`)) || [];
                 return purchases;
             } catch (error) {
                 console.error('Error loading user purchases:', error);
@@ -2756,7 +2819,7 @@
             return userPurchases.includes(videoId);
         }
 
-        // Load channel data
+        // Load channel data from Firebase (keep this as is)
         async function loadChannelData(userId) {
             try {
                 const channelDoc = await db.collection('channels').doc(userId).get();
@@ -2825,7 +2888,7 @@
                     }
                 });
                 
-                // Update channel in database
+                // Update channel in Firebase
                 await db.collection('channels').doc(currentUser.uid).update({
                     totalViews: totalViews,
                     totalVideos: videos.length,
@@ -3110,7 +3173,7 @@
             }
         }
 
-        // Update creator's earnings
+        // Update creator's earnings in Firebase
         async function updateCreatorEarnings(videoId, amount) {
             try {
                 const videoDoc = await db.collection('videos').doc(videoId).get();
@@ -3121,7 +3184,7 @@
                 
                 if (!creatorId) return;
                 
-                // Update creator's earnings
+                // Update creator's earnings in Firebase
                 await db.collection('channels').doc(creatorId).update({
                     earnings: firebase.firestore.FieldValue.increment(amount),
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -3137,7 +3200,7 @@
             adRevenueDisplay.textContent = `Ad Revenue: $${adRevenue.toFixed(2)}`;
         }
 
-        // Upload video with progress - FIXED WORKING VERSION
+        // Upload video with progress to Back4App
         async function uploadVideoWithProgress(videoFile, title, description, visibility, price = 10.99) {
             if (!currentUser) {
                 showError(uploadError, 'You must be signed in to upload videos');
@@ -3148,7 +3211,6 @@
                 // Generate unique ID and slug
                 const videoId = Date.now().toString();
                 const slug = generateSlug(title);
-                const videoPath = `videos/${currentUser.uid}/${videoId}/${videoFile.name}`;
                 
                 // Get channel data
                 const channelData = await loadChannelData(currentUser.uid);
@@ -3161,51 +3223,92 @@
                 document.getElementById('upload-step-1').style.display = 'none';
                 uploadProgressContainer.style.display = 'block';
                 
-                // Start upload
-                const videoRef = storage.ref(videoPath);
-                const videoUploadTask = videoRef.put(videoFile);
-                
-                // Create a promise that resolves when upload is complete
+                // Start upload to Back4App
                 return new Promise((resolve, reject) => {
-                    videoUploadTask.on('state_changed',
-                        (snapshot) => {
-                            // Update progress - REAL PROGRESS
-                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            const roundedProgress = Math.round(progress);
-                            updateUploadProgress(roundedProgress, 'upload');
+                    const reader = new FileReader();
+                    
+                    reader.onload = async function(e) {
+                        try {
+                            const base64 = e.target.result.split(",")[1];
                             
-                            // Update UI
-                            progressPercentage.textContent = `${roundedProgress}%`;
-                            progressPercentageText.textContent = `${roundedProgress}%`;
-                            uploadProgressFill.style.width = `${roundedProgress}%`;
-                        },
-                        (error) => {
-                            console.error('Upload error:', error);
-                            showError(uploadError, 'Upload failed: ' + error.message);
-                            resetUploadUI();
-                            reject(error);
-                        },
-                        async () => {
-                            // Upload complete - update progress to 100%
+                            // Start progress animation
+                            let progress = 1;
+                            const progressInterval = setInterval(() => {
+                                if (progress <= 100) {
+                                    updateUploadProgress(progress, 'upload');
+                                    progressPercentage.textContent = `${progress}%`;
+                                    progressPercentageText.textContent = `${progress}%`;
+                                    uploadProgressFill.style.width = `${progress}%`;
+                                    progress++;
+                                } else {
+                                    clearInterval(progressInterval);
+                                }
+                            }, 30); // Adjust speed as needed (30ms = ~3 seconds total)
+                            
+                            // Wait for progress to complete
+                            await new Promise(resolve => setTimeout(resolve, 3200));
+                            
+                            // Upload to Back4App
+                            const response = await fetch("https://parseapi.back4app.com/functions/uploadVideo", {
+                                method: "POST",
+                                headers: {
+                                    "X-Parse-Application-Id": BACK4APP_APP_ID,
+                                    "X-Parse-JavaScript-Key": BACK4APP_CLIENT_KEY,
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    title: title,
+                                    userId: currentUser.uid,
+                                    fileBase64: base64,
+                                    fileName: videoFile.name,
+                                    description: description,
+                                    visibility: visibility,
+                                    price: visibility === 'premium' ? parseFloat(price) : 0,
+                                    channelName: channelName,
+                                    thumbnailUrl: thumbnailUrl
+                                })
+                            });
+                            
+                            const result = await response.json();
+                            
+                            if (result.error) {
+                                throw new Error(result.error);
+                            }
+                            
+                            // Update progress to 100% and move to processing
                             updateUploadProgress(100, 'upload');
                             
-                            // Get download URL
-                            const videoUrl = await videoUploadTask.snapshot.ref.getDownloadURL();
-                            
                             // Process video
-                            await processVideo(videoId, videoUrl, {
+                            await processVideo(videoId, result.videoUrl, {
                                 title,
                                 description,
                                 thumbnailUrl,
                                 channelName,
                                 visibility,
                                 slug,
-                                price: visibility === 'premium' ? parseFloat(price) : 0
+                                price: visibility === 'premium' ? parseFloat(price) : 0,
+                                videoUrl: result.videoUrl,
+                                duration: result.duration || 300
                             });
                             
                             resolve(videoId);
+                            
+                        } catch (error) {
+                            console.error('Upload error:', error);
+                            showError(uploadError, 'Upload failed: ' + error.message);
+                            resetUploadUI();
+                            reject(error);
                         }
-                    );
+                    };
+                    
+                    reader.onerror = function(error) {
+                        console.error('File reading error:', error);
+                        showError(uploadError, 'Failed to read video file');
+                        resetUploadUI();
+                        reject(error);
+                    };
+                    
+                    reader.readAsDataURL(videoFile);
                 });
                 
             } catch (error) {
@@ -3245,7 +3348,7 @@
                         updateUploadProgress(100, 'publish');
                         await new Promise(resolve => setTimeout(resolve, 500));
                         
-                        // Create video document
+                        // Create video document in Back4App
                         await createVideoDocument(videoId, videoUrl, videoData);
                         
                         // Show success
@@ -3268,7 +3371,7 @@
                             price: videoData.price || 0,
                             purchases: 0,
                             timestamp: new Date(),
-                            duration: 300,
+                            duration: videoData.duration || 300,
                             slug: videoData.slug,
                             monetized: videoData.visibility !== 'premium'
                         };
@@ -3316,11 +3419,12 @@
             });
         }
 
-        // Create video document in Firestore
+        // Create video document in Back4App
         async function createVideoDocument(videoId, videoUrl, videoData) {
-            const videoDuration = 300;
+            const videoDuration = videoData.duration || 300;
             
             const videoDoc = {
+                objectId: videoId,
                 title: videoData.title,
                 description: videoData.description,
                 thumbnail: videoData.thumbnailUrl,
@@ -3336,21 +3440,58 @@
                 price: videoData.price || 0,
                 purchases: 0,
                 duration: videoDuration,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                timestamp: new Date().toISOString(),
                 totalWatchTime: 0,
                 avgWatchTime: 0,
                 monetized: videoData.visibility !== 'premium',
                 slug: videoData.slug,
-                adPlacements: calculateAdPlacements(videoDuration),
                 url: generateVideoUrl(videoId, videoData.title)
             };
             
-            await db.collection('videos').doc(videoId).set(videoDoc);
+            // Save to Back4App
+            try {
+                const response = await fetch("https://parseapi.back4app.com/classes/Videos", {
+                    method: "POST",
+                    headers: {
+                        "X-Parse-Application-Id": BACK4APP_APP_ID,
+                        "X-Parse-REST-API-Key": BACK4APP_REST_KEY,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(videoDoc)
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    console.error('Error saving to Back4App:', result.error);
+                    // Continue anyway since video is uploaded
+                }
+            } catch (error) {
+                console.error('Error connecting to Back4App:', error);
+                // Continue with local storage
+            }
             
-            // Update channel video count
-            await db.collection('channels').doc(currentUser.uid).update({
-                totalVideos: firebase.firestore.FieldValue.increment(1),
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            // Also save to local videos array for immediate display
+            videos.unshift({
+                id: videoId,
+                title: videoData.title,
+                description: videoData.description,
+                thumbnail: videoData.thumbnailUrl,
+                videoUrl: videoUrl,
+                channel: videoData.channelName,
+                views: 0,
+                likes: 0,
+                dislikes: 0,
+                comments: 0,
+                userId: currentUser.uid,
+                visibility: videoData.visibility,
+                price: videoData.price || 0,
+                purchases: 0,
+                timestamp: new Date(),
+                duration: videoDuration,
+                slug: videoData.slug,
+                monetized: videoData.visibility !== 'premium',
+                url: generateVideoUrl(videoId, videoData.title)
             });
         }
 
@@ -3397,34 +3538,44 @@
             `;
         }
 
+        // Update video views in Back4App
+        async function updateVideoViews(videoId) {
+            try {
+                // Get current views
+                const response = await fetch(`https://parseapi.back4app.com/classes/Videos/${videoId}`, {
+                    headers: {
+                        "X-Parse-Application-Id": BACK4APP_APP_ID,
+                        "X-Parse-REST-API-Key": BACK4APP_REST_KEY
+                    }
+                });
+                
+                const video = await response.json();
+                
+                if (video.error) return;
+                
+                // Update views
+                await fetch(`https://parseapi.back4app.com/classes/Videos/${videoId}`, {
+                    method: "PUT",
+                    headers: {
+                        "X-Parse-Application-Id": BACK4APP_APP_ID,
+                        "X-Parse-REST-API-Key": BACK4APP_REST_KEY,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        views: (video.views || 0) + 1
+                    })
+                });
+                
+            } catch (error) {
+                console.error('Error updating views in Back4App:', error);
+            }
+        }
+
         // Record a view for a video
         async function recordView(videoId) {
             try {
-                const videoRef = db.collection('videos').doc(videoId);
-                await db.runTransaction(async (transaction) => {
-                    const videoDoc = await transaction.get(videoRef);
-                    if (!videoDoc.exists) return;
-                    
-                    const videoData = videoDoc.data();
-                    const newViews = (videoData.views || 0) + 1;
-                    
-                    transaction.update(videoRef, {
-                        views: newViews,
-                        lastViewed: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    // Update channel views
-                    if (videoData.userId) {
-                        const channelRef = db.collection('channels').doc(videoData.userId);
-                        const channelDoc = await transaction.get(channelRef);
-                        if (channelDoc.exists) {
-                            const channelData = channelDoc.data();
-                            transaction.update(channelRef, {
-                                totalViews: (channelData.totalViews || 0) + 1
-                            });
-                        }
-                    }
-                });
+                // Update Back4App
+                await updateVideoViews(videoId);
                 
                 // Update local data
                 const videoIndex = videos.findIndex(v => v.id === videoId);
@@ -3451,22 +3602,60 @@
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                // Update video's total watch time
-                const videoRef = db.collection('videos').doc(videoId);
-                await db.runTransaction(async (transaction) => {
-                    const videoDoc = await transaction.get(videoRef);
-                    if (!videoDoc.exists) return;
-                    
-                    const videoData = videoDoc.data();
-                    const totalWatchTime = (videoData.totalWatchTime || 0) + watchTime;
-                    
-                    transaction.update(videoRef, {
-                        totalWatchTime: totalWatchTime,
-                        avgWatchTime: totalWatchTime / (videoData.views || 1)
+                // Update video's total watch time in Back4App
+                try {
+                    await fetch(`https://parseapi.back4app.com/classes/Videos/${videoId}`, {
+                        method: "PUT",
+                        headers: {
+                            "X-Parse-Application-Id": BACK4APP_APP_ID,
+                            "X-Parse-REST-API-Key": BACK4APP_REST_KEY,
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            totalWatchTime: (await getVideoTotalWatchTime(videoId)) + watchTime,
+                            avgWatchTime: (await getVideoAverageWatchTime(videoId))
+                        })
                     });
-                });
+                } catch (error) {
+                    console.error('Error updating watch time in Back4App:', error);
+                }
+                
             } catch (error) {
                 console.error('Error saving watch time:', error);
+            }
+        }
+
+        async function getVideoTotalWatchTime(videoId) {
+            try {
+                const response = await fetch(`https://parseapi.back4app.com/classes/Videos/${videoId}`, {
+                    headers: {
+                        "X-Parse-Application-Id": BACK4APP_APP_ID,
+                        "X-Parse-REST-API-Key": BACK4APP_REST_KEY
+                    }
+                });
+                
+                const video = await response.json();
+                return video.totalWatchTime || 0;
+            } catch (error) {
+                return 0;
+            }
+        }
+
+        async function getVideoAverageWatchTime(videoId) {
+            try {
+                const response = await fetch(`https://parseapi.back4app.com/classes/Videos/${videoId}`, {
+                    headers: {
+                        "X-Parse-Application-Id": BACK4APP_APP_ID,
+                        "X-Parse-REST-API-Key": BACK4APP_REST_KEY
+                    }
+                });
+                
+                const video = await response.json();
+                const views = video.views || 1;
+                const totalWatchTime = video.totalWatchTime || 0;
+                return totalWatchTime / views;
+            } catch (error) {
+                return 0;
             }
         }
 
@@ -4138,6 +4327,26 @@
             });
         }
 
+        // Update video in Back4App
+        async function updateVideoInBack4App(videoId, updates) {
+            try {
+                const response = await fetch(`https://parseapi.back4app.com/classes/Videos/${videoId}`, {
+                    method: "PUT",
+                    headers: {
+                        "X-Parse-Application-Id": BACK4APP_APP_ID,
+                        "X-Parse-REST-API-Key": BACK4APP_REST_KEY,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(updates)
+                });
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Error updating video in Back4App:', error);
+                throw error;
+            }
+        }
+
         // Edit video
         async function editVideo(videoId) {
             const video = videos.find(v => v.id === videoId);
@@ -4166,6 +4375,24 @@
             editVideoModal.classList.add('show');
         }
 
+        // Delete video from Back4App
+        async function deleteVideoFromBack4App(videoId) {
+            try {
+                const response = await fetch(`https://parseapi.back4app.com/classes/Videos/${videoId}`, {
+                    method: "DELETE",
+                    headers: {
+                        "X-Parse-Application-Id": BACK4APP_APP_ID,
+                        "X-Parse-REST-API-Key": BACK4APP_REST_KEY
+                    }
+                });
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Error deleting video from Back4App:', error);
+                throw error;
+            }
+        }
+
         // Delete video
         async function deleteVideo(videoId) {
             if (!confirm('Are you sure you want to delete this video? This action cannot be undone.')) {
@@ -4173,8 +4400,8 @@
             }
             
             try {
-                // Delete from Firestore
-                await db.collection('videos').doc(videoId).delete();
+                // Delete from Back4App
+                await deleteVideoFromBack4App(videoId);
                 
                 // Remove from local videos array
                 const videoIndex = videos.findIndex(v => v.id === videoId);
@@ -4208,27 +4435,26 @@
             }
             
             try {
-                // Record purchase
-                const purchaseData = {
-                    videoId: videoId,
-                    userId: currentUser.uid,
-                    amount: amount,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    status: 'completed'
-                };
+                // Record purchase in local storage
+                userPurchases.push(videoId);
+                localStorage.setItem(`purchases_${currentUser.uid}`, JSON.stringify(userPurchases));
                 
-                await db.collection('purchases').add(purchaseData);
+                // Update video purchase count in Back4App
+                const video = videos.find(v => v.id === videoId);
+                if (video) {
+                    const newPurchases = (video.purchases || 0) + 1;
+                    
+                    await updateVideoInBack4App(videoId, {
+                        purchases: newPurchases
+                    });
+                    
+                    // Update local video data
+                    video.purchases = newPurchases;
+                }
                 
-                // Update video purchase count
-                const videoRef = db.collection('videos').doc(videoId);
-                await videoRef.update({
-                    purchases: firebase.firestore.FieldValue.increment(1)
-                });
-                
-                // Update channel premium earnings (80% for creator)
-                const videoDoc = await videoRef.get();
-                if (videoDoc.exists) {
-                    const videoData = videoDoc.data();
+                // Update channel premium earnings in Firebase (80% for creator)
+                const videoData = videos.find(v => v.id === videoId);
+                if (videoData && videoData.userId) {
                     const creatorId = videoData.userId;
                     
                     if (creatorId) {
@@ -4237,13 +4463,6 @@
                             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                         });
                     }
-                }
-                
-                // Update local data
-                userPurchases.push(videoId);
-                const videoIndex = videos.findIndex(v => v.id === videoId);
-                if (videoIndex !== -1) {
-                    videos[videoIndex].purchases = (videos[videoIndex].purchases || 0) + 1;
                 }
                 
                 // Show success message
@@ -4447,7 +4666,7 @@
             }
         });
 
-        // Start upload - FIXED WORKING VERSION
+        // Start upload
         uploadStartBtn.addEventListener('click', async function() {
             if (!selectedVideoFile) {
                 showError(uploadError, 'Please select a video file');
@@ -4472,7 +4691,7 @@
             // Clear any previous errors
             uploadError.style.display = 'none';
             
-            // Start upload
+            // Start upload to Back4App
             const videoId = await uploadVideoWithProgress(selectedVideoFile, title, description, visibility, price);
             if (videoId) {
                 console.log('Video uploaded successfully:', videoId);
@@ -4582,30 +4801,26 @@
             if (!currentVideoId) return;
             
             try {
-                const videoRef = db.collection('videos').doc(currentVideoId);
-                await db.runTransaction(async (transaction) => {
-                    const videoDoc = await transaction.get(videoRef);
-                    if (!videoDoc.exists) return;
-                    
-                    const videoData = videoDoc.data();
-                    const newLikes = (videoData.likes || 0) + 1;
-                    
-                    transaction.update(videoRef, {
-                        likes: newLikes
-                    });
-                    
-                    // Update local data
-                    const videoIndex = videos.findIndex(v => v.id === currentVideoId);
-                    if (videoIndex !== -1) {
-                        videos[videoIndex].likes = newLikes;
-                        likeCount.textContent = formatNumber(newLikes);
-                        
-                        // Update ratio
-                        const totalInteractions = newLikes + (videos[videoIndex].dislikes || 0);
-                        const likeRatio = totalInteractions > 0 ? Math.round((newLikes / totalInteractions) * 100) : 0;
-                        likeDislikeRatio.textContent = `${likeRatio}% liked this video`;
-                    }
+                const video = videos.find(v => v.id === currentVideoId);
+                if (!video) return;
+                
+                // Update in Back4App
+                const newLikes = (video.likes || 0) + 1;
+                await updateVideoInBack4App(currentVideoId, {
+                    likes: newLikes
                 });
+                
+                // Update local data
+                const videoIndex = videos.findIndex(v => v.id === currentVideoId);
+                if (videoIndex !== -1) {
+                    videos[videoIndex].likes = newLikes;
+                    likeCount.textContent = formatNumber(newLikes);
+                    
+                    // Update ratio
+                    const totalInteractions = newLikes + (videos[videoIndex].dislikes || 0);
+                    const likeRatio = totalInteractions > 0 ? Math.round((newLikes / totalInteractions) * 100) : 0;
+                    likeDislikeRatio.textContent = `${likeRatio}% liked this video`;
+                }
                 
                 this.classList.add('active');
             } catch (error) {
@@ -4623,30 +4838,26 @@
             if (!currentVideoId) return;
             
             try {
-                const videoRef = db.collection('videos').doc(currentVideoId);
-                await db.runTransaction(async (transaction) => {
-                    const videoDoc = await transaction.get(videoRef);
-                    if (!videoDoc.exists) return;
-                    
-                    const videoData = videoDoc.data();
-                    const newDislikes = (videoData.dislikes || 0) + 1;
-                    
-                    transaction.update(videoRef, {
-                        dislikes: newDislikes
-                    });
-                    
-                    // Update local data
-                    const videoIndex = videos.findIndex(v => v.id === currentVideoId);
-                    if (videoIndex !== -1) {
-                        videos[videoIndex].dislikes = newDislikes;
-                        dislikeCount.textContent = formatNumber(newDislikes);
-                        
-                        // Update ratio
-                        const totalInteractions = (videos[videoIndex].likes || 0) + newDislikes;
-                        const likeRatio = totalInteractions > 0 ? Math.round(((videos[videoIndex].likes || 0) / totalInteractions) * 100) : 0;
-                        likeDislikeRatio.textContent = `${likeRatio}% liked this video`;
-                    }
+                const video = videos.find(v => v.id === currentVideoId);
+                if (!video) return;
+                
+                // Update in Back4App
+                const newDislikes = (video.dislikes || 0) + 1;
+                await updateVideoInBack4App(currentVideoId, {
+                    dislikes: newDislikes
                 });
+                
+                // Update local data
+                const videoIndex = videos.findIndex(v => v.id === currentVideoId);
+                if (videoIndex !== -1) {
+                    videos[videoIndex].dislikes = newDislikes;
+                    dislikeCount.textContent = formatNumber(newDislikes);
+                    
+                    // Update ratio
+                    const totalInteractions = (videos[videoIndex].likes || 0) + newDislikes;
+                    const likeRatio = totalInteractions > 0 ? Math.round(((videos[videoIndex].likes || 0) / totalInteractions) * 100) : 0;
+                    likeDislikeRatio.textContent = `${likeRatio}% liked this video`;
+                }
                 
                 this.classList.add('active');
             } catch (error) {
@@ -4714,17 +4925,20 @@
                 // Add to Firestore
                 await db.collection('comments').add(commentData);
                 
-                // Update video comment count
-                const videoRef = db.collection('videos').doc(currentVideoId);
-                await videoRef.update({
-                    comments: firebase.firestore.FieldValue.increment(1)
-                });
-                
-                // Update local data
-                const videoIndex = videos.findIndex(v => v.id === currentVideoId);
-                if (videoIndex !== -1) {
-                    videos[videoIndex].comments = (videos[videoIndex].comments || 0) + 1;
-                    commentsCount.textContent = `Comments (${videos[videoIndex].comments})`;
+                // Update video comment count in Back4App
+                const video = videos.find(v => v.id === currentVideoId);
+                if (video) {
+                    const newComments = (video.comments || 0) + 1;
+                    await updateVideoInBack4App(currentVideoId, {
+                        comments: newComments
+                    });
+                    
+                    // Update local data
+                    const videoIndex = videos.findIndex(v => v.id === currentVideoId);
+                    if (videoIndex !== -1) {
+                        videos[videoIndex].comments = newComments;
+                        commentsCount.textContent = `Comments (${newComments})`;
+                    }
                 }
                 
                 // Clear input
@@ -4763,7 +4977,7 @@
                     title: title,
                     description: description,
                     visibility: visibility,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: new Date().toISOString(),
                     slug: generateSlug(title),
                     url: generateVideoUrl(videoBeingEdited, title)
                 };
@@ -4775,8 +4989,8 @@
                     updates.monetized = true;
                 }
                 
-                const videoRef = db.collection('videos').doc(videoBeingEdited);
-                await videoRef.update(updates);
+                // Update in Back4App
+                await updateVideoInBack4App(videoBeingEdited, updates);
                 
                 // Update local data
                 const videoIndex = videos.findIndex(v => v.id === videoBeingEdited);
@@ -4862,7 +5076,7 @@
                     updates.bannerImage = await bannerRef.getDownloadURL();
                 }
                 
-                // Update channel
+                // Update channel in Firebase
                 await db.collection('channels').doc(currentUser.uid).update(updates);
                 
                 // Update UI
@@ -4880,13 +5094,11 @@
                     studioChannelAvatar.textContent = '';
                 }
                 
-                // Update all videos with new channel name
+                // Update all videos with new channel name in Back4App
                 const userVideos = await loadUserVideos();
-                const batch = db.batch();
                 
-                userVideos.forEach(video => {
-                    const videoRef = db.collection('videos').doc(video.id);
-                    batch.update(videoRef, { 
+                for (const video of userVideos) {
+                    await updateVideoInBack4App(video.id, { 
                         channel: name,
                         channelVerified: channelData.verified || false
                     });
@@ -4897,9 +5109,7 @@
                         videos[videoIndex].channel = name;
                         videos[videoIndex].channelVerified = channelData.verified || false;
                     }
-                });
-                
-                await batch.commit();
+                }
                 
                 showSuccess(editChannelSuccess, 'Channel updated successfully!');
                 
@@ -5070,7 +5280,7 @@
                     displayName: name
                 });
                 
-                // Create channel document
+                // Create channel document in Firebase
                 const channelData = {
                     name: name,
                     email: email,
