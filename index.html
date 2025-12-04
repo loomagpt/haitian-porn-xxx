@@ -52,14 +52,14 @@
             line-height: 1.5;
         }
 
-        /* AGE VERIFICATION 18+ */
+        /* AGE VERIFICATION 18+ - Enhanced */
         #ageGate {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--yt-black);
+            background: linear-gradient(135deg, var(--yt-black) 0%, #1a0000 100%);
             z-index: 999999;
             display: flex;
             justify-content: center;
@@ -67,6 +67,16 @@
             flex-direction: column;
             text-align: center;
             padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .age-gate-content {
+            background: rgba(15, 15, 15, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid var(--yt-red);
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
         }
 
         #ageGate h2 {
@@ -74,37 +84,88 @@
             margin-bottom: 20px;
             font-weight: bold;
             color: var(--yt-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
         }
 
-        #ageGate p {
+        #ageGate h2 i {
+            font-size: 40px;
+        }
+
+        .age-warning {
             max-width: 500px;
             font-size: 18px;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             line-height: 1.6;
-            color: var(--yt-light-gray);
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #ff6b6b;
         }
 
-        #ageGate button {
+        .age-warning i {
+            margin-right: 10px;
+        }
+
+        .age-legal {
+            font-size: 14px;
+            color: var(--yt-light-gray);
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .age-confirm-btn {
             padding: 15px 50px;
             font-size: 18px;
-            background: var(--yt-red);
+            background: linear-gradient(135deg, var(--yt-red) 0%, #cc0000 100%);
             border: none;
             border-radius: 30px;
             color: var(--yt-white);
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
         }
 
-        #ageGate button:hover {
-            background: #cc0000;
+        .age-confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.6);
+            background: linear-gradient(135deg, #cc0000 0%, #990000 100%);
         }
 
-        #ageGate a {
-            margin-top: 20px;
+        .age-leave-btn {
+            margin-top: 10px;
             font-size: 14px;
             color: var(--yt-light-gray);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: color 0.3s;
+        }
+
+        .age-leave-btn:hover {
+            color: var(--yt-white);
             text-decoration: underline;
+        }
+
+        /* Hide ad notification elements */
+        .ad-notice, .ad-revenue {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
         }
 
         /* Header - YouTube Style */
@@ -435,7 +496,7 @@
             padding: 24px;
         }
 
-        /* Homepage - YouTube Style */
+        /* Homepage with video cards */
         #homepage {
             width: 100%;
         }
@@ -580,33 +641,6 @@
         .video-js:hover .vjs-big-play-button {
             background-color: #cc0000;
             border-color: #cc0000;
-        }
-
-        /* Ad Notice */
-        .ad-notice {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #4CAF50;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            z-index: 10;
-            font-weight: 500;
-        }
-
-        .ad-revenue {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #4CAF50;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            z-index: 10;
-            font-weight: 500;
         }
 
         .video-info-section {
@@ -1112,19 +1146,25 @@
     </style>
 </head>
 <body>
-    <!-- AGE VERIFICATION 18+ -->
+    <!-- AGE VERIFICATION 18+ - Updated -->
     <div id="ageGate">
-        <h2>Adults Only – 18+</h2>
-        <p>
-            This website contains explicit adult material.  
-            You must be at least 18 years old to access this content.
-        </p>
-        <button onclick="enterSite()">
-            I Confirm I Am 18+
-        </button>
-        <a href="https://google.com">
-            I am under 18 – Leave
-        </a>
+        <div class="age-gate-content">
+            <h2><i class="fas fa-exclamation-triangle"></i> Adults Only – 18+</h2>
+            <p class="age-warning">
+                <i class="fas fa-shield-alt"></i> WARNING: This website contains explicit adult material.  
+                You must be at least <strong>18 years old</strong> to access this content.
+            </p>
+            <p class="age-legal">
+                By entering this site, you confirm that you are of legal age in your country 
+                to view adult content and agree to our Terms of Service.
+            </p>
+            <button onclick="enterSite()" class="age-confirm-btn">
+                <i class="fas fa-check-circle"></i> I Confirm I Am 18+
+            </button>
+            <a href="https://google.com" class="age-leave-btn">
+                <i class="fas fa-arrow-left"></i> I am under 18 – Leave Site
+            </a>
+        </div>
     </div>
     
     <!-- Header -->
@@ -1245,8 +1285,8 @@
             <div class="video-detail-container">
                 <div class="video-main">
                     <div class="video-player-container">
-                        <div class="ad-notice">CrackRevenue VAST Ads Enabled</div>
-                        <div class="ad-revenue">Ad Revenue: $0.00</div>
+                        <!-- Ad revenue display is hidden -->
+                        <div id="ad-revenue" style="display: none;">Ad Revenue: $0.00</div>
                         <div class="video-player">
                             <!-- Video.js player will be inserted here -->
                             <video id="video-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto">
@@ -1331,7 +1371,7 @@
                 <i class="fas fa-play-circle"></i>
                 <span>HaitianTube</span>
             </div>
-            <p class="footer-text">© 2025 HaitianTube. All rights reserved. Videos are embedded from external sources.</p>
+            <p class="footer-text">© 2024 HaitianTube. All rights reserved. Videos are embedded from external sources.</p>
         </div>
     </footer>
 
@@ -1381,8 +1421,15 @@
 
         // Age Verification
         function enterSite() {
+            // Set session-based verification (expires when browser closes)
+            sessionStorage.setItem("ageVerified", "true");
             document.getElementById("ageGate").style.display = "none";
-            localStorage.setItem("ageVerified", "true");
+            document.body.style.overflow = "auto";
+            
+            // Show all content
+            document.querySelectorAll('.container, header, footer').forEach(el => {
+                el.style.display = "block";
+            });
             
             // Initialize CrackRevenue pop-in ad
             if (typeof crakPopIn !== 'undefined') {
@@ -1392,16 +1439,33 @@
             }
         }
 
-        if (localStorage.getItem("ageVerified") === "true") {
-            document.getElementById("ageGate").style.display = "none";
-            
-            // Initialize CrackRevenue pop-in ad
-            if (typeof crakPopIn !== 'undefined') {
-                setTimeout(() => {
-                    crakPopIn.init(crakPopInParamsIframe);
-                }, 3000);
+        // Prevent bypassing age verification
+        window.addEventListener('load', function() {
+            if (sessionStorage.getItem("ageVerified") !== "true") {
+                document.getElementById("ageGate").style.display = "flex";
+                document.body.style.overflow = "hidden";
+                
+                // Block all other content
+                document.querySelectorAll('.container, header, footer').forEach(el => {
+                    el.style.display = "none";
+                });
+            } else {
+                document.getElementById("ageGate").style.display = "none";
+                document.body.style.overflow = "auto";
+                
+                // Show all content
+                document.querySelectorAll('.container, header, footer').forEach(el => {
+                    el.style.display = "block";
+                });
+                
+                // Initialize CrackRevenue pop-in ad
+                if (typeof crakPopIn !== 'undefined') {
+                    setTimeout(() => {
+                        crakPopIn.init(crakPopInParamsIframe);
+                    }, 3000);
+                }
             }
-        }
+        });
 
         // Firebase Configuration
         const firebaseConfig = {
@@ -1442,7 +1506,7 @@
                 title: 'chire kokom🍑🥵',
                 description: 'Explicit content',
                 videoUrl: 'https://archive.org/download/72b-612cd-a-28a-4aae-b-651-08d-02f-120fdd/72b612cd-a28a-4aae-b651-08d02f120fdd.mp4',
-                channel: 'krèy haiti',
+                channel: 'Adult Entertainment',
                 views: 8900,
                 likes: 720,
                 dislikes: 18,
@@ -1454,11 +1518,10 @@
             },
             {
                 id: 'video3',
-                title: 'pandan li vinn lakay la nou pase yon bon ap konyen',
-                description: '',
-                videoUrl: 'https://archive.org/download/bffd4e0e-b28b-4c3f-b6d0-53e762dda04b/bffd4e0e-b28b-4c3f-b6d0-53e762dda04b.mp4',
-                channel: 'Sassou haiti
-                    ',
+                title: 'Hot Video Sample 1',
+                description: 'This is a sample video description',
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                channel: 'Sample Channel 1',
                 views: 2500000,
                 likes: 125000,
                 dislikes: 5000,
@@ -1512,6 +1575,21 @@
                 likesPercentage: 96,
                 tags: ['content', 'video'],
                 userId: 'channel6'
+            },
+            {
+                id: 'video7',
+                title: 'Merry Christmas',
+                description: 'Holiday special content',
+                videoUrl: 'https://archive.org/download/bffd4e0e-b28b-4c3f-b6d0-53e762dda04b/bffd4e0e-b28b-4c3f-b6d0-53e762dda04b.mp4',
+                channel: 'vanessa haiti',
+                views: 5000,
+                likes: 350,
+                dislikes: 10,
+                comments: 25,
+                uploadDate: '1 day ago',
+                likesPercentage: 97,
+                tags: ['christmas', 'holiday', 'special'],
+                userId: 'channel7'
             }
         ];
 
@@ -1613,17 +1691,6 @@
         // VIDEO PLAYER & CRACKREVENUE ADS
         // ============================================
 
-        // Get CrackRevenue VAST tag
-        function getCrackRevenueVastTag(position = 'pre') {
-            const tags = {
-                pre: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ar%3Dpreonly&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&correlator=',
-                mid: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ar%3Dmidroll&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&correlator=',
-                post: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ar%3Dpostonly&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&correlator='
-            };
-            
-            return tags[position] || tags.pre;
-        }
-
         // Initialize Video.js player with CrackRevenue VAST ads
         function initVideoPlayer(videoUrl, title, videoId) {
             // Destroy existing player if it exists
@@ -1662,12 +1729,13 @@
             // Set title for accessibility
             player.el().setAttribute('aria-label', `Video player: ${title}`);
             
-            // Configure VAST plugin for CrackRevenue ads
+            // Configure VAST plugin for pre-roll ads
             player.vastClient({
-                adTagUrl: getCrackRevenueVastTag('pre'),
+                adTagUrl: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ar%3Dpreonly&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&correlator=',
                 playAdAlways: true,
-                adCancelTimeout: 5000,
-                adsEnabled: true
+                adCancelTimeout: 8000,
+                adsEnabled: true,
+                vpaidFlashLoaderPath: false
             });
             
             // Track ad events
@@ -1684,6 +1752,13 @@
             
             player.on('vast.adEnd', function() {
                 console.log('Ad ended');
+                // Play video after ad
+                player.play();
+            });
+            
+            player.on('vast.adError', function() {
+                console.log('Ad error, playing video directly');
+                player.play();
             });
             
             // Track video plays for views
@@ -1691,18 +1766,44 @@
                 recordView(videoId);
             });
             
-            // Set up mid-roll ads
-            setTimeout(() => {
-                player.vastClient({
-                    adTagUrl: getCrackRevenueVastTag('mid'),
-                    playAdAlways: true
-                });
-            }, 60000); // 60 seconds for mid-roll
+            // Set up mid-roll ads at specific time intervals
+            player.on('timeupdate', function() {
+                const currentTime = player.currentTime();
+                const duration = player.duration();
+                
+                // Mid-roll at 30% of video
+                if (currentTime > duration * 0.3 && currentTime < duration * 0.31) {
+                    if (!player.midRollPlayed) {
+                        player.midRollPlayed = true;
+                        player.pause();
+                        
+                        // Play mid-roll ad
+                        player.vastClient({
+                            adTagUrl: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ar%3Dmidroll&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&correlator=',
+                            playAdAlways: true
+                        });
+                    }
+                }
+                
+                // Another mid-roll at 70% of video
+                if (currentTime > duration * 0.7 && currentTime < duration * 0.71) {
+                    if (!player.secondMidRollPlayed) {
+                        player.secondMidRollPlayed = true;
+                        player.pause();
+                        
+                        // Play second mid-roll ad
+                        player.vastClient({
+                            adTagUrl: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ar%3Dmidroll&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&correlator=',
+                            playAdAlways: true
+                        });
+                    }
+                }
+            });
             
             // Set up post-roll ads
             player.on('ended', () => {
                 player.vastClient({
-                    adTagUrl: getCrackRevenueVastTag('post'),
+                    adTagUrl: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ar%3Dpostonly&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&correlator=',
                     playAdAlways: true
                 });
             });
