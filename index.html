@@ -19,6 +19,164 @@
             overflow-x: hidden;
         }
         
+        /* PRE-ROLL AD OVERLAY */
+        #prerollAdOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.98);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .preroll-container {
+            width: 95%;
+            max-width: 900px;
+            background-color: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+        }
+        
+        .preroll-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #1a1a1a;
+            border-bottom: 1px solid #333;
+        }
+        
+        .preroll-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #f1f1f1;
+        }
+        
+        .preroll-countdown {
+            color: #ff4444;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .preroll-video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-color: #000;
+        }
+        
+        #prerollAdVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .preroll-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .skip-button {
+            background-color: rgba(255, 68, 68, 0.9);
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+        }
+        
+        .skip-button:hover {
+            background-color: #ff0000;
+            transform: translateY(-2px);
+        }
+        
+        .skip-button:disabled {
+            background-color: rgba(255, 68, 68, 0.5);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .skip-timer {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid #444;
+        }
+        
+        .preroll-sponsor {
+            text-align: center;
+            padding: 15px;
+            color: #aaa;
+            font-size: 13px;
+            background-color: #111;
+        }
+        
+        .preroll-sponsor a {
+            color: #3ea6ff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .preroll-sponsor a:hover {
+            text-decoration: underline;
+        }
+        
+        /* LOADING SPINNER FOR AD */
+        .ad-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+        }
+        
+        .ad-loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #333;
+            border-top: 4px solid #ff4444;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        /* AD ERROR MESSAGE */
+        .ad-error {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+            padding: 20px;
+            background: rgba(0,0,0,0.8);
+            border-radius: 10px;
+            width: 80%;
+        }
+        
         /* OFFLINE MESSAGE */
         #offlineMessage {
             position: fixed;
@@ -28,11 +186,12 @@
             background-color: #ffcc00;
             color: #000;
             text-align: center;
-            padding: 10px;
+            padding: 12px;
             z-index: 2000;
             display: none;
             font-weight: 500;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-size: 14px;
         }
         
         /* SPLASH SCREEN */
@@ -493,6 +652,7 @@
             border-radius: 12px;
             overflow: hidden;
             margin-bottom: 16px;
+            position: relative;
         }
         
         video {
@@ -801,6 +961,132 @@
             margin-bottom: 20px;
         }
         
+        /* REWARD ADS BUTTON */
+        .reward-ad-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ffa500);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        .reward-ad-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+        
+        .reward-ad-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* REWARD AD OVERLAY */
+        #rewardAdOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 9998;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .reward-ad-container {
+            width: 90%;
+            max-width: 800px;
+            background-color: #1a1a1a;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+        }
+        
+        .reward-ad-header {
+            padding: 20px;
+            background: linear-gradient(135deg, #ff6b6b, #ffa500);
+            text-align: center;
+            color: white;
+        }
+        
+        .reward-ad-header h2 {
+            margin: 0;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .reward-ad-content {
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .reward-icon {
+            font-size: 64px;
+            color: #ffa500;
+            margin-bottom: 20px;
+        }
+        
+        .reward-ad-content h3 {
+            margin-bottom: 15px;
+            color: #f1f1f1;
+        }
+        
+        .reward-ad-content p {
+            color: #aaa;
+            margin-bottom: 25px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .reward-ad-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .reward-btn {
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .reward-watch-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ffa500);
+            color: white;
+        }
+        
+        .reward-watch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+        
+        .reward-close-btn {
+            background-color: #333;
+            color: #f1f1f1;
+        }
+        
+        .reward-close-btn:hover {
+            background-color: #444;
+        }
+        
         /* Responsive Design */
         @media (max-width: 1024px) {
             .video-container {
@@ -839,6 +1125,7 @@
             .action-buttons {
                 width: 100%;
                 justify-content: space-between;
+                flex-wrap: wrap;
             }
             
             .recommended-video {
@@ -852,6 +1139,28 @@
             
             .video-grid {
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .preroll-container {
+                width: 98%;
+            }
+            
+            .skip-button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .skip-timer {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+            
+            .reward-ad-buttons {
+                flex-direction: column;
+            }
+            
+            .reward-btn {
+                width: 100%;
             }
         }
         
@@ -897,6 +1206,80 @@
     </style>
 </head>
 <body>
+    <!-- PRE-ROLL AD OVERLAY -->
+    <div id="prerollAdOverlay">
+        <div class="preroll-container">
+            <div class="preroll-header">
+                <div class="preroll-title">Advertisement • Streamflix</div>
+                <div class="preroll-countdown" id="adCountdown">5s</div>
+            </div>
+            
+            <div class="preroll-video-container">
+                <!-- Loading Spinner -->
+                <div class="ad-loading" id="adLoading">
+                    <div class="ad-loading-spinner"></div>
+                    <p>Loading advertisement...</p>
+                </div>
+                
+                <!-- Error Message -->
+                <div class="ad-error" id="adError" style="display: none;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 40px; margin-bottom: 15px; color: #ff4444;"></i>
+                    <h3>Advertisement Failed to Load</h3>
+                    <p>Starting your video in 3 seconds...</p>
+                </div>
+                
+                <!-- Ad Video - CrackRevenue ads only -->
+                <video id="prerollAdVideo" style="display: none;"></video>
+                
+                <!-- CrackRevenue Ad Image Placeholder -->
+                <div id="adImageFallback" style="display: none; width: 100%; height: 100%; background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); position: relative;">
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white; padding: 20px;">
+                        <i class="fas fa-ad" style="font-size: 60px; margin-bottom: 20px; color: #3ea6ff;"></i>
+                        <h2 style="margin-bottom: 10px;">Advertisement by CrackRevenue</h2>
+                        <p>Your video will start after this message</p>
+                        <p style="margin-top: 20px; font-size: 12px; opacity: 0.8;">Pre-roll advertisement</p>
+                    </div>
+                </div>
+                
+                <div class="preroll-controls">
+                    <div class="skip-timer" id="skipTimer">Ad • Skip in <span id="skipSeconds">5</span> seconds</div>
+                    <button class="skip-button" id="skipAdButton" disabled>
+                        <i class="fas fa-forward"></i> Skip Ad
+                    </button>
+                </div>
+            </div>
+            
+            <div class="preroll-sponsor">
+                Advertisement by <a href="https://t.acrsmartcam.com/387067/3664/0?bo=2779,2778,2777,2776,2775&target=prerolls&po=6533&aff_sub5=SF_006OG000004lmDN" target="_blank" id="sponsorLink" rel="noopener noreferrer">CrackRevenue</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- REWARD AD OVERLAY -->
+    <div id="rewardAdOverlay">
+        <div class="reward-ad-container">
+            <div class="reward-ad-header">
+                <h2><i class="fas fa-gift"></i> Reward Ad</h2>
+            </div>
+            <div class="reward-ad-content">
+                <div class="reward-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <h3>Watch an Ad, Get Rewarded!</h3>
+                <p>Watch this short advertisement to unlock special features or get exclusive content. The ad will only take a moment and you'll receive a reward upon completion.</p>
+                <p><strong>Reward:</strong> Unlock premium features for 24 hours</p>
+                <div class="reward-ad-buttons">
+                    <button class="reward-btn reward-watch-btn" id="watchRewardAdBtn">
+                        <i class="fas fa-play-circle"></i> Watch Ad for Reward
+                    </button>
+                    <button class="reward-btn reward-close-btn" id="closeRewardAdBtn">
+                        <i class="fas fa-times"></i> Maybe Later
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- OFFLINE MESSAGE -->
     <div id="offlineMessage">
         <i class="fas fa-wifi"></i> You're offline. Check your connection.
@@ -990,6 +1373,9 @@
             </div>
             
             <div class="user-actions">
+                <button class="reward-ad-btn" id="rewardAdBtn">
+                    <i class="fas fa-gift"></i> Reward Ad
+                </button>
                 <div class="user-avatar" id="userAvatar">U</div>
             </div>
         </header>
@@ -1010,7 +1396,14 @@
         
         <!-- HOME PAGE -->
         <div class="main-container" id="homePage">
-            <h1 style="margin-bottom: 20px;">Recommended Videos</h1>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h1>Recommended Videos</h1>
+                <div style="display: flex; gap: 10px;">
+                    <button class="reward-ad-btn" id="homeRewardBtn">
+                        <i class="fas fa-gift"></i> Watch Reward Ad
+                    </button>
+                </div>
+            </div>
             
             <div class="video-grid" id="videoGrid">
                 <!-- Video cards will be generated by JavaScript -->
@@ -1070,8 +1463,11 @@
                             <button class="action-btn" id="shareBtn">
                                 <i class="fas fa-share"></i> Share
                             </button>
-                            <button class="action-btn">
+                            <button class="action-btn" id="downloadBtn">
                                 <i class="fas fa-download"></i> Download
+                            </button>
+                            <button class="reward-ad-btn" id="detailRewardBtn">
+                                <i class="fas fa-gift"></i> Reward
                             </button>
                         </div>
                     </div>
@@ -1119,6 +1515,44 @@
         </div>
     </div>
     
+    <!-- CrackRevenue Postitial Ads Script -->
+    <script src="https://crxcr2.com/popin/latest/popin-min.js"></script>
+    <script>
+    var crakPopInParamsIframe = {
+        url: 'https://t.crjmpy.com/387067/8023?aff_sub5=SF_006OG000004lmDN',
+        decryptUrl: false,
+        contentUrl: 'https://app.aimour.ai/?aff_id=1&transaction_id=postitial',
+        decryptContentUrl: false,
+        contentType: 'iframe',
+        width: '85%',
+        height: '85%',
+        timeout: false,
+        delayClose: 0,
+        clickStart: false,
+        closeIntent: false,
+        postitialBehavior: true,
+        closeButtonColor: '#000',
+        closeCrossColor: '#fff',
+        shadow: true,
+        shadowColor: '#000',
+        shadowOpacity: '.5',
+        shadeColor: '#111',
+        shadeOpacity: '0',
+        border: '1px',
+        borderColor: '#000',
+        borderRadius: '0px',
+        leadOut: true,
+        animation: 'slide',
+        direction: 'up',
+        verticalPosition: 'center',
+        horizontalPosition: 'center',
+        expireDays: 0.01
+    };
+    </script>
+    
+    <!-- Monetag Interstitial Ads -->
+    <script>(function(s){s.dataset.zone='10282578',s.src='https://groleegni.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    
     <script>
         // App State
         let currentUser = null;
@@ -1131,10 +1565,30 @@
         let isOnline = navigator.onLine;
         let recentSearches = JSON.parse(localStorage.getItem('streamflix_recent_searches')) || [];
         let searchTimeout = null;
+        let postitialAdShown = false;
+        let rewardAdCooldown = false;
+        
+        // Pre-roll Ad State
+        let prerollAdVisible = false;
+        let skipTimerCount = 5;
+        let skipTimerInterval = null;
+        let pendingVideoId = null;
+        let pendingVideoData = null;
+        let adStarted = false;
+        
+        // ONLY CrackRevenue pre-roll ad URLs - NO external video sources
+        const prerollAdUrls = [
+            {
+                url: "https://t.acrsmartcam.com/387067/3664/0?bo=2779,2778,2777,2776,2775&target=prerolls&po=6533&aff_sub5=SF_006OG000004lmDN",
+                type: "tracking"
+            }
+        ];
+
+        // CrackRevenue Reward Ad URL
+        const rewardAdUrl = "https://t.crjmpy.com/387067/3788/0?bo=3471,3472,3473,3474,3475&target=rewards&po=6456&aff_sub5=SF_006OG000004lmDN";
 
         // Smart search suggestions database
         const searchSuggestions = {
-            // Movies
             'bloodshot': ['bloodshot film', 'bloodshot complet', 'bloodshot français', 'vin diesel'],
             'beast': ['beast warrior', 'beast film', 'beast action'],
             'robin': ['robin des bois', 'robin hood', 'robin rebellion'],
@@ -1143,20 +1597,9 @@
             'horror': ['horror film', 'horror movie', 'horror complet'],
             'action': ['action film', 'action movie', 'action complet'],
             'french': ['french film', 'film français', 'french movie'],
-            'film': ['film complet', 'full movie', 'movie'],
-            'movie': ['movie', 'film', 'full movie'],
-            'complet': ['film complet', 'movie complet', 'full'],
-            
-            // Genres
             'sci-fi': ['science fiction', 'sci fi film', 'futuriste'],
             'adventure': ['aventure', 'adventure film', 'exploration'],
-            'thriller': ['thriller film', 'suspense', 'mystery'],
-            
-            // Actors/Directors
             'vin diesel': ['vin diesel film', 'fast furious', 'xxx'],
-            'action francais': ['action français', 'film action français'],
-            
-            // Specific phrases
             'des rats': ['rats zombies', 'rats mutants', 'train rats'],
             'train': ['train film', 'train action', 'train horror'],
             'mutants': ['mutants film', 'mutants horror', 'creatures mutants']
@@ -1182,7 +1625,7 @@
                 channel: "Streamflix Movies",
                 channelInitial: "S",
                 views: 2450321,
-                uploadDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
+                uploadDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
                 duration: "1:49:12",
                 thumbnail: "https://dn720703.ca.archive.org/0/items/images-3_20250908/images%20%283%29.jpeg",
                 videoUrl: "https://archive.org/download/bloodshot-version-francaise-360-p/Bloodshot_%5BVersion_fran%C3%A7aise%5D_360P.mp4",
@@ -1203,7 +1646,7 @@
                 channel: "Streamflix Action",
                 channelInitial: "S",
                 views: 1850432,
-                uploadDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+                uploadDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
                 duration: "1:38:00",
                 thumbnail: "https://archive.org/download/obrp-c-smwp-8-hd/OBrpC_SMWP8-HD.jpg",
                 videoUrl: "https://archive.org/download/beast-warrior-film-complet-en-francais-action-sf-720p/Beast_Warrior___Film_Complet_en_Fran%C3%A7ais___Action%2C_SF%28720p%29.mp4",
@@ -1224,7 +1667,7 @@
                 channel: "Streamflix Adventure",
                 channelInitial: "S",
                 views: 1567890,
-                uploadDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+                uploadDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
                 duration: "1:45:00",
                 thumbnail: "https://archive.org/download/maxresdefault-1-1_202508/maxresdefault%20%281%29%20%281%29.jpg",
                 videoUrl: "https://archive.org/download/robin-des-bois-la-rebellion-film-complet-en-francais-action-aventure-ace-720p/Robin_des_bois___la_r%C3%A9bellion___Film_Complet_en_Fran%C3%A7ais___Action___Aventure___ACE%28720p%29.mp4",
@@ -1245,7 +1688,7 @@
                 channel: "Streamflix Horror",
                 channelInitial: "S",
                 views: 892345,
-                uploadDate: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
+                uploadDate: new Date(Date.now() - 12 * 60 * 60 * 1000),
                 duration: "1:32:15",
                 thumbnail: "https://archive.org/download/11d-8d-0d-1-2852-4a-87-b-739-d-5fac-85f-6d-8c/11d8d0d1-2852-4a87-b739-d5fac85f6d8c.jpeg",
                 videoUrl: "https://archive.org/download/des-rats-se-transforment-en-zombies-une-horde-de-rats-mutants-attaque-feroceme/YTDown.com_YouTube_Media_Z91WwO5nCyE_001_1080p.mp4",
@@ -1289,6 +1732,26 @@
         const mobileSearchBtn = document.getElementById('mobileSearchBtn');
         const mobileSearchSuggestions = document.getElementById('mobileSearchSuggestions');
         
+        // Pre-roll Ad Elements
+        const prerollAdOverlay = document.getElementById('prerollAdOverlay');
+        const prerollAdVideo = document.getElementById('prerollAdVideo');
+        const skipAdButton = document.getElementById('skipAdButton');
+        const skipTimer = document.getElementById('skipTimer');
+        const skipSeconds = document.getElementById('skipSeconds');
+        const sponsorLink = document.getElementById('sponsorLink');
+        const adLoading = document.getElementById('adLoading');
+        const adError = document.getElementById('adError');
+        const adImageFallback = document.getElementById('adImageFallback');
+        const adCountdown = document.getElementById('adCountdown');
+        
+        // Reward Ad Elements
+        const rewardAdOverlay = document.getElementById('rewardAdOverlay');
+        const rewardAdBtn = document.getElementById('rewardAdBtn');
+        const homeRewardBtn = document.getElementById('homeRewardBtn');
+        const detailRewardBtn = document.getElementById('detailRewardBtn');
+        const watchRewardAdBtn = document.getElementById('watchRewardAdBtn');
+        const closeRewardAdBtn = document.getElementById('closeRewardAdBtn');
+        
         // Detail page elements
         const mainVideo = document.getElementById('mainVideo');
         const detailVideoTitle = document.getElementById('detailVideoTitle');
@@ -1307,9 +1770,12 @@
         const recommendationsContainer = document.getElementById('recommendationsContainer');
         const commentInput = document.getElementById('commentInput');
         const commentUserAvatar = document.getElementById('commentUserAvatar');
+        const downloadBtn = document.getElementById('downloadBtn');
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Streamflix initializing...');
+            
             // Check network status
             updateNetworkStatus();
             
@@ -1328,15 +1794,21 @@
                     splashScreen.style.display = 'none';
                     showAuthScreen();
                 }, 500);
-            }, 2000);
+            }, 1500);
             
             // Skip auth button
             skipAuthButton.addEventListener('click', function() {
                 const username = authUsername.value.trim() || 'Guest';
                 currentUser = { displayName: username, email: 'guest@streamflix.com' };
+                console.log('User logged in:', currentUser.displayName);
                 showMainApp();
                 loadVideos();
                 updateRecentSearchesUI();
+                
+                // Show postitial ad after login
+                setTimeout(() => {
+                    showPostitialAd();
+                }, 2000);
             });
             
             // Set up main app event listeners
@@ -1470,7 +1942,470 @@
                     videoPlayer.appendChild(errorDiv);
                 }
             });
+            
+            // Download button
+            downloadBtn.addEventListener('click', function() {
+                if (!currentUser) {
+                    alert('Please login to download videos');
+                    return;
+                }
+                
+                if (!isOnline) {
+                    alert('You need to be online to download videos.');
+                    return;
+                }
+                
+                // Show reward ad before download
+                showRewardAd('download');
+            });
+            
+            // Pre-roll ad event listeners
+            skipAdButton.addEventListener('click', skipPrerollAd);
+            prerollAdVideo.addEventListener('ended', prerollAdEnded);
+            prerollAdVideo.addEventListener('error', prerollAdError);
+            prerollAdVideo.addEventListener('loadeddata', prerollAdLoaded);
+            
+            // Reward ad event listeners
+            rewardAdBtn.addEventListener('click', function() {
+                showRewardAd('general');
+            });
+            
+            homeRewardBtn.addEventListener('click', function() {
+                showRewardAd('home');
+            });
+            
+            detailRewardBtn.addEventListener('click', function() {
+                showRewardAd('detail');
+            });
+            
+            watchRewardAdBtn.addEventListener('click', function() {
+                watchRewardAd();
+            });
+            
+            closeRewardAdBtn.addEventListener('click', function() {
+                hideRewardAd();
+            });
+            
+            console.log('Streamflix initialization complete');
         });
+
+        // POSTITTIAL AD FUNCTION
+        function showPostitialAd() {
+            if (postitialAdShown) return;
+            
+            console.log('Showing postitial ad');
+            
+            // Check if CrackRevenue popin script is loaded
+            if (typeof crakPopIn !== 'undefined') {
+                try {
+                    crakPopIn.init(crakPopInParamsIframe);
+                    postitialAdShown = true;
+                    console.log('Postitial ad launched successfully');
+                } catch (error) {
+                    console.error('Error launching postitial ad:', error);
+                }
+            } else {
+                console.warn('CrackRevenue popin script not loaded');
+                
+                // Fallback: Open in new tab after delay
+                setTimeout(() => {
+                    window.open('https://t.crjmpy.com/387067/8023?aff_sub5=SF_006OG000004lmDN', '_blank');
+                    postitialAdShown = true;
+                }, 3000);
+            }
+        }
+
+        // REWARD AD FUNCTIONS
+        function showRewardAd(context) {
+            if (rewardAdCooldown) {
+                alert('Please wait a moment before watching another reward ad.');
+                return;
+            }
+            
+            if (!isOnline) {
+                alert('You need an internet connection to watch reward ads.');
+                return;
+            }
+            
+            console.log('Showing reward ad for context:', context);
+            rewardAdOverlay.style.display = 'flex';
+        }
+
+        function hideRewardAd() {
+            rewardAdOverlay.style.display = 'none';
+        }
+
+        function watchRewardAd() {
+            console.log('Watching reward ad');
+            
+            // Set cooldown
+            rewardAdCooldown = true;
+            
+            // Hide reward ad overlay
+            hideRewardAd();
+            
+            // Track reward ad start
+            trackRewardAdStart();
+            
+            // Show loading message
+            alert('Loading reward ad... Please wait.');
+            
+            // Open reward ad in new window
+            const rewardWindow = window.open(rewardAdUrl, '_blank', 'width=800,height=600');
+            
+            if (rewardWindow) {
+                // Check if window closed (ad completed)
+                const checkClosed = setInterval(() => {
+                    if (rewardWindow.closed) {
+                        clearInterval(checkClosed);
+                        rewardAdCompleted();
+                    }
+                }, 1000);
+                
+                // Auto-close check after 30 seconds
+                setTimeout(() => {
+                    clearInterval(checkClosed);
+                    if (!rewardWindow.closed) {
+                        rewardWindow.close();
+                        rewardAdCompleted();
+                    }
+                }, 30000);
+            } else {
+                // If popup blocked, redirect in same window
+                alert('Popup blocked! Redirecting to reward ad...');
+                window.location.href = rewardAdUrl;
+                
+                // Simulate completion after delay
+                setTimeout(() => {
+                    rewardAdCompleted();
+                }, 10000);
+            }
+        }
+
+        function rewardAdCompleted() {
+            console.log('Reward ad completed');
+            
+            // Track completion
+            trackRewardAdCompletion();
+            
+            // Show success message
+            alert('🎉 Reward ad completed! You have unlocked premium features for 24 hours!');
+            
+            // Reset cooldown after 2 minutes
+            setTimeout(() => {
+                rewardAdCooldown = false;
+            }, 120000);
+        }
+
+        // Reward Ad Tracking Functions
+        function trackRewardAdStart() {
+            console.log('Tracking reward ad start');
+            
+            const trackingPixel = document.createElement('img');
+            trackingPixel.style.display = 'none';
+            trackingPixel.width = 1;
+            trackingPixel.height = 1;
+            
+            const trackingUrl = `https://t.crjmpy.com/387067/3788/0?bo=3471,3472,3473,3474,3475&target=rewards&po=6456&aff_sub5=SF_006OG000004lmDN&action=start&ref=${encodeURIComponent(window.location.href)}&t=${Date.now()}`;
+            trackingPixel.src = trackingUrl;
+            
+            document.body.appendChild(trackingPixel);
+        }
+
+        function trackRewardAdCompletion() {
+            console.log('Tracking reward ad completion');
+            
+            const trackingPixel = document.createElement('img');
+            trackingPixel.style.display = 'none';
+            trackingPixel.width = 1;
+            trackingPixel.height = 1;
+            
+            const trackingUrl = `https://t.crjmpy.com/387067/3788/0?bo=3471,3472,3473,3474,3475&target=rewards&po=6456&aff_sub5=SF_006OG000004lmDN&action=complete&ref=${encodeURIComponent(window.location.href)}&t=${Date.now()}`;
+            trackingPixel.src = trackingUrl;
+            
+            document.body.appendChild(trackingPixel);
+        }
+
+        // PRE-ROLL AD FUNCTIONS - ONLY CrackRevenue ads
+        function showPrerollAd(videoId, videoData) {
+            console.log('Showing pre-roll ad for video:', videoId);
+            
+            if (!isOnline) {
+                // If offline, skip ad and play video directly
+                console.log('Offline - skipping ad');
+                showVideoDetailDirect(videoId);
+                return;
+            }
+            
+            // Store pending video data
+            pendingVideoId = videoId;
+            pendingVideoData = videoData;
+            
+            // Reset ad state
+            skipTimerCount = 5;
+            adStarted = false;
+            
+            // Update UI
+            skipSeconds.textContent = skipTimerCount;
+            skipAdButton.disabled = true;
+            adLoading.style.display = 'block';
+            adError.style.display = 'none';
+            prerollAdVideo.style.display = 'none';
+            adImageFallback.style.display = 'none';
+            
+            // Show pre-roll overlay
+            prerollAdOverlay.style.display = 'flex';
+            prerollAdVisible = true;
+            
+            // Track impression
+            trackAdImpression();
+            
+            // Start skip timer
+            startSkipTimer();
+            
+            // Show CrackRevenue ad placeholder
+            setTimeout(() => {
+                if (!adStarted && prerollAdVisible) {
+                    console.log('Showing CrackRevenue ad placeholder');
+                    adLoading.style.display = 'none';
+                    adImageFallback.style.display = 'block';
+                    adStarted = true;
+                    
+                    // Auto-skip after 5 seconds (simulating ad completion)
+                    setTimeout(() => {
+                        if (prerollAdVisible) {
+                            skipPrerollAd();
+                        }
+                    }, 5000);
+                }
+            }, 1000);
+        }
+
+        function startSkipTimer() {
+            clearInterval(skipTimerInterval);
+            
+            skipTimerInterval = setInterval(() => {
+                skipTimerCount--;
+                skipSeconds.textContent = skipTimerCount;
+                adCountdown.textContent = skipTimerCount + 's';
+                
+                if (skipTimerCount <= 0) {
+                    clearInterval(skipTimerInterval);
+                    skipAdButton.disabled = false;
+                    skipTimer.textContent = "Ad • Skip now";
+                }
+            }, 1000);
+        }
+
+        function prerollAdLoaded() {
+            console.log('Pre-roll ad loaded');
+            adLoading.style.display = 'none';
+            prerollAdVideo.style.display = 'block';
+            adStarted = true;
+        }
+
+        function skipPrerollAd() {
+            console.log('Skipping pre-roll ad');
+            
+            // Track skip event
+            trackAdSkip();
+            
+            // Close ad and play video
+            closePrerollAd();
+            playPendingVideo();
+        }
+
+        function closePrerollAd() {
+            console.log('Closing pre-roll ad');
+            
+            // Clear timer
+            clearInterval(skipTimerInterval);
+            
+            // Pause ad video
+            prerollAdVideo.pause();
+            prerollAdVideo.src = '';
+            
+            // Hide overlay
+            prerollAdOverlay.style.display = 'none';
+            prerollAdVisible = false;
+        }
+
+        function prerollAdEnded() {
+            console.log('Pre-roll ad ended');
+            
+            // Track completion
+            trackAdCompletion();
+            
+            // Close ad and play video
+            closePrerollAd();
+            playPendingVideo();
+        }
+
+        function prerollAdError() {
+            console.error('Pre-roll ad failed to load');
+            
+            adLoading.style.display = 'none';
+            adError.style.display = 'block';
+            
+            // Auto-continue after 3 seconds
+            setTimeout(() => {
+                if (prerollAdVisible) {
+                    closePrerollAd();
+                    playPendingVideo();
+                }
+            }, 3000);
+        }
+
+        function playPendingVideo() {
+            console.log('Playing pending video:', pendingVideoId);
+            
+            if (pendingVideoId && pendingVideoData) {
+                showVideoDetailDirect(pendingVideoId);
+                pendingVideoId = null;
+                pendingVideoData = null;
+            }
+        }
+
+        // Ad Tracking Functions - CrackRevenue ONLY
+        function trackAdImpression() {
+            console.log('Tracking ad impression');
+            
+            // Create tracking pixel for CrackRevenue
+            const trackingPixel = document.createElement('img');
+            trackingPixel.style.display = 'none';
+            trackingPixel.width = 1;
+            trackingPixel.height = 1;
+            
+            // CrackRevenue URL with impression tracking
+            const trackingUrl = `https://t.acrsmartcam.com/387067/3664/0?bo=2779,2778,2777,2776,2775&target=prerolls&po=6533&aff_sub5=SF_006OG000004lmDN&action=impression&ref=${encodeURIComponent(window.location.href)}&t=${Date.now()}`;
+            trackingPixel.src = trackingUrl;
+            
+            document.body.appendChild(trackingPixel);
+            
+            // Also set the sponsor link
+            sponsorLink.href = "https://t.acrsmartcam.com/387067/3664/0?bo=2779,2778,2777,2776,2775&target=prerolls&po=6533&aff_sub5=SF_006OG000004lmDN";
+        }
+
+        function trackAdSkip() {
+            console.log('Tracking ad skip');
+            
+            const trackingPixel = document.createElement('img');
+            trackingPixel.style.display = 'none';
+            trackingPixel.width = 1;
+            trackingPixel.height = 1;
+            
+            // CrackRevenue URL
+            const trackingUrl = `https://t.acrsmartcam.com/387067/3664/0?bo=2779,2778,2777,2776,2775&target=prerolls&po=6533&aff_sub5=SF_006OG000004lmDN&action=skip&ref=${encodeURIComponent(window.location.href)}&t=${Date.now()}`;
+            trackingPixel.src = trackingUrl;
+            
+            document.body.appendChild(trackingPixel);
+        }
+
+        function trackAdCompletion() {
+            console.log('Tracking ad completion');
+            
+            const trackingPixel = document.createElement('img');
+            trackingPixel.style.display = 'none';
+            trackingPixel.width = 1;
+            trackingPixel.height = 1;
+            
+            // CrackRevenue URL
+            const trackingUrl = `https://t.acrsmartcam.com/387067/3664/0?bo=2779,2778,2777,2776,2775&target=prerolls&po=6533&aff_sub5=SF_006OG000004lmDN&action=complete&ref=${encodeURIComponent(window.location.href)}&t=${Date.now()}`;
+            trackingPixel.src = trackingUrl;
+            
+            document.body.appendChild(trackingPixel);
+        }
+
+        function showVideoDetailDirect(videoId) {
+            console.log('Showing video detail:', videoId);
+            
+            const video = videos.find(v => v.id === videoId);
+            if (!video) {
+                console.error('Video not found:', videoId);
+                return;
+            }
+            
+            currentVideoId = videoId;
+            currentVideoData = video;
+            
+            // Clear any previous error messages
+            const videoPlayer = document.querySelector('.video-player');
+            const errorDiv = videoPlayer.querySelector('.video-error');
+            if (errorDiv) {
+                errorDiv.remove();
+            }
+            
+            // Update video player and info
+            mainVideo.src = video.videoUrl;
+            mainVideo.poster = video.thumbnail;
+            
+            // Set video title and load metadata
+            mainVideo.load();
+            
+            detailVideoTitle.textContent = video.title;
+            detailChannelName.textContent = video.channel;
+            detailSubscribers.textContent = video.subscribers;
+            detailViews.textContent = `${formatCount(video.views)} views`;
+            detailDate.textContent = getTimeAgo(video.uploadDate);
+            detailDescription.textContent = video.description;
+            
+            // Update like/dislike counts
+            likeCount.textContent = formatCount(video.likes);
+            dislikeCount.textContent = formatCount(video.dislikes);
+            
+            // Update comment count
+            commentCount.textContent = `Comments • ${formatCount(video.comments)}`;
+            
+            // Load comments
+            loadComments(video);
+            
+            // Load recommendations (excluding current video)
+            loadRecommendations(videoId);
+            
+            // Reset like/dislike/subscribe states
+            isLiked = false;
+            isDisliked = false;
+            isSubscribed = false;
+            likeBtn.classList.remove('active');
+            dislikeBtn.classList.remove('active');
+            subscribeBtn.textContent = 'SUBSCRIBE';
+            subscribeBtn.classList.remove('subscribed');
+            
+            // Show detail page, hide home page
+            homePage.style.display = 'none';
+            detailPage.style.display = 'block';
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            // Auto-play the video after a short delay
+            setTimeout(() => {
+                console.log('Attempting to auto-play video');
+                const playPromise = mainVideo.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("Auto-play prevented:", error);
+                        // Don't show error, let user click play
+                    });
+                }
+            }, 500);
+        }
+
+        // Modified video click handler to show pre-roll ad
+        function setupVideoCardClick(videoCard, videoId) {
+            videoCard.addEventListener('click', function() {
+                if (!isOnline) {
+                    alert('You need an internet connection to watch videos. Please check your connection.');
+                    return;
+                }
+                
+                // Show pre-roll ad before playing video
+                const video = videos.find(v => v.id === videoId);
+                if (video) {
+                    showPrerollAd(videoId, video);
+                }
+            });
+        }
 
         // Check screen size for responsive search
         function checkScreenSize() {
@@ -1610,101 +2545,22 @@
                 
                 videoCard.innerHTML = thumbnailHtml;
                 
-                videoCard.addEventListener('click', function() {
-                    if (!isOnline) {
-                        alert('You need an internet connection to watch videos. Please check your connection.');
-                        return;
-                    }
-                    const videoId = parseInt(this.getAttribute('data-id'));
-                    showVideoDetail(videoId);
-                });
+                // Use the new pre-roll ad enabled click handler
+                setupVideoCardClick(videoCard, video.id);
                 
                 videoGrid.appendChild(videoCard);
             });
+            
+            console.log('Home page rendered with', videos.length, 'videos');
         }
 
-        // Show video detail page
+        // Show video detail page (now called by pre-roll system)
         function showVideoDetail(videoId) {
+            // This function now shows pre-roll ad first
             const video = videos.find(v => v.id === videoId);
             if (!video) return;
             
-            currentVideoId = videoId;
-            currentVideoData = video;
-            
-            // Clear any previous error messages
-            const videoPlayer = document.querySelector('.video-player');
-            const errorDiv = videoPlayer.querySelector('.video-error');
-            if (errorDiv) {
-                errorDiv.remove();
-            }
-            
-            // Update video player and info
-            mainVideo.src = video.videoUrl;
-            mainVideo.poster = video.thumbnail;
-            
-            // Set video title and load metadata
-            mainVideo.load();
-            
-            detailVideoTitle.textContent = video.title;
-            detailChannelName.textContent = video.channel;
-            detailSubscribers.textContent = video.subscribers;
-            detailViews.textContent = `${formatCount(video.views)} views`;
-            detailDate.textContent = getTimeAgo(video.uploadDate);
-            detailDescription.textContent = video.description;
-            
-            // Update like/dislike counts
-            likeCount.textContent = formatCount(video.likes);
-            dislikeCount.textContent = formatCount(video.dislikes);
-            
-            // Update comment count
-            commentCount.textContent = `Comments • ${formatCount(video.comments)}`;
-            
-            // Load comments
-            loadComments(video);
-            
-            // Load recommendations (excluding current video)
-            loadRecommendations(videoId);
-            
-            // Reset like/dislike/subscribe states
-            isLiked = false;
-            isDisliked = false;
-            isSubscribed = false;
-            likeBtn.classList.remove('active');
-            dislikeBtn.classList.remove('active');
-            subscribeBtn.textContent = 'SUBSCRIBE';
-            subscribeBtn.classList.remove('subscribed');
-            
-            // Show detail page, hide home page
-            homePage.style.display = 'none';
-            detailPage.style.display = 'block';
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
-            
-            // Try to auto-play the video (only if online)
-            if (isOnline) {
-                setTimeout(() => {
-                    const playPromise = mainVideo.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch(error => {
-                            console.log("Auto-play prevented:", error);
-                            // Don't show error, let user click play
-                        });
-                    }
-                }, 1000);
-            } else {
-                // Show offline message for video player
-                videoPlayer.innerHTML = `
-                    <div style="background: #000; color: #fff; padding: 40px; text-align: center; height: 400px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                        <div style="font-size: 64px; margin-bottom: 20px;">
-                            <i class="fas fa-wifi-slash"></i>
-                        </div>
-                        <h2>Video Unavailable Offline</h2>
-                        <p>You need an internet connection to watch this video.</p>
-                        <p>Please check your connection and try again.</p>
-                    </div>
-                `;
-            }
+            showPrerollAd(videoId, video);
         }
 
         // Show home page
@@ -1713,6 +2569,14 @@
             if (mainVideo) {
                 mainVideo.pause();
             }
+            
+            // Close any open pre-roll ad
+            if (prerollAdVisible) {
+                closePrerollAd();
+            }
+            
+            // Close any open reward ad
+            hideRewardAd();
             
             homePage.style.display = 'block';
             detailPage.style.display = 'none';
@@ -2256,14 +3120,8 @@
                         </div>
                     `;
                     
-                    videoCard.addEventListener('click', function() {
-                        if (!isOnline) {
-                            alert('You need an internet connection to watch videos. Please check your connection.');
-                            return;
-                        }
-                        const videoId = parseInt(this.getAttribute('data-id'));
-                        showVideoDetail(videoId);
-                    });
+                    // Use the new pre-roll ad enabled click handler
+                    setupVideoCardClick(videoCard, video.id);
                     
                     videoGrid.appendChild(videoCard);
                 });
