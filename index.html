@@ -3,2623 +3,2486 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HaitianTube - YouTube-like Video Platform</title>
-    
-    <!-- Video.js CSS -->
-    <link href="https://vjs.zencdn.net/8.6.1/video-js.css" rel="stylesheet">
-    
-    <!-- Video.js VAST Plugin CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/videojs-vast-vpaid@2.0.2/dist/videojs.vast.vpaid.min.css" rel="stylesheet">
-    
-    <!-- Font Awesome -->
+    <title>Streamflix - Video Streaming</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    
     <style>
-        :root {
-            --yt-red: #ff0000;
-            --yt-dark: #0f0f0f;
-            --yt-dark-gray: #272727;
-            --yt-gray: #3f3f3f;
-            --yt-light-gray: #aaaaaa;
-            --yt-white: #ffffff;
-            --yt-black: #000000;
-            --yt-blue: #3ea6ff;
-            --yt-blue-dark: #2d7cbf;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.1);
-            --shadow-md: 0 4px 8px rgba(0,0,0,0.2);
-            --shadow-lg: 0 8px 16px rgba(0,0,0,0.3);
-            --border-radius: 12px;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Roboto', Arial, sans-serif;
         }
-
+        
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--yt-dark);
-            color: var(--yt-white);
-            line-height: 1.5;
+            background-color: #0f0f0f;
+            color: #f1f1f1;
+            overflow-x: hidden;
         }
-
-        /* AGE VERIFICATION 18+ - Enhanced */
-        #ageGate {
+        
+        /* OFFLINE MESSAGE */
+        #offlineMessage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ffcc00;
+            color: #000;
+            text-align: center;
+            padding: 10px;
+            z-index: 2000;
+            display: none;
+            font-weight: 500;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        /* SPLASH SCREEN */
+        #splashScreen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, var(--yt-black) 0%, #1a0000 100%);
-            z-index: 999999;
+            background-color: #0f0f0f;
             display: flex;
-            justify-content: center;
-            align-items: center;
             flex-direction: column;
-            text-align: center;
-            padding: 20px;
-            backdrop-filter: blur(10px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
         }
-
-        .age-gate-content {
-            background: rgba(15, 15, 15, 0.95);
-            padding: 40px;
-            border-radius: 20px;
-            border: 2px solid var(--yt-red);
-            max-width: 600px;
-            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
-        }
-
-        #ageGate h2 {
-            font-size: 36px;
-            margin-bottom: 20px;
+        
+        .splash-logo {
+            font-size: 48px;
             font-weight: bold;
-            color: var(--yt-red);
+            color: #ff0000;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 15px;
-        }
-
-        #ageGate h2 i {
-            font-size: 40px;
-        }
-
-        .age-warning {
-            max-width: 500px;
-            font-size: 18px;
-            margin-bottom: 15px;
-            line-height: 1.6;
-            color: #ff6b6b;
-            background: rgba(255, 107, 107, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 4px solid #ff6b6b;
-        }
-
-        .age-warning i {
-            margin-right: 10px;
-        }
-
-        .age-legal {
-            font-size: 14px;
-            color: var(--yt-light-gray);
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-
-        .age-confirm-btn {
-            padding: 15px 50px;
-            font-size: 18px;
-            background: linear-gradient(135deg, var(--yt-red) 0%, #cc0000 100%);
-            border: none;
-            border-radius: 30px;
-            color: var(--yt-white);
-            cursor: pointer;
-            transition: all 0.3s;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             gap: 10px;
-            margin: 0 auto 20px;
-            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
         }
-
-        .age-confirm-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.6);
-            background: linear-gradient(135deg, #cc0000 0%, #990000 100%);
+        
+        .splash-logo i {
+            font-size: 52px;
         }
-
-        .age-leave-btn {
-            margin-top: 10px;
-            font-size: 14px;
-            color: var(--yt-light-gray);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: color 0.3s;
+        
+        .splash-welcome {
+            font-size: 24px;
+            color: #f1f1f1;
+            margin-bottom: 40px;
         }
-
-        .age-leave-btn:hover {
-            color: var(--yt-white);
-            text-decoration: underline;
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #303030;
+            border-top: 4px solid #ff0000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
-
-        /* Hide ad notification elements */
-        .ad-notice, .ad-revenue {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            height: 0 !important;
-            width: 0 !important;
-            overflow: hidden !important;
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-
-        /* Header - YouTube Style */
-        header {
+        
+        /* AUTH SCREEN - SIMPLIFIED */
+        #authScreen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            background-color: var(--yt-dark);
-            z-index: 1000;
-            padding: 0 16px;
-            border-bottom: 1px solid var(--yt-gray);
-        }
-
-        .header-container {
-            max-width: 100%;
-            margin: 0 auto;
-            display: flex;
+            height: 100%;
+            background-color: #0f0f0f;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            justify-content: space-between;
-            height: 56px;
-            padding: 0 16px;
+            z-index: 999;
+            padding: 20px;
         }
-
+        
+        .auth-container {
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .auth-form h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #aaa;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: #121212;
+            border: 1px solid #303030;
+            border-radius: 8px;
+            color: #f1f1f1;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff0000;
+        }
+        
+        .auth-button {
+            width: 100%;
+            padding: 14px;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .auth-button:hover {
+            background-color: #cc0000;
+        }
+        
+        /* MAIN APP */
+        #mainApp {
+            display: none;
+        }
+        
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            height: 56px;
+            background-color: #0f0f0f;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #303030;
+        }
+        
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 30px;
+            gap: 8px;
         }
-
-        .hamburger-menu {
-            background: none;
-            border: none;
-            color: var(--yt-white);
-            font-size: 20px;
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        .logo {
+        
+        .logo-image {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #ff0000;
             display: flex;
             align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .logo-text {
             font-size: 22px;
             font-weight: bold;
-            color: var(--yt-white);
+            color: #ff0000;
             text-decoration: none;
         }
-
-        .logo i {
-            margin-right: 8px;
-            font-size: 28px;
-            color: var(--yt-red);
-        }
-
+        
+        /* SMART SEARCH BAR */
         .search-container {
-            flex: 1;
-            max-width: 600px;
+            display: flex;
+            flex: 0 1 640px;
             margin: 0 40px;
-        }
-
-        .search-form {
-            display: flex;
-            width: 100%;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: 0 16px;
-            border: 1px solid var(--yt-gray);
-            border-right: none;
-            border-radius: 20px 0 0 20px;
-            font-size: 16px;
-            outline: none;
-            background: var(--yt-dark);
-            color: var(--yt-white);
-            height: 40px;
-        }
-
-        .search-input::placeholder {
-            color: var(--yt-light-gray);
-        }
-
-        .search-input:focus {
-            border-color: var(--yt-blue);
-        }
-
-        .search-button {
-            background-color: var(--yt-gray);
-            border: 1px solid var(--yt-gray);
-            border-left: none;
-            border-radius: 0 20px 20px 0;
-            padding: 0 20px;
-            cursor: pointer;
-            color: var(--yt-light-gray);
-            transition: background-color 0.2s;
-            height: 40px;
-        }
-
-        .search-button:hover {
-            background-color: var(--yt-dark-gray);
-        }
-
-        .user-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .signin-button, .upload-button, .user-menu-button {
-            background-color: var(--yt-blue);
-            color: var(--yt-white);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 18px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-
-        .signin-button:hover, .upload-button:hover, .user-menu-button:hover {
-            background-color: var(--yt-blue-dark);
-        }
-
-        .user-menu-button {
-            background-color: transparent;
-            color: var(--yt-white);
-            padding: 8px;
             position: relative;
         }
-
-        .user-menu {
+        
+        .search-box-container {
+            display: flex;
+            width: 100%;
+            position: relative;
+        }
+        
+        .search-box {
+            flex: 1;
+            padding: 8px 16px;
+            background-color: #121212;
+            border: 1px solid #303030;
+            border-right: none;
+            border-radius: 40px 0 0 40px;
+            color: #f1f1f1;
+            font-size: 16px;
+            width: 100%;
+        }
+        
+        .search-btn {
+            background-color: #222222;
+            border: 1px solid #303030;
+            border-left: none;
+            border-radius: 0 40px 40px 0;
+            padding: 8px 20px;
+            cursor: pointer;
+            color: #f1f1f1;
+            min-width: 64px;
+        }
+        
+        .search-btn:hover {
+            background-color: #303030;
+        }
+        
+        .voice-search-btn {
+            background: none;
+            border: none;
+            color: #f1f1f1;
+            padding: 8px;
+            margin-left: 12px;
+            cursor: pointer;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .voice-search-btn:hover {
+            background-color: #272727;
+        }
+        
+        /* Search Suggestions Dropdown */
+        .search-suggestions {
             position: absolute;
             top: 100%;
-            right: 0;
-            background: var(--yt-dark);
-            border: 1px solid var(--yt-gray);
-            border-radius: 12px;
-            box-shadow: var(--shadow-lg);
-            min-width: 200px;
-            z-index: 1000;
+            left: 0;
+            width: 100%;
+            background-color: #212121;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            z-index: 101;
             display: none;
-            overflow: hidden;
+            max-height: 400px;
+            overflow-y: auto;
         }
-
-        .user-menu.show {
-            display: block;
-        }
-
-        .user-menu-item {
-            padding: 12px 20px;
-            cursor: pointer;
+        
+        .suggestion-item {
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             gap: 12px;
-            transition: background-color 0.2s;
-            color: var(--yt-white);
-            border-bottom: 1px solid var(--yt-gray);
+            cursor: pointer;
+            color: #f1f1f1;
+            text-decoration: none;
         }
-
-        .user-menu-item:last-child {
-            border-bottom: none;
+        
+        .suggestion-item:hover {
+            background-color: #383838;
         }
-
-        .user-menu-item:hover {
-            background-color: var(--yt-dark-gray);
+        
+        .suggestion-item i {
+            color: #aaa;
+            font-size: 16px;
+            width: 24px;
         }
-
+        
+        .suggestion-item span {
+            font-size: 14px;
+        }
+        
+        .recent-searches {
+            padding: 12px 16px;
+            color: #aaa;
+            font-size: 14px;
+            border-bottom: 1px solid #303030;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .clear-recent {
+            color: #3ea6ff;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        
+        .clear-recent:hover {
+            text-decoration: underline;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
         .user-avatar {
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background-color: var(--yt-blue);
+            background-color: #ff0000;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--yt-white);
-            font-weight: 600;
+            font-weight: bold;
+            cursor: pointer;
         }
-
-        /* Modal Styles - YouTube-like */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
+        
+        /* Navigation */
+        .nav-container {
+            padding: 0 24px;
+            background-color: #0f0f0f;
+            border-bottom: 1px solid #303030;
+            position: sticky;
+            top: 56px;
+            z-index: 99;
         }
-
-        .modal.show {
+        
+        .nav-items {
             display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            overflow-x: auto;
+            white-space: nowrap;
         }
-
-        .modal-content {
-            background-color: var(--yt-dark);
-            border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 440px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--yt-gray);
-        }
-
-        .modal-header {
-            padding: 24px 24px 0;
-            border-bottom: none;
-            text-align: center;
-        }
-
-        .modal-header h2 {
-            font-size: 24px;
-            font-weight: 500;
-            color: var(--yt-white);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
+        
+        .nav-item {
+            background-color: #272727;
+            color: #f1f1f1;
             border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--yt-light-gray);
-        }
-
-        .modal-body {
-            padding: 24px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--yt-light-gray);
-            font-size: 14px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--yt-gray);
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.2s;
-            background: var(--yt-dark);
-            color: var(--yt-white);
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--yt-blue);
-        }
-
-        .btn-primary {
-            background-color: var(--yt-blue);
-            color: var(--yt-white);
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.2s;
-            font-size: 16px;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--yt-blue-dark);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--yt-blue);
-            border: 1px solid var(--yt-gray);
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            width: 100%;
-            transition: background-color 0.2s;
-            font-size: 16px;
-        }
-
-        .btn-secondary:hover {
-            background-color: rgba(62, 166, 255, 0.1);
-        }
-
-        .error-message {
-            color: #ff6b6b;
-            font-size: 14px;
-            margin-top: 8px;
-            display: none;
-            background: rgba(255, 107, 107, 0.1);
             padding: 8px 12px;
-            border-radius: 4px;
-            border-left: 3px solid #ff6b6b;
-        }
-
-        .success-message {
-            color: #4caf50;
+            border-radius: 8px;
+            cursor: pointer;
             font-size: 14px;
-            margin-top: 8px;
-            display: none;
-            background: rgba(76, 175, 80, 0.1);
-            padding: 8px 12px;
-            border-radius: 4px;
-            border-left: 3px solid #4caf50;
         }
-
-        /* Main Content */
-        .container {
-            max-width: 100%;
-            margin: 56px auto 0;
+        
+        .nav-item.active {
+            background-color: #f1f1f1;
+            color: #0f0f0f;
+        }
+        
+        /* Main Content Layout */
+        .main-container {
             padding: 24px;
+            max-width: 1600px;
+            margin: 0 auto;
         }
-
-        /* Homepage with video cards */
-        #homepage {
-            width: 100%;
-        }
-
-        .section-title {
-            font-size: 20px;
-            font-weight: 500;
-            margin-bottom: 20px;
-            color: var(--yt-white);
-        }
-
+        
+        /* HOME PAGE - Video Grid */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 16px;
-            margin-top: 16px;
+            gap: 24px 16px;
         }
-
+        
         .video-card {
-            background-color: transparent;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.3s;
             cursor: pointer;
-            position: relative;
+            transition: transform 0.2s;
         }
-
+        
         .video-card:hover {
-            transform: translateY(-4px);
+            transform: scale(1.02);
         }
-
+        
         .thumbnail-container {
             position: relative;
             width: 100%;
-            padding-top: 56.25%; /* 16:9 aspect ratio */
+            border-radius: 12px;
             overflow: hidden;
-            background-color: var(--yt-black);
-            border-radius: 8px;
             margin-bottom: 12px;
+            background-color: #000;
+            aspect-ratio: 16/9;
         }
-
+        
         .thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .duration {
             position: absolute;
-            top: 0;
-            left: 0;
+            bottom: 8px;
+            right: 8px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .video-info {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .channel-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #ff0000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        
+        .channel-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-
-        .video-info {
-            padding: 0 4px;
-        }
-
-        .video-title {
-            font-weight: 500;
+        
+        .video-details h3 {
             font-size: 16px;
-            margin-bottom: 8px;
-            line-height: 1.4;
-            color: var(--yt-white);
+            font-weight: 600;
+            margin-bottom: 6px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-
-        .video-channel {
-            color: var(--yt-light-gray);
+        
+        .video-details p {
             font-size: 14px;
+            color: #aaa;
             margin-bottom: 4px;
         }
-
-        .video-meta {
-            color: var(--yt-light-gray);
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .video-meta span:not(:last-child)::after {
-            content: "•";
-            margin-left: 4px;
-        }
-
-        /* Video Detail Page - YouTube Style */
-        #video-detail {
+        
+        /* VIDEO DETAIL PAGE */
+        .detail-page {
             display: none;
-            width: 100%;
         }
-
-        .video-detail-container {
+        
+        .video-container {
             display: flex;
             gap: 24px;
-            max-width: 1400px;
-            margin: 0 auto;
         }
-
-        .video-main {
-            flex: 1;
-            min-width: 0;
+        
+        .video-player-section {
+            flex: 7;
         }
-
-        .video-player-container {
-            width: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 24px;
-            background-color: var(--yt-black);
-            position: relative;
+        
+        .sidebar {
+            flex: 3;
+            max-width: 400px;
         }
-
+        
+        /* Video Player */
         .video-player {
             width: 100%;
-            height: 0;
-            padding-bottom: 56.25%;
-            position: relative;
-            background-color: var(--yt-black);
-        }
-
-        .video-player video,
-        .video-js {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Video.js Custom Styles */
-        .video-js .vjs-big-play-button {
-            background-color: var(--yt-red);
-            border-color: var(--yt-red);
-            width: 68px;
-            height: 48px;
-            border-radius: 8px;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .video-js:hover .vjs-big-play-button {
-            background-color: #cc0000;
-            border-color: #cc0000;
-        }
-
-        .video-info-section {
-            background-color: transparent;
-            border-radius: 0;
-            padding: 0;
-            margin-bottom: 24px;
-        }
-
-        .video-title-large {
-            font-size: 22px;
-            font-weight: 500;
+            background-color: #000;
+            border-radius: 12px;
+            overflow: hidden;
             margin-bottom: 16px;
-            line-height: 1.4;
-            color: var(--yt-white);
         }
-
-        .video-meta-section {
+        
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .video-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 12px 0;
+        }
+        
+        /* Video Actions */
+        .video-actions {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--yt-gray);
+            padding: 12px 0;
+            border-bottom: 1px solid #303030;
         }
-
-        .video-stats {
-            color: var(--yt-light-gray);
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .video-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        /* YouTube-style Action Buttons */
-        .btn-yt {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background-color: var(--yt-dark-gray);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 18px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            color: var(--yt-white);
-            height: 36px;
-        }
-
-        .btn-yt.like {
-            color: var(--yt-white);
-            background-color: var(--yt-dark-gray);
-        }
-
-        .btn-yt.like.active {
-            color: var(--yt-blue);
-            background-color: rgba(62, 166, 255, 0.1);
-        }
-
-        .btn-yt.dislike {
-            color: var(--yt-white);
-            background-color: var(--yt-dark-gray);
-        }
-
-        .btn-yt.dislike.active {
-            color: var(--yt-light-gray);
-            background-color: rgba(170, 170, 170, 0.1);
-        }
-
-        .btn-yt.share {
-            color: var(--yt-white);
-            background-color: var(--yt-dark-gray);
-        }
-
-        .btn-yt:hover {
-            background-color: var(--yt-gray);
-        }
-
-        .btn-yt:active {
-            transform: scale(0.97);
-        }
-
-        /* Channel Section */
-        .channel-section {
+        
+        .channel-info {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 20px;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--yt-gray);
         }
-
-        .channel-avatar {
+        
+        .channel-avatar-large {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: var(--yt-blue);
+            background-color: #ff0000;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            overflow: hidden;
+        }
+        
+        .channel-avatar-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .channel-name {
             font-weight: 600;
-            color: var(--yt-white);
-            flex-shrink: 0;
         }
-
-        .channel-info h4 {
-            font-weight: 500;
-            margin-bottom: 4px;
-            color: var(--yt-white);
-        }
-
-        .channel-info p {
-            font-size: 12px;
-            color: var(--yt-light-gray);
-        }
-
+        
         .subscribe-btn {
-            margin-left: auto;
-            background-color: var(--yt-red);
-            color: var(--yt-white);
+            background-color: #ff0000;
+            color: white;
             border: none;
             padding: 10px 16px;
-            border-radius: 18px;
-            font-weight: 500;
+            border-radius: 20px;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s;
-            font-size: 14px;
+            margin-left: 20px;
         }
-
-        .subscribe-btn:hover {
-            background-color: #cc0000;
-        }
-
+        
         .subscribe-btn.subscribed {
-            background-color: var(--yt-gray);
+            background-color: #303030;
         }
-
-        /* Comments Section - YouTube Style */
-        .comments-section {
-            background-color: transparent;
-            border-radius: 0;
-            padding: 0;
-        }
-
-        .comments-section h3 {
-            margin-bottom: 20px;
-            font-size: 18px;
-            font-weight: 500;
-            color: var(--yt-white);
-        }
-
-        .comment-form {
+        
+        .action-buttons {
             display: flex;
-            gap: 12px;
-            margin-bottom: 32px;
+            gap: 8px;
         }
-
-        .comment-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--yt-blue);
+        
+        .action-btn {
+            background-color: #272727;
+            border: none;
+            color: #f1f1f1;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: var(--yt-white);
-            font-weight: 600;
-            flex-shrink: 0;
-        }
-
-        .comment-input-container {
-            flex: 1;
-        }
-
-        .comment-input {
-            width: 100%;
-            padding: 8px 0;
-            border: none;
-            border-bottom: 1px solid var(--yt-gray);
-            font-size: 14px;
-            outline: none;
-            resize: none;
-            min-height: 24px;
-            background: transparent;
-            color: var(--yt-white);
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .comment-input:focus {
-            border-bottom-color: var(--yt-blue);
-        }
-
-        .comment-input::placeholder {
-            color: var(--yt-light-gray);
-        }
-
-        .comment-submit {
-            align-self: flex-start;
-            background-color: var(--yt-blue);
-            color: var(--yt-white);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 18px;
+            gap: 8px;
             font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            font-size: 14px;
-            margin-top: 8px;
         }
-
-        .comment-submit:hover {
-            background-color: var(--yt-blue-dark);
+        
+        .action-btn:hover {
+            background-color: #3f3f3f;
         }
-
-        .comment {
+        
+        .action-btn.active {
+            color: #ff0000;
+        }
+        
+        /* Video Description */
+        .video-description {
+            background-color: #272727;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            line-height: 1.6;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .views-date {
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 20px;
+        }
+        
+        /* Comments Section */
+        .comments-section {
+            margin-top: 24px;
+        }
+        
+        .comments-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .comment-input {
             display: flex;
             gap: 12px;
             margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--yt-gray);
         }
-
-        .comment:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-
-        .comment-content h4 {
-            font-size: 13px;
-            font-weight: 500;
-            margin-bottom: 4px;
-            color: var(--yt-white);
-        }
-
-        .comment-content p {
-            font-size: 14px;
-            line-height: 1.5;
-            color: var(--yt-white);
-            margin-bottom: 8px;
-        }
-
-        .comment-time {
-            font-size: 12px;
-            color: var(--yt-light-gray);
-        }
-
-        .comment-actions {
-            display: flex;
-            gap: 16px;
-            margin-top: 8px;
-        }
-
-        .comment-action {
+        
+        .comment-user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #3ea6ff;
             display: flex;
             align-items: center;
-            gap: 4px;
-            font-size: 12px;
-            color: var(--yt-light-gray);
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .comment-box {
+            flex: 1;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #303030;
+            color: #f1f1f1;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+        
+        .comment-box:focus {
+            outline: none;
+            border-bottom-color: #3ea6ff;
+        }
+        
+        .comment {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .comment-content h4 {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .comment-text {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .comment-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        
+        .comment-action {
+            color: #aaa;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
             cursor: pointer;
-            transition: color 0.2s;
         }
-
-        .comment-action:hover {
-            color: var(--yt-blue);
-        }
-
-        /* Sidebar - YouTube Style */
-        .video-sidebar {
-            width: 402px;
-        }
-
-        .sidebar-title {
-            font-size: 16px;
-            font-weight: 500;
+        
+        /* Sidebar - Recommendations */
+        .recommendations-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 16px;
-            color: var(--yt-white);
         }
-
-        .related-videos {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        
+        .recommendations-header h3 {
+            font-size: 18px;
+            font-weight: 600;
         }
-
-        .related-video {
+        
+        .ai-badge {
+            background-color: #3ea6ff;
+            color: #0f0f0f;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .recommended-video {
             display: flex;
-            gap: 8px;
+            gap: 12px;
+            margin-bottom: 12px;
             cursor: pointer;
             padding: 8px;
             border-radius: 8px;
-            transition: background-color 0.2s;
         }
-
-        .related-video:hover {
-            background-color: var(--yt-dark-gray);
+        
+        .recommended-video:hover {
+            background-color: #272727;
         }
-
-        .related-thumbnail {
+        
+        .recommended-thumbnail {
             width: 168px;
             height: 94px;
-            object-fit: cover;
             border-radius: 8px;
+            overflow: hidden;
             flex-shrink: 0;
+            background-color: #333;
+            position: relative;
         }
-
-        .related-video-info h4 {
+        
+        .recommended-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .recommended-thumbnail .duration {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .recommended-info h4 {
             font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 4px;
-            line-height: 1.4;
-            color: var(--yt-white);
+            font-weight: 600;
+            margin-bottom: 6px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-
-        .related-video-info p {
+        
+        .recommended-info p {
             font-size: 12px;
-            color: var(--yt-light-gray);
+            color: #aaa;
             margin-bottom: 4px;
         }
-
-        /* Footer */
-        footer {
-            background-color: var(--yt-dark);
-            padding: 32px 16px;
-            margin-top: 60px;
-            text-align: center;
-            border-top: 1px solid var(--yt-gray);
-        }
-
-        .footer-logo {
-            display: flex;
+        
+        /* Back to Home Button */
+        .back-home {
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
+            gap: 8px;
+            color: #f1f1f1;
+            text-decoration: none;
+            margin-bottom: 20px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background-color: #272727;
+        }
+        
+        .back-home:hover {
+            background-color: #3f3f3f;
+        }
+        
+        /* Offline Content Styling */
+        .offline-content {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .offline-icon {
+            font-size: 64px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .offline-content h2 {
             font-size: 24px;
-            font-weight: bold;
-            color: var(--yt-white);
-            margin-bottom: 16px;
+            margin-bottom: 10px;
+            color: #f1f1f1;
         }
-
-        .footer-logo i {
-            margin-right: 8px;
-            color: var(--yt-red);
+        
+        .offline-content p {
+            color: #aaa;
+            font-size: 16px;
+            margin-bottom: 20px;
         }
-
-        .footer-text {
-            color: var(--yt-light-gray);
-            font-size: 14px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
+        
         /* Responsive Design */
-        @media (max-width: 1200px) {
-            .video-detail-container {
+        @media (max-width: 1024px) {
+            .video-container {
                 flex-direction: column;
             }
             
-            .video-sidebar {
-                width: 100%;
-                margin-top: 32px;
-            }
-            
-            .video-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header-container {
-                padding: 0 8px;
+            .sidebar {
+                max-width: 100%;
             }
             
             .search-container {
-                margin: 0 16px;
-                max-width: 300px;
-            }
-            
-            .user-actions {
-                gap: 8px;
-            }
-            
-            .signin-button span, .upload-button span {
-                display: none;
+                flex: 0 1 400px;
+                margin: 0 20px;
             }
             
             .video-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 12px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .search-container {
+                display: none;
             }
             
-            .video-meta-section {
+            .mobile-search-btn {
+                display: block;
+            }
+            
+            .video-actions {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 16px;
             }
             
-            .video-actions {
+            .action-buttons {
                 width: 100%;
                 justify-content: space-between;
             }
             
-            .btn-yt {
-                flex: 1;
-                justify-content: center;
-            }
-            
-            .comment-form {
+            .recommended-video {
                 flex-direction: column;
             }
             
-            .comment-submit {
-                align-self: flex-end;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .search-container {
-                display: none;
+            .recommended-thumbnail {
+                width: 100%;
+                height: 180px;
             }
             
             .video-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .btn-yt span {
-                display: none;
-            }
-            
-            .btn-yt {
-                padding: 8px;
-                width: 40px;
-                justify-content: center;
-            }
-            
-            .video-title-large {
-                font-size: 18px;
-            }
-            
-            .container {
-                padding: 16px;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
         }
-
-        /* Video Box with Preview */
-        .video-preview {
-            position: relative;
-            width: 100%;
-            padding-top: 56.25%;
-            overflow: hidden;
-            background-color: var(--yt-black);
-            border-radius: 8px;
-        }
-
-        .video-preview video {
-            position: absolute;
+        
+        /* Mobile Search Overlay */
+        .mobile-search-overlay {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            background-color: #0f0f0f;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
         }
-
-        .play-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+        
+        .mobile-search-header {
             display: flex;
             align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s;
+            padding: 16px;
+            background-color: #0f0f0f;
+            border-bottom: 1px solid #303030;
         }
-
-        .video-card:hover .play-overlay {
-            opacity: 1;
+        
+        .mobile-search-input {
+            flex: 1;
+            padding: 12px 16px;
+            background-color: #121212;
+            border: 1px solid #303030;
+            border-radius: 20px;
+            color: #f1f1f1;
+            font-size: 16px;
+            margin: 0 12px;
         }
-
-        .play-icon {
-            font-size: 48px;
-            color: white;
-            background: rgba(255, 0, 0, 0.8);
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        
+        .mobile-search-close {
+            background: none;
+            border: none;
+            color: #f1f1f1;
+            font-size: 20px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <!-- AGE VERIFICATION 18+ - Updated -->
-    <div id="ageGate">
-        <div class="age-gate-content">
-            <h2><i class="fas fa-exclamation-triangle"></i> Adults Only – 18+</h2>
-            <p class="age-warning">
-                <i class="fas fa-shield-alt"></i> WARNING: This website contains explicit adult material.  
-                You must be at least <strong>18 years old</strong> to access this content.
-            </p>
-            <p class="age-legal">
-                By entering this site, you confirm that you are of legal age in your country 
-                to view adult content and agree to our Terms of Service.
-            </p>
-            <button onclick="enterSite()" class="age-confirm-btn">
-                <i class="fas fa-check-circle"></i> I Confirm I Am 18+
-            </button>
-            <a href="https://google.com" class="age-leave-btn">
-                <i class="fas fa-arrow-left"></i> I am under 18 – Leave Site
-            </a>
+    <!-- OFFLINE MESSAGE -->
+    <div id="offlineMessage">
+        <i class="fas fa-wifi"></i> You're offline. Check your connection.
+    </div>
+    
+    <!-- SPLASH SCREEN -->
+    <div id="splashScreen">
+        <div class="splash-logo">
+            <i class="fas fa-play-circle"></i>
+            Stream Flix
+        </div>
+        <div class="splash-welcome">Welcome</div>
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <!-- AUTH SCREEN - SIMPLIFIED -->
+    <div id="authScreen">
+        <div class="auth-container">
+            <div class="auth-form">
+                <h2>Welcome to Streamflix</h2>
+                <p style="color: #aaa; text-align: center; margin-bottom: 30px;">Enter a username to continue</p>
+                
+                <div class="form-group">
+                    <label for="authUsername">Username</label>
+                    <input type="text" id="authUsername" placeholder="Enter your username">
+                </div>
+                
+                <button class="auth-button" id="skipAuthButton">
+                    <i class="fas fa-play"></i> Continue
+                </button>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <p style="color: #aaa; font-size: 14px;">By continuing, you agree to our Terms of Service</p>
+                </div>
+            </div>
         </div>
     </div>
     
-    <!-- Header -->
-    <header>
-        <div class="header-container">
+    <!-- MOBILE SEARCH OVERLAY -->
+    <div class="mobile-search-overlay" id="mobileSearchOverlay">
+        <div class="mobile-search-header">
+            <button class="mobile-search-close" id="mobileSearchClose">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <input type="text" class="mobile-search-input" id="mobileSearchInput" placeholder="Search Streamflix">
+            <button class="search-btn" id="mobileSearchBtn">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+        <div class="search-suggestions" id="mobileSearchSuggestions">
+            <!-- Mobile search suggestions will appear here -->
+        </div>
+    </div>
+    
+    <!-- MAIN APP -->
+    <div id="mainApp">
+        <!-- Header with Logo and Search -->
+        <header>
             <div class="logo-container">
-                <button class="hamburger-menu">
-                    <i class="fas fa-bars"></i>
+                <button class="mobile-search-btn" id="mobileSearchBtnIcon" style="display: none; background: none; border: none; color: #f1f1f1; margin-right: 12px;">
+                    <i class="fas fa-search"></i>
                 </button>
-                <a href="/" class="logo" id="home-link">
-                    <i class="fas fa-play-circle"></i>
-                    <span>HaitianTube</span>
+                <div class="logo-image">
+                    <img id="channelLogo" src="https://cdn.leonardo.ai/users/59cc19c6-be61-41ed-ab82-8485d4d58d54/generations/807f5487-c3b8-4ccd-9ab8-dabab318a67d/Phoenix_10_Create_a_clean_bold_modern_logo_for_an_app_named_St_0.jpg" alt="Streamflix Logo">
+                </div>
+                <a href="#" class="logo-text" id="homeLogo">
+                    Streamflix
                 </a>
             </div>
             
+            <!-- SMART SEARCH BAR -->
             <div class="search-container">
-                <form class="search-form" id="search-form">
-                    <input type="text" class="search-input" placeholder="Search videos..." id="search-input">
-                    <button type="submit" class="search-button">
+                <div class="search-box-container">
+                    <input type="text" class="search-box" id="searchBox" placeholder="Search" aria-label="Search videos">
+                    <button class="search-btn" id="searchBtn" aria-label="Search">
                         <i class="fas fa-search"></i>
                     </button>
-                </form>
+                </div>
+                <button class="voice-search-btn" id="voiceSearchBtn" aria-label="Voice search" title="Voice search">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                
+                <!-- Search Suggestions Dropdown -->
+                <div class="search-suggestions" id="searchSuggestions">
+                    <div class="recent-searches">
+                        <span>Recent searches</span>
+                        <span class="clear-recent" id="clearRecent">Clear all</span>
+                    </div>
+                    <!-- Search suggestions will be dynamically inserted here -->
+                </div>
             </div>
             
             <div class="user-actions">
-                <button class="upload-button" id="upload-btn">
-                    <i class="fas fa-upload"></i>
-                    <span>Upload</span>
-                </button>
-                <button class="signin-button" id="signin-btn" style="display: none;">
-                    <i class="fas fa-user"></i>
-                    <span>Sign In</span>
-                </button>
-                <div class="user-menu-container" id="user-menu-container" style="display: none;">
-                    <button class="user-menu-button" id="user-menu-btn">
-                        <div class="user-avatar" id="user-avatar">U</div>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="user-menu" id="user-menu">
-                        <div class="user-menu-item">
-                            <i class="fas fa-user"></i>
-                            <span id="user-name">User</span>
-                        </div>
-                        <div class="user-menu-item" id="logout-btn">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span>Logout</span>
-                        </div>
-                    </div>
-                </div>
+                <div class="user-avatar" id="userAvatar">U</div>
             </div>
-        </div>
-    </header>
-    
-    <!-- Auth Modal -->
-    <div class="modal" id="auth-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="auth-modal-title">Sign In</h2>
-                <button class="modal-close" id="auth-modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="auth-error" class="error-message"></div>
-                <div id="auth-success" class="success-message"></div>
-                
-                <div id="signin-form">
-                    <div class="form-group">
-                        <label for="auth-email">Email</label>
-                        <input type="email" id="auth-email" class="form-control" placeholder="Enter your email">
-                    </div>
-                    <div class="form-group">
-                        <label for="auth-password">Password</label>
-                        <input type="password" id="auth-password" class="form-control" placeholder="Enter your password">
-                    </div>
-                    <button class="btn-primary" id="signin-submit">Sign In</button>
-                    <div class="mt-3 text-center">
-                        <p style="color: var(--yt-light-gray);">Don't have an account? <a href="#" id="switch-to-signup" style="color: var(--yt-blue); text-decoration: none;">Sign Up</a></p>
-                    </div>
-                </div>
-                
-                <div id="signup-form" style="display: none;">
-                    <div class="form-group">
-                        <label for="signup-name">Display Name</label>
-                        <input type="text" id="signup-name" class="form-control" placeholder="Enter your display name">
-                    </div>
-                    <div class="form-group">
-                        <label for="signup-email">Email</label>
-                        <input type="email" id="signup-email" class="form-control" placeholder="Enter your email">
-                    </div>
-                    <div class="form-group">
-                        <label for="signup-password">Password</label>
-                        <input type="password" id="signup-password" class="form-control" placeholder="Create a password (min. 6 characters)">
-                    </div>
-                    <div class="form-group">
-                        <label for="signup-confirm-password">Confirm Password</label>
-                        <input type="password" id="signup-confirm-password" class="form-control" placeholder="Confirm your password">
-                    </div>
-                    <button class="btn-primary" id="signup-submit">Sign Up</button>
-                    <div class="mt-3 text-center">
-                        <p style="color: var(--yt-light-gray);">Already have an account? <a href="#" id="switch-to-signin" style="color: var(--yt-blue); text-decoration: none;">Sign In</a></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Main Content -->
-    <div class="container">
-        <!-- Homepage with video cards -->
-        <section id="homepage">
-            <h2 class="section-title" id="section-title">Trending Videos</h2>
-            <div class="video-grid" id="video-grid">
-                <!-- Video cards will be dynamically generated here -->
-            </div>
-        </section>
+        </header>
         
-        <!-- Video Detail Page (hidden by default) -->
-        <section id="video-detail">
-            <div class="video-detail-container">
-                <div class="video-main">
-                    <div class="video-player-container">
-                        <!-- Ad revenue display is hidden -->
-                        <div id="ad-revenue" style="display: none;">Ad Revenue: $0.00</div>
-                        <div class="video-player">
-                            <!-- Video.js player will be inserted here -->
-                            <video id="video-player" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto">
-                                <p class="vjs-no-js">
-                                    To view this video please enable JavaScript, and consider upgrading to a web browser that
-                                    <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-                                </p>
-                            </video>
-                        </div>
+        <!-- Navigation -->
+        <div class="nav-container">
+            <div class="nav-items">
+                <button class="nav-item active">All</button>
+                <button class="nav-item">Movies</button>
+                <button class="nav-item">Action</button>
+                <button class="nav-item">Horror</button>
+                <button class="nav-item">French</button>
+                <button class="nav-item">Sci-Fi</button>
+                <button class="nav-item">Adventure</button>
+                <button class="nav-item">Zombie</button>
+            </div>
+        </div>
+        
+        <!-- HOME PAGE -->
+        <div class="main-container" id="homePage">
+            <h1 style="margin-bottom: 20px;">Recommended Videos</h1>
+            
+            <div class="video-grid" id="videoGrid">
+                <!-- Video cards will be generated by JavaScript -->
+            </div>
+            
+            <!-- Offline Content Placeholder -->
+            <div id="offlineContent" class="offline-content" style="display: none;">
+                <div class="offline-icon">
+                    <i class="fas fa-wifi-slash"></i>
+                </div>
+                <h2>No Internet Connection</h2>
+                <p>You're offline. Check your internet connection and try again.</p>
+                <p>Videos will appear when you're back online.</p>
+            </div>
+        </div>
+        
+        <!-- VIDEO DETAIL PAGE -->
+        <div class="main-container detail-page" id="detailPage">
+            <a href="#" class="back-home" id="backHomeBtn">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+            
+            <div class="video-container">
+                <!-- Video Player Section -->
+                <div class="video-player-section">
+                    <!-- Video Player -->
+                    <div class="video-player">
+                        <video id="mainVideo" controls poster="" preload="metadata">
+                            <source src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
                     </div>
                     
-                    <div class="video-info-section">
-                        <h1 class="video-title-large" id="detail-video-title">Video Title</h1>
-                        
-                        <div class="channel-section">
-                            <div class="channel-avatar" id="detail-channel-avatar">C</div>
-                            <div class="channel-info">
-                                <h4 id="detail-channel-name">Channel Name</h4>
-                                <p id="detail-channel-subs">0 subscribers</p>
+                    <!-- Video Title -->
+                    <h1 class="video-title" id="detailVideoTitle"></h1>
+                    
+                    <!-- Video Actions -->
+                    <div class="video-actions">
+                        <div class="channel-info">
+                            <div class="channel-avatar-large" id="detailChannelAvatar">
+                                <img id="channelLogoDetail" src="https://cdn.leonardo.ai/users/59cc19c6-be61-41ed-ab82-8485d4d58d54/generations/807f5487-c3b8-4ccd-9ab8-dabab318a67d/Phoenix_10_Create_a_clean_bold_modern_logo_for_an_app_named_St_0.jpg" alt="Streamflix Logo">
                             </div>
-                            <button class="subscribe-btn" id="subscribe-btn">
-                                Subscribe
+                            <div>
+                                <div class="channel-name" id="detailChannelName"></div>
+                                <div class="subscribers" id="detailSubscribers"></div>
+                            </div>
+                            <button class="subscribe-btn" id="subscribeBtn">SUBSCRIBE</button>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="action-btn" id="likeBtn">
+                                <i class="fas fa-thumbs-up"></i> <span id="likeCount">0</span>
+                            </button>
+                            <button class="action-btn" id="dislikeBtn">
+                                <i class="fas fa-thumbs-down"></i> <span id="dislikeCount">0</span>
+                            </button>
+                            <button class="action-btn" id="shareBtn">
+                                <i class="fas fa-share"></i> Share
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-download"></i> Download
                             </button>
                         </div>
-                        
-                        <div class="video-meta-section">
-                            <div class="video-stats">
-                                <span id="view-count">0 views</span>
-                                <span id="upload-date">Just now</span>
-                                <span id="like-dislike-ratio">0% liked this video</span>
-                            </div>
-                            
-                            <div class="video-actions">
-                                <button class="btn-yt like" id="like-btn">
-                                    <i class="fas fa-thumbs-up"></i>
-                                    <span id="like-count">0</span>
-                                </button>
-                                <button class="btn-yt dislike" id="dislike-btn">
-                                    <i class="fas fa-thumbs-down"></i>
-                                    <span id="dislike-count">0</span>
-                                </button>
-                                <button class="btn-yt share" id="share-btn">
-                                    <i class="fas fa-share"></i>
-                                    <span>Share</span>
-                                </button>
-                            </div>
-                        </div>
                     </div>
                     
+                    <!-- Video Description -->
+                    <div class="video-description">
+                        <div class="views-date">
+                            <span id="detailViews">0 views</span>
+                            <span id="detailDate">Just now</span>
+                        </div>
+                        <p id="detailDescription"></p>
+                    </div>
+                    
+                    <!-- Comments Section -->
                     <div class="comments-section">
-                        <h3 id="comments-count">Comments (0)</h3>
-                        
-                        <div class="comment-form" id="comment-form-section">
-                            <div class="comment-avatar" id="comment-user-avatar">U</div>
-                            <div class="comment-input-container">
-                                <textarea class="comment-input" id="comment-input" placeholder="Add a comment..." rows="1"></textarea>
-                            </div>
-                            <button class="comment-submit" id="comment-submit-btn">Comment</button>
+                        <div class="comments-title">
+                            <span id="commentCount">Comments • 0</span>
                         </div>
                         
-                        <div class="comments-list" id="comments-list">
-                            <!-- Comments will be dynamically generated here -->
+                        <div class="comment-input">
+                            <div class="comment-user-avatar" id="commentUserAvatar">U</div>
+                            <input type="text" class="comment-box" id="commentInput" placeholder="Add a comment...">
+                        </div>
+                        
+                        <div id="commentsContainer">
+                            <!-- Comments will be loaded here -->
                         </div>
                     </div>
                 </div>
                 
-                <!-- Sidebar for related videos -->
-                <aside class="video-sidebar">
-                    <h3 class="sidebar-title">Related Videos</h3>
-                    <div class="related-videos" id="related-videos">
-                        <!-- Related videos will be dynamically generated here -->
+                <!-- Sidebar with Recommendations -->
+                <div class="sidebar">
+                    <div class="recommendations-header">
+                        <h3>Recommended Videos</h3>
+                        <div class="ai-badge">
+                            <i class="fas fa-robot"></i> AI Recommended
+                        </div>
                     </div>
-                </aside>
+                    
+                    <div id="recommendationsContainer">
+                        <!-- Recommended videos will be loaded here -->
+                    </div>
+                </div>
             </div>
-        </section>
+        </div>
     </div>
     
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-logo">
-                <i class="fas fa-play-circle"></i>
-                <span>HaitianTube</span>
-            </div>
-            <p class="footer-text">© 2024 HaitianTube. All rights reserved. Videos are embedded from external sources.</p>
-        </div>
-    </footer>
-
-    <!-- Video.js and VAST Plugin Scripts -->
-    <script src="https://vjs.zencdn.net/8.6.1/video.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/videojs-vast-vpaid@2.0.2/dist/videojs_4.vast.vpaid.min.js"></script>
-    
-    <!-- CrackRevenue Postitial Ad Code -->
-    <script src="https://crxcr2.com/popin/latest/popin-min.js"></script>
     <script>
-    var crakPopInParamsIframe = {
-      url: 'https://t.amyfc.link/385505/779/0?bo=2779,2778,2777,2776,2775&po=6533&aff_sub5=SF_006OG000004lmDN&aff_sub4=AT_0016',
-      decryptUrl: false,
-      contentUrl: 'https://www.myfreecams.com/?cam=30352&skip_oapopup=1&r=2&go_to_trending=10&track=preview&aff_id=1&transaction_id=postitial',
-      decryptContentUrl: false,
-      contentType: 'iframe',
-      width: '85%',
-      height: '85%',
-      timeout: false,
-      delayClose: 0,
-      clickStart: false,
-      closeIntent: false,
-      postitialBehavior: true,
-      closeButtonColor: '#000',
-      closeCrossColor: '#fff',
-      shadow: true,
-      shadowColor: '#000',
-      shadowOpacity: '.5',
-      shadeColor: '#111',
-      shadeOpacity: '0',
-      border: '1px',
-      borderColor: '#000',
-      borderRadius: '0px',
-      leadOut: true,
-      animation: 'slide',
-      direction: 'up',
-      verticalPosition: 'center',
-      horizontalPosition: 'center',
-      expireDays: 0.01
-    };
-    </script>
+        // App State
+        let currentUser = null;
+        let videos = [];
+        let currentVideoId = null;
+        let isSubscribed = false;
+        let isLiked = false;
+        let isDisliked = false;
+        let currentVideoData = null;
+        let isOnline = navigator.onLine;
+        let recentSearches = JSON.parse(localStorage.getItem('streamflix_recent_searches')) || [];
+        let searchTimeout = null;
 
-    <script>
-        // ============================================
-        // INITIALIZATION & CONFIGURATION
-        // ============================================
-
-        // Age Verification
-        function enterSite() {
-            // Set session-based verification (expires when browser closes)
-            sessionStorage.setItem("ageVerified", "true");
-            document.getElementById("ageGate").style.display = "none";
-            document.body.style.overflow = "auto";
+        // Smart search suggestions database
+        const searchSuggestions = {
+            // Movies
+            'bloodshot': ['bloodshot film', 'bloodshot complet', 'bloodshot français', 'vin diesel'],
+            'beast': ['beast warrior', 'beast film', 'beast action'],
+            'robin': ['robin des bois', 'robin hood', 'robin rebellion'],
+            'rats': ['rats zombies', 'rats mutants', 'rats film', 'rats train'],
+            'zombie': ['zombie film', 'zombie horror', 'zombie rats'],
+            'horror': ['horror film', 'horror movie', 'horror complet'],
+            'action': ['action film', 'action movie', 'action complet'],
+            'french': ['french film', 'film français', 'french movie'],
+            'film': ['film complet', 'full movie', 'movie'],
+            'movie': ['movie', 'film', 'full movie'],
+            'complet': ['film complet', 'movie complet', 'full'],
             
-            // Show all content
-            document.querySelectorAll('.container, header, footer').forEach(el => {
-                el.style.display = "block";
-            });
+            // Genres
+            'sci-fi': ['science fiction', 'sci fi film', 'futuriste'],
+            'adventure': ['aventure', 'adventure film', 'exploration'],
+            'thriller': ['thriller film', 'suspense', 'mystery'],
             
-            // Initialize CrackRevenue pop-in ad
-            if (typeof crakPopIn !== 'undefined') {
-                setTimeout(() => {
-                    crakPopIn.init(crakPopInParamsIframe);
-                }, 3000);
-            }
-        }
-
-        // Prevent bypassing age verification
-        window.addEventListener('load', function() {
-            if (sessionStorage.getItem("ageVerified") !== "true") {
-                document.getElementById("ageGate").style.display = "flex";
-                document.body.style.overflow = "hidden";
-                
-                // Block all other content
-                document.querySelectorAll('.container, header, footer').forEach(el => {
-                    el.style.display = "none";
-                });
-            } else {
-                document.getElementById("ageGate").style.display = "none";
-                document.body.style.overflow = "auto";
-                
-                // Show all content
-                document.querySelectorAll('.container, header, footer').forEach(el => {
-                    el.style.display = "block";
-                });
-                
-                // Initialize CrackRevenue pop-in ad
-                if (typeof crakPopIn !== 'undefined') {
-                    setTimeout(() => {
-                        crakPopIn.init(crakPopInParamsIframe);
-                    }, 3000);
-                }
-            }
-        });
-
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyABmWKGHOihq-2A_oywlKke-H4l7Pq_UvM",
-            authDomain: "loomastore.firebaseapp.com",
-            databaseURL: "https://loomastore-default-rtdb.firebaseio.com",
-            projectId: "loomastore",
-            storageBucket: "loomastore.firebasestorage.app",
-            messagingSenderId: "480260251641",
-            appId: "1:480260251641:web:75b1fbea6dc8f33cc16728",
-            measurementId: "G-Z4QXNFLQEY"
+            // Actors/Directors
+            'vin diesel': ['vin diesel film', 'fast furious', 'xxx'],
+            'action francais': ['action français', 'film action français'],
+            
+            // Specific phrases
+            'des rats': ['rats zombies', 'rats mutants', 'train rats'],
+            'train': ['train film', 'train action', 'train horror'],
+            'mutants': ['mutants film', 'mutants horror', 'creatures mutants']
         };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+        // Common search queries
+        const commonQueries = [
+            'Film complet français',
+            'Action film complet',
+            'Horror movie',
+            'Sci-fi film',
+            'Zombie rats',
+            'Vin Diesel',
+            'French movies',
+            'Full movie'
+        ];
 
-        // Video data - All videos loaded from external URLs
-        const videos = [
+        // Video Data - INCLUDING NEW ZOMBIE RAT FILM
+        const videoData = [
             {
-                id: 'video1',
-                title: 'damn🥵',
-                description: 'Hot video content',
-                videoUrl: 'https://archive.org/download/dafcdec7-cc67-4a0d-a865-c7ae417a57c9_202512/dafcdec7-cc67-4a0d-a865-c7ae417a57c9.mp4',
-                channel: 'Haitian Content',
-                views: 12500,
-                likes: 850,
-                dislikes: 25,
-                comments: 42,
-                uploadDate: '2 days ago',
-                likesPercentage: 97,
-                tags: ['hot', 'trending'],
-                userId: 'channel1'
+                id: 1,
+                title: "Bloodshot film complet en français",
+                channel: "Streamflix Movies",
+                channelInitial: "S",
+                views: 2450321,
+                uploadDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
+                duration: "1:49:12",
+                thumbnail: "https://dn720703.ca.archive.org/0/items/images-3_20250908/images%20%283%29.jpeg",
+                videoUrl: "https://archive.org/download/bloodshot-version-francaise-360-p/Bloodshot_%5BVersion_fran%C3%A7aise%5D_360P.mp4",
+                description: "Ray Garrison, a soldier resurrected with nanotech after being killed, gaining superhuman strength and healing, but then discovers his memories and mission (avenging his wife) are manipulated by the corporation that created him, forcing him to fight for truth and escape his programming in a sci-fi action thriller starring Vin Diesel.",
+                subscribers: "1.2M subscribers",
+                likes: 245000,
+                dislikes: 12000,
+                comments: 8452,
+                commentsList: [
+                    { user: "John MovieCritic", text: "This movie exceeded my expectations! Vin Diesel delivers one of his best performances. The nanotech concept is fascinating.", likes: 1200, time: "2 days ago" },
+                    { user: "SciFiFan99", text: "The visual effects are stunning, especially the regeneration scenes. Hope they make a sequel!", likes: 845, time: "1 week ago" }
+                ],
+                tags: ["action", "sci-fi", "french", "vin diesel", "film complet", "français"]
             },
             {
-                id: 'video2',
-                title: 'chire kokom🍑🥵',
-                description: 'Explicit content',
-                videoUrl: 'https://archive.org/download/72b-612cd-a-28a-4aae-b-651-08d-02f-120fdd/72b612cd-a28a-4aae-b651-08d02f120fdd.mp4',
-                channel: 'Adult Entertainment',
-                views: 8900,
-                likes: 720,
-                dislikes: 18,
-                comments: 31,
-                uploadDate: '1 week ago',
-                likesPercentage: 98,
-                tags: ['explicit', 'adult'],
-                userId: 'channel2'
+                id: 2,
+                title: "Beast Warrior Film action Complet en français",
+                channel: "Streamflix Action",
+                channelInitial: "S",
+                views: 1850432,
+                uploadDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+                duration: "1:38:00",
+                thumbnail: "https://archive.org/download/obrp-c-smwp-8-hd/OBrpC_SMWP8-HD.jpg",
+                videoUrl: "https://archive.org/download/beast-warrior-film-complet-en-francais-action-sf-720p/Beast_Warrior___Film_Complet_en_Fran%C3%A7ais___Action%2C_SF%28720p%29.mp4",
+                description: "Beast Warrior is an action-packed science fiction film featuring epic battles, advanced technology, and a hero's journey in a futuristic world. Follow the warrior's quest to protect humanity from formidable threats using extraordinary abilities and combat skills.",
+                subscribers: "950K subscribers",
+                likes: 185000,
+                dislikes: 8500,
+                comments: 5234,
+                commentsList: [
+                    { user: "ActionMovieFan", text: "Incredible action sequences! The fight choreography is top-notch.", likes: 850, time: "1 day ago" },
+                    { user: "FrenchCinema", text: "Great to see quality action films available in French. Excellent dubbing!", likes: 621, time: "3 days ago" }
+                ],
+                tags: ["action", "sci-fi", "french", "adventure", "film complet", "français"]
             },
             {
-                id: 'video3',
-                title: 'Hot Video Sample 1',
-                description: 'This is a sample video description',
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-                channel: 'Sample Channel 1',
-                views: 2500000,
-                likes: 125000,
-                dislikes: 5000,
-                comments: 8500,
-                uploadDate: '1 month ago',
-                likesPercentage: 96,
-                tags: ['sample', 'demo'],
-                userId: 'channel3'
+                id: 3,
+                title: "Robin Des Bois La Rébellion Film Complet En Français Action Aventure ACE",
+                channel: "Streamflix Adventure",
+                channelInitial: "S",
+                views: 1567890,
+                uploadDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+                duration: "1:45:00",
+                thumbnail: "https://archive.org/download/maxresdefault-1-1_202508/maxresdefault%20%281%29%20%281%29.jpg",
+                videoUrl: "https://archive.org/download/robin-des-bois-la-rebellion-film-complet-en-francais-action-aventure-ace-720p/Robin_des_bois___la_r%C3%A9bellion___Film_Complet_en_Fran%C3%A7ais___Action___Aventure___ACE%28720p%29.mp4",
+                description: "Robin Hood La Rébellion - Suivez les aventures du célèbre hors-la-loi qui vole aux riches pour donner aux pauvres. Dans cette version captivante, Robin des Bois mène la rébellion contre le shérif corrompu de Nottingham, combattant pour la justice et l'égalité dans l'Angleterre médiévale.",
+                subscribers: "850K subscribers",
+                likes: 165000,
+                dislikes: 7500,
+                comments: 4123,
+                commentsList: [
+                    { user: "AdventureSeeker", text: "Fantastic adaptation of Robin Hood! The rebellion scenes are epic.", likes: 45, time: "Just now" },
+                    { user: "HistoryBuff", text: "Love the medieval setting and the fight for justice. True to the Robin Hood legend!", likes: 67, time: "5 hours ago" }
+                ],
+                tags: ["action", "adventure", "french", "historical", "robin hood", "film complet", "français"]
             },
             {
-                id: 'video4',
-                title: 'Explicit Content Demo',
-                description: 'Another sample video for testing',
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-                channel: 'Demo Channel',
-                views: 1800000,
-                likes: 98000,
-                dislikes: 3200,
-                comments: 7200,
-                uploadDate: '2 months ago',
-                likesPercentage: 97,
-                tags: ['sample', 'test'],
-                userId: 'channel4'
-            },
-            {
-                id: 'video5',
-                title: 'Adult Video Example',
-                description: 'Third sample video for demonstration',
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-                channel: 'Example Channel',
-                views: 3200000,
-                likes: 156000,
-                dislikes: 7800,
-                comments: 12400,
-                uploadDate: '3 months ago',
-                likesPercentage: 95,
-                tags: ['demo', 'example'],
-                userId: 'channel5'
-            },
-            {
-                id: 'video6',
-                title: 'Trending Content',
-                description: 'Fourth sample video content',
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-                channel: 'Trending Videos',
-                views: 2100000,
-                likes: 112000,
-                dislikes: 4500,
-                comments: 8900,
-                uploadDate: '4 months ago',
-                likesPercentage: 96,
-                tags: ['content', 'video'],
-                userId: 'channel6'
-            },
-            {
-                id: 'video7',
-                title: 'Merry Christmas',
-                description: 'Holiday special content',
-                videoUrl: 'https://archive.org/download/bffd4e0e-b28b-4c3f-b6d0-53e762dda04b/bffd4e0e-b28b-4c3f-b6d0-53e762dda04b.mp4',
-                channel: 'vanessa haiti',
-                views: 5000,
-                likes: 350,
-                dislikes: 10,
-                comments: 25,
-                uploadDate: '1 day ago',
-                likesPercentage: 97,
-                tags: ['christmas', 'holiday', 'special'],
-                userId: 'channel7'
+                id: 4,
+                title: "FILM COMPLET] Des rats se transforment en zombies ! Une horde de rats mutants attaque férocement des survivants",
+                channel: "Streamflix Horror",
+                channelInitial: "S",
+                views: 892345,
+                uploadDate: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
+                duration: "1:32:15",
+                thumbnail: "https://archive.org/download/11d-8d-0d-1-2852-4a-87-b-739-d-5fac-85f-6d-8c/11d8d0d1-2852-4a87-b739-d5fac85f6d8c.jpeg",
+                videoUrl: "https://archive.org/download/des-rats-se-transforment-en-zombies-une-horde-de-rats-mutants-attaque-feroceme/YTDown.com_YouTube_Media_Z91WwO5nCyE_001_1080p.mp4",
+                description: "💕【Sous licence officielle】Toutes les vidéos de cette chaîne sont sous licence. 🙌Abonnez-vous pour être informé des nouvelles vidéos. Un film d'horreur intense où des rats se transforment en zombies ! Une horde de rats mutants attaque férocement des survivants qui tentent désespérément de s'échapper d'un wagon de train exigu. Suspense, action et horreur garantis !",
+                subscribers: "720K subscribers",
+                likes: 89000,
+                dislikes: 4200,
+                comments: 3124,
+                commentsList: [
+                    { user: "HorrorFanatic", text: "This movie gave me nightmares! The rat zombie concept is terrifying and original.", likes: 320, time: "3 hours ago" },
+                    { user: "SurvivalExpert", text: "The train setting creates such claustrophobic tension. Amazing suspense throughout!", likes: 215, time: "6 hours ago" },
+                    { user: "ZombieLover", text: "Finally a fresh take on zombie movies! Rat zombies are both creepy and creative.", likes: 189, time: "1 day ago" }
+                ],
+                tags: ["horror", "zombie", "rats", "mutants", "survival", "train", "french", "film complet", "français", "thriller"]
             }
         ];
 
-        // Global variables
-        let currentVideoId = null;
-        let currentUser = null;
-        let player = null;
-        let comments = {};
-        let adRevenue = 0;
-        let adImpressions = 0;
-
-        // DOM elements
-        const homepage = document.getElementById('homepage');
-        const videoDetail = document.getElementById('video-detail');
-        const videoGrid = document.getElementById('video-grid');
-        const relatedVideos = document.getElementById('related-videos');
-        const commentsList = document.getElementById('comments-list');
-        const homeLink = document.getElementById('home-link');
-        const searchForm = document.getElementById('search-form');
-        const searchInput = document.getElementById('search-input');
-        const likeBtn = document.getElementById('like-btn');
-        const dislikeBtn = document.getElementById('dislike-btn');
-        const shareBtn = document.getElementById('share-btn');
-        const subscribeBtn = document.getElementById('subscribe-btn');
-        const commentInput = document.getElementById('comment-input');
-        const commentSubmitBtn = document.getElementById('comment-submit-btn');
-        const sectionTitle = document.getElementById('section-title');
-        const signinBtn = document.getElementById('signin-btn');
-        const uploadBtn = document.getElementById('upload-btn');
-        const userMenuContainer = document.getElementById('user-menu-container');
-        const userMenuBtn = document.getElementById('user-menu-btn');
-        const userMenu = document.getElementById('user-menu');
-        const userAvatar = document.getElementById('user-avatar');
-        const userName = document.getElementById('user-name');
-        const logoutBtn = document.getElementById('logout-btn');
+        // DOM Elements
+        const splashScreen = document.getElementById('splashScreen');
+        const authScreen = document.getElementById('authScreen');
+        const mainApp = document.getElementById('mainApp');
+        const homePage = document.getElementById('homePage');
+        const detailPage = document.getElementById('detailPage');
+        const videoGrid = document.getElementById('videoGrid');
+        const offlineMessage = document.getElementById('offlineMessage');
+        const offlineContent = document.getElementById('offlineContent');
+        const homeLogo = document.getElementById('homeLogo');
+        const backHomeBtn = document.getElementById('backHomeBtn');
+        const searchBox = document.getElementById('searchBox');
+        const searchBtn = document.getElementById('searchBtn');
+        const voiceSearchBtn = document.getElementById('voiceSearchBtn');
+        const searchSuggestionsEl = document.getElementById('searchSuggestions');
+        const clearRecentBtn = document.getElementById('clearRecent');
+        const userAvatar = document.getElementById('userAvatar');
+        const skipAuthButton = document.getElementById('skipAuthButton');
+        const authUsername = document.getElementById('authUsername');
+        const mobileSearchBtnIcon = document.getElementById('mobileSearchBtnIcon');
+        const mobileSearchOverlay = document.getElementById('mobileSearchOverlay');
+        const mobileSearchClose = document.getElementById('mobileSearchClose');
+        const mobileSearchInput = document.getElementById('mobileSearchInput');
+        const mobileSearchBtn = document.getElementById('mobileSearchBtn');
+        const mobileSearchSuggestions = document.getElementById('mobileSearchSuggestions');
         
         // Detail page elements
-        const detailVideoTitle = document.getElementById('detail-video-title');
-        const viewCount = document.getElementById('view-count');
-        const uploadDate = document.getElementById('upload-date');
-        const likeCount = document.getElementById('like-count');
-        const dislikeCount = document.getElementById('dislike-count');
-        const likeDislikeRatio = document.getElementById('like-dislike-ratio');
-        const commentsCount = document.getElementById('comments-count');
-        const detailChannelName = document.getElementById('detail-channel-name');
-        const detailChannelSubs = document.getElementById('detail-channel-subs');
-        const detailChannelAvatar = document.getElementById('detail-channel-avatar');
-        const adRevenueDisplay = document.getElementById('ad-revenue');
+        const mainVideo = document.getElementById('mainVideo');
+        const detailVideoTitle = document.getElementById('detailVideoTitle');
+        const detailChannelName = document.getElementById('detailChannelName');
+        const detailSubscribers = document.getElementById('detailSubscribers');
+        const detailViews = document.getElementById('detailViews');
+        const detailDate = document.getElementById('detailDate');
+        const detailDescription = document.getElementById('detailDescription');
+        const likeBtn = document.getElementById('likeBtn');
+        const dislikeBtn = document.getElementById('dislikeBtn');
+        const likeCount = document.getElementById('likeCount');
+        const dislikeCount = document.getElementById('dislikeCount');
+        const subscribeBtn = document.getElementById('subscribeBtn');
+        const commentCount = document.getElementById('commentCount');
+        const commentsContainer = document.getElementById('commentsContainer');
+        const recommendationsContainer = document.getElementById('recommendationsContainer');
+        const commentInput = document.getElementById('commentInput');
+        const commentUserAvatar = document.getElementById('commentUserAvatar');
 
-        // Modal elements
-        const authModal = document.getElementById('auth-modal');
-        const authModalClose = document.getElementById('auth-modal-close');
-        const authModalTitle = document.getElementById('auth-modal-title');
-        const signinForm = document.getElementById('signin-form');
-        const signupForm = document.getElementById('signup-form');
-        const switchToSignup = document.getElementById('switch-to-signup');
-        const switchToSignin = document.getElementById('switch-to-signin');
-        const authEmail = document.getElementById('auth-email');
-        const authPassword = document.getElementById('auth-password');
-        const signinSubmit = document.getElementById('signin-submit');
-        const signupName = document.getElementById('signup-name');
-        const signupEmail = document.getElementById('signup-email');
-        const signupPassword = document.getElementById('signup-password');
-        const signupConfirmPassword = document.getElementById('signup-confirm-password');
-        const signupSubmit = document.getElementById('signup-submit');
-        const authError = document.getElementById('auth-error');
-        const authSuccess = document.getElementById('auth-success');
-
-        // ============================================
-        // HELPER FUNCTIONS
-        // ============================================
-
-        function showError(element, message) {
-            element.textContent = message;
-            element.style.display = 'block';
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check network status
+            updateNetworkStatus();
+            
+            // Listen for online/offline events
+            window.addEventListener('online', updateNetworkStatus);
+            window.addEventListener('offline', updateNetworkStatus);
+            
+            // Check screen size for responsive search
+            checkScreenSize();
+            window.addEventListener('resize', checkScreenSize);
+            
+            // Start with splash screen
             setTimeout(() => {
-                element.style.display = 'none';
-            }, 5000);
+                splashScreen.style.opacity = '0';
+                setTimeout(() => {
+                    splashScreen.style.display = 'none';
+                    showAuthScreen();
+                }, 500);
+            }, 2000);
+            
+            // Skip auth button
+            skipAuthButton.addEventListener('click', function() {
+                const username = authUsername.value.trim() || 'Guest';
+                currentUser = { displayName: username, email: 'guest@streamflix.com' };
+                showMainApp();
+                loadVideos();
+                updateRecentSearchesUI();
+            });
+            
+            // Set up main app event listeners
+            homeLogo.addEventListener('click', function(e) {
+                e.preventDefault();
+                showHomePage();
+            });
+            
+            backHomeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                showHomePage();
+            });
+            
+            // Desktop search functionality
+            searchBtn.addEventListener('click', function() {
+                performSearch(searchBox.value);
+            });
+            
+            searchBox.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch(this.value);
+                }
+            });
+            
+            searchBox.addEventListener('input', function() {
+                showSearchSuggestions(this.value);
+            });
+            
+            searchBox.addEventListener('focus', function() {
+                if (this.value.trim() === '') {
+                    showRecentSearches();
+                }
+            });
+            
+            // Voice search button
+            voiceSearchBtn.addEventListener('click', function() {
+                initiateVoiceSearch();
+            });
+            
+            // Clear recent searches
+            clearRecentBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                clearRecentSearches();
+            });
+            
+            // Close search suggestions when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!searchBox.contains(event.target) && !searchSuggestionsEl.contains(event.target)) {
+                    hideSearchSuggestions();
+                }
+            });
+            
+            // Mobile search functionality
+            mobileSearchBtnIcon.addEventListener('click', function() {
+                showMobileSearch();
+            });
+            
+            mobileSearchClose.addEventListener('click', function() {
+                hideMobileSearch();
+            });
+            
+            mobileSearchBtn.addEventListener('click', function() {
+                performSearch(mobileSearchInput.value);
+                hideMobileSearch();
+            });
+            
+            mobileSearchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch(this.value);
+                    hideMobileSearch();
+                }
+            });
+            
+            mobileSearchInput.addEventListener('input', function() {
+                showMobileSearchSuggestions(this.value);
+            });
+            
+            // Set up like/dislike buttons
+            likeBtn.addEventListener('click', toggleLike);
+            dislikeBtn.addEventListener('click', toggleDislike);
+            subscribeBtn.addEventListener('click', toggleSubscribe);
+            
+            // Comment input
+            commentInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && this.value.trim()) {
+                    addComment(this.value.trim());
+                    this.value = '';
+                }
+            });
+            
+            // Video player events
+            mainVideo.addEventListener('play', function() {
+                if (currentVideoId && currentUser) {
+                    // Record view when video starts playing
+                    recordView(currentVideoId);
+                }
+            });
+            
+            mainVideo.addEventListener('loadeddata', function() {
+                console.log('Video loaded successfully');
+            });
+            
+            mainVideo.addEventListener('error', function(e) {
+                console.error('Error loading video:', e);
+                // Show alternative message
+                const videoPlayer = document.querySelector('.video-player');
+                if (videoPlayer && !videoPlayer.querySelector('.video-error')) {
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'video-error';
+                    errorDiv.style.cssText = `
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: rgba(0,0,0,0.8);
+                        color: white;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        padding: 20px;
+                        text-align: center;
+                    `;
+                    errorDiv.innerHTML = `
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 20px;"></i>
+                        <h3>Video Playback Error</h3>
+                        <p>There was an error loading the video. Please try again later.</p>
+                        <p style="font-size: 12px; margin-top: 10px;">If the problem persists, the video might be temporarily unavailable.</p>
+                    `;
+                    videoPlayer.appendChild(errorDiv);
+                }
+            });
+        });
+
+        // Check screen size for responsive search
+        function checkScreenSize() {
+            if (window.innerWidth <= 768) {
+                document.querySelector('.search-container').style.display = 'none';
+                mobileSearchBtnIcon.style.display = 'block';
+            } else {
+                document.querySelector('.search-container').style.display = 'flex';
+                mobileSearchBtnIcon.style.display = 'none';
+                if (mobileSearchOverlay.style.display === 'flex') {
+                    hideMobileSearch();
+                }
+            }
         }
 
-        function showSuccess(element, message) {
-            element.textContent = message;
-            element.style.display = 'block';
-            setTimeout(() => {
-                element.style.display = 'none';
-            }, 3000);
+        // Show mobile search overlay
+        function showMobileSearch() {
+            mobileSearchOverlay.style.display = 'flex';
+            mobileSearchInput.focus();
         }
 
-        function formatNumber(num) {
+        // Hide mobile search overlay
+        function hideMobileSearch() {
+            mobileSearchOverlay.style.display = 'none';
+            mobileSearchInput.value = '';
+            mobileSearchSuggestions.innerHTML = '';
+            mobileSearchSuggestions.style.display = 'none';
+        }
+
+        // Update network status
+        function updateNetworkStatus() {
+            isOnline = navigator.onLine;
+            
+            if (isOnline) {
+                // Hide offline message
+                offlineMessage.style.display = 'none';
+                
+                // If we're on home page and offline content is showing, reload
+                if (homePage.style.display !== 'none' && offlineContent.style.display === 'block') {
+                    loadVideos();
+                }
+            } else {
+                // Show offline message
+                offlineMessage.style.display = 'block';
+                
+                // Show offline content on home page
+                if (homePage.style.display !== 'none') {
+                    showOfflineContent();
+                }
+            }
+        }
+
+        // Show offline content
+        function showOfflineContent() {
+            // Hide video grid
+            videoGrid.style.display = 'none';
+            
+            // Show offline content
+            offlineContent.style.display = 'block';
+        }
+
+        // Show online content
+        function showOnlineContent() {
+            // Show video grid
+            videoGrid.style.display = 'grid';
+            
+            // Hide offline content
+            offlineContent.style.display = 'none';
+        }
+
+        // Show authentication screen
+        function showAuthScreen() {
+            authScreen.style.display = 'flex';
+            mainApp.style.display = 'none';
+        }
+
+        // Show main app
+        function showMainApp() {
+            authScreen.style.display = 'none';
+            mainApp.style.display = 'block';
+            
+            // Update user avatar
+            if (currentUser.displayName) {
+                userAvatar.textContent = currentUser.displayName.charAt(0).toUpperCase();
+                commentUserAvatar.textContent = currentUser.displayName.charAt(0).toUpperCase();
+            }
+        }
+
+        // Load videos
+        function loadVideos() {
+            videos = videoData;
+            
+            // Show online content
+            showOnlineContent();
+            
+            // Render home page
+            renderHomePage();
+        }
+
+        // Render home page with videos
+        function renderHomePage() {
+            videoGrid.innerHTML = '';
+            
+            // Sort videos by upload date (newest first)
+            const sortedVideos = [...videos].sort((a, b) => b.uploadDate - a.uploadDate);
+            
+            sortedVideos.forEach(video => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.setAttribute('data-id', video.id);
+                
+                // Format time ago
+                const timeAgo = getTimeAgo(video.uploadDate);
+                
+                // Create thumbnail
+                const thumbnailHtml = `
+                    <div class="thumbnail-container">
+                        <img src="${video.thumbnail}" 
+                             alt="${video.title}" 
+                             class="thumbnail"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80';">
+                        <div class="duration">${video.duration}</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="channel-avatar">
+                            <img src="https://cdn.leonardo.ai/users/59cc19c6-be61-41ed-ab82-8485d4d58d54/generations/807f5487-c3b8-4ccd-9ab8-dabab318a67d/Phoenix_10_Create_a_clean_bold_modern_logo_for_an_app_named_St_0.jpg" 
+                                 alt="Streamflix Logo"
+                                 onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${video.channelInitial}</span>';">
+                        </div>
+                        <div class="video-details">
+                            <h3>${video.title.length > 60 ? video.title.substring(0, 60) + '...' : video.title}</h3>
+                            <p>${video.channel}</p>
+                            <p>${formatCount(video.views)} views • ${timeAgo}</p>
+                        </div>
+                    </div>
+                `;
+                
+                videoCard.innerHTML = thumbnailHtml;
+                
+                videoCard.addEventListener('click', function() {
+                    if (!isOnline) {
+                        alert('You need an internet connection to watch videos. Please check your connection.');
+                        return;
+                    }
+                    const videoId = parseInt(this.getAttribute('data-id'));
+                    showVideoDetail(videoId);
+                });
+                
+                videoGrid.appendChild(videoCard);
+            });
+        }
+
+        // Show video detail page
+        function showVideoDetail(videoId) {
+            const video = videos.find(v => v.id === videoId);
+            if (!video) return;
+            
+            currentVideoId = videoId;
+            currentVideoData = video;
+            
+            // Clear any previous error messages
+            const videoPlayer = document.querySelector('.video-player');
+            const errorDiv = videoPlayer.querySelector('.video-error');
+            if (errorDiv) {
+                errorDiv.remove();
+            }
+            
+            // Update video player and info
+            mainVideo.src = video.videoUrl;
+            mainVideo.poster = video.thumbnail;
+            
+            // Set video title and load metadata
+            mainVideo.load();
+            
+            detailVideoTitle.textContent = video.title;
+            detailChannelName.textContent = video.channel;
+            detailSubscribers.textContent = video.subscribers;
+            detailViews.textContent = `${formatCount(video.views)} views`;
+            detailDate.textContent = getTimeAgo(video.uploadDate);
+            detailDescription.textContent = video.description;
+            
+            // Update like/dislike counts
+            likeCount.textContent = formatCount(video.likes);
+            dislikeCount.textContent = formatCount(video.dislikes);
+            
+            // Update comment count
+            commentCount.textContent = `Comments • ${formatCount(video.comments)}`;
+            
+            // Load comments
+            loadComments(video);
+            
+            // Load recommendations (excluding current video)
+            loadRecommendations(videoId);
+            
+            // Reset like/dislike/subscribe states
+            isLiked = false;
+            isDisliked = false;
+            isSubscribed = false;
+            likeBtn.classList.remove('active');
+            dislikeBtn.classList.remove('active');
+            subscribeBtn.textContent = 'SUBSCRIBE';
+            subscribeBtn.classList.remove('subscribed');
+            
+            // Show detail page, hide home page
+            homePage.style.display = 'none';
+            detailPage.style.display = 'block';
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            // Try to auto-play the video (only if online)
+            if (isOnline) {
+                setTimeout(() => {
+                    const playPromise = mainVideo.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            console.log("Auto-play prevented:", error);
+                            // Don't show error, let user click play
+                        });
+                    }
+                }, 1000);
+            } else {
+                // Show offline message for video player
+                videoPlayer.innerHTML = `
+                    <div style="background: #000; color: #fff; padding: 40px; text-align: center; height: 400px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                        <div style="font-size: 64px; margin-bottom: 20px;">
+                            <i class="fas fa-wifi-slash"></i>
+                        </div>
+                        <h2>Video Unavailable Offline</h2>
+                        <p>You need an internet connection to watch this video.</p>
+                        <p>Please check your connection and try again.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Show home page
+        function showHomePage() {
+            // Pause current video
+            if (mainVideo) {
+                mainVideo.pause();
+            }
+            
+            homePage.style.display = 'block';
+            detailPage.style.display = 'none';
+            
+            // Check network status
+            if (!isOnline) {
+                showOfflineContent();
+            }
+            
+            window.scrollTo(0, 0);
+        }
+
+        // Load comments
+        function loadComments(video) {
+            commentsContainer.innerHTML = '';
+            
+            video.commentsList.forEach(comment => {
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment';
+                
+                commentElement.innerHTML = `
+                    <div class="comment-user-avatar">${comment.user.charAt(0)}</div>
+                    <div class="comment-content">
+                        <h4>${comment.user} <span>${comment.time}</span></h4>
+                        <p class="comment-text">${comment.text}</p>
+                        <div class="comment-actions">
+                            <div class="comment-action">
+                                <i class="fas fa-thumbs-up"></i> ${comment.likes}
+                            </div>
+                            <div class="comment-action">
+                                <i class="fas fa-thumbs-down"></i>
+                            </div>
+                            <div class="comment-action">REPLY</div>
+                        </div>
+                    </div>
+                `;
+                
+                commentsContainer.appendChild(commentElement);
+            });
+        }
+
+        // Add a new comment
+        function addComment(text) {
+            if (!currentUser || !currentVideoId) return;
+            
+            // Create new comment object
+            const newComment = {
+                user: currentUser.displayName || 'Guest',
+                text: text,
+                likes: 0,
+                time: 'Just now'
+            };
+            
+            // Add to current video data
+            if (currentVideoData) {
+                currentVideoData.comments += 1;
+                currentVideoData.commentsList.unshift(newComment);
+                
+                // Update UI
+                commentCount.textContent = `Comments • ${formatCount(currentVideoData.comments)}`;
+                
+                // Add comment to UI
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment';
+                
+                commentElement.innerHTML = `
+                    <div class="comment-user-avatar">${newComment.user.charAt(0)}</div>
+                    <div class="comment-content">
+                        <h4>${newComment.user} <span>${newComment.time}</span></h4>
+                        <p class="comment-text">${newComment.text}</p>
+                        <div class="comment-actions">
+                            <div class="comment-action">
+                                <i class="fas fa-thumbs-up"></i> ${newComment.likes}
+                            </div>
+                            <div class="comment-action">
+                                <i class="fas fa-thumbs-down"></i>
+                            </div>
+                            <div class="comment-action">REPLY</div>
+                        </div>
+                    </div>
+                `;
+                
+                commentsContainer.prepend(commentElement);
+            }
+        }
+
+        // Load recommendations
+        function loadRecommendations(currentVideoId) {
+            recommendationsContainer.innerHTML = '';
+            
+            // Get other videos (excluding current video)
+            const otherVideos = videos.filter(v => v.id !== currentVideoId);
+            
+            if (otherVideos.length === 0) {
+                recommendationsContainer.innerHTML = `
+                    <div style="padding: 20px; text-align: center; color: #aaa;">
+                        <p>More videos coming soon!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort by views (most popular first) and take up to 4
+            const sortedVideos = [...otherVideos]
+                .sort((a, b) => b.views - a.views)
+                .slice(0, 4);
+            
+            sortedVideos.forEach(video => {
+                const timeAgo = getTimeAgo(video.uploadDate);
+                
+                const recommendedVideo = document.createElement('div');
+                recommendedVideo.className = 'recommended-video';
+                recommendedVideo.setAttribute('data-id', video.id);
+                
+                recommendedVideo.innerHTML = `
+                    <div class="recommended-thumbnail">
+                        <img src="${video.thumbnail}" alt="${video.title}" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80';">
+                        <div class="duration">${video.duration}</div>
+                    </div>
+                    <div class="recommended-info">
+                        <h4>${video.title.length > 50 ? video.title.substring(0, 50) + '...' : video.title}</h4>
+                        <p>${video.channel}</p>
+                        <p>${formatCount(video.views)} views • ${timeAgo}</p>
+                    </div>
+                `;
+                
+                recommendedVideo.addEventListener('click', function() {
+                    if (!isOnline) {
+                        alert('You need an internet connection to watch videos. Please check your connection.');
+                        return;
+                    }
+                    const videoId = parseInt(this.getAttribute('data-id'));
+                    showVideoDetail(videoId);
+                });
+                
+                recommendationsContainer.appendChild(recommendedVideo);
+            });
+        }
+
+        // SMART SEARCH FUNCTIONS
+
+        // Show search suggestions based on input
+        function showSearchSuggestions(query) {
+            clearTimeout(searchTimeout);
+            
+            searchTimeout = setTimeout(() => {
+                const suggestionsContainer = searchSuggestionsEl;
+                suggestionsContainer.innerHTML = '';
+                
+                if (query.trim() === '') {
+                    showRecentSearches();
+                    return;
+                }
+                
+                // Show recent searches that match query
+                const matchingRecent = recentSearches.filter(search => 
+                    search.toLowerCase().includes(query.toLowerCase())
+                ).slice(0, 3);
+                
+                if (matchingRecent.length > 0) {
+                    const recentHeader = document.createElement('div');
+                    recentHeader.className = 'recent-searches';
+                    recentHeader.innerHTML = '<span>Recent searches</span>';
+                    suggestionsContainer.appendChild(recentHeader);
+                    
+                    matchingRecent.forEach(search => {
+                        const item = document.createElement('a');
+                        item.className = 'suggestion-item';
+                        item.href = '#';
+                        item.innerHTML = `
+                            <i class="fas fa-history"></i>
+                            <span>${search}</span>
+                        `;
+                        item.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            searchBox.value = search;
+                            performSearch(search);
+                        });
+                        suggestionsContainer.appendChild(item);
+                    });
+                }
+                
+                // Generate smart suggestions based on query
+                const suggestions = generateSmartSuggestions(query);
+                
+                if (suggestions.length > 0) {
+                    suggestions.forEach(suggestion => {
+                        const item = document.createElement('a');
+                        item.className = 'suggestion-item';
+                        item.href = '#';
+                        item.innerHTML = `
+                            <i class="fas fa-search"></i>
+                            <span>${suggestion}</span>
+                        `;
+                        item.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            searchBox.value = suggestion;
+                            performSearch(suggestion);
+                        });
+                        suggestionsContainer.appendChild(item);
+                    });
+                }
+                
+                // Show common queries if no specific suggestions
+                if (suggestions.length === 0 && matchingRecent.length === 0) {
+                    commonQueries.slice(0, 5).forEach(queryText => {
+                        const item = document.createElement('a');
+                        item.className = 'suggestion-item';
+                        item.href = '#';
+                        item.innerHTML = `
+                            <i class="fas fa-fire"></i>
+                            <span>${queryText}</span>
+                        `;
+                        item.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            searchBox.value = queryText;
+                            performSearch(queryText);
+                        });
+                        suggestionsContainer.appendChild(item);
+                    });
+                }
+                
+                suggestionsContainer.style.display = 'block';
+            }, 300);
+        }
+
+        // Show mobile search suggestions
+        function showMobileSearchSuggestions(query) {
+            const suggestionsContainer = mobileSearchSuggestions;
+            suggestionsContainer.innerHTML = '';
+            
+            if (query.trim() === '') {
+                showMobileRecentSearches();
+                return;
+            }
+            
+            // Generate smart suggestions based on query
+            const suggestions = generateSmartSuggestions(query);
+            
+            if (suggestions.length > 0) {
+                suggestions.forEach(suggestion => {
+                    const item = document.createElement('a');
+                    item.className = 'suggestion-item';
+                    item.href = '#';
+                    item.innerHTML = `
+                        <i class="fas fa-search"></i>
+                        <span>${suggestion}</span>
+                    `;
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        mobileSearchInput.value = suggestion;
+                        performSearch(suggestion);
+                        hideMobileSearch();
+                    });
+                    suggestionsContainer.appendChild(item);
+                });
+            }
+            
+            // Show common queries if no specific suggestions
+            if (suggestions.length === 0) {
+                commonQueries.slice(0, 5).forEach(queryText => {
+                    const item = document.createElement('a');
+                    item.className = 'suggestion-item';
+                    item.href = '#';
+                    item.innerHTML = `
+                        <i class="fas fa-fire"></i>
+                        <span>${queryText}</span>
+                    `;
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        mobileSearchInput.value = queryText;
+                        performSearch(queryText);
+                        hideMobileSearch();
+                    });
+                    suggestionsContainer.appendChild(item);
+                });
+            }
+            
+            suggestionsContainer.style.display = 'block';
+        }
+
+        // Generate smart search suggestions
+        function generateSmartSuggestions(query) {
+            const queryLower = query.toLowerCase().trim();
+            const suggestions = new Set();
+            
+            // Check for direct matches in suggestion database
+            for (const [key, values] of Object.entries(searchSuggestions)) {
+                if (queryLower.includes(key)) {
+                    values.forEach(value => {
+                        if (value.toLowerCase().includes(queryLower) || queryLower.includes(key)) {
+                            suggestions.add(value);
+                        }
+                    });
+                }
+            }
+            
+            // Check video titles and tags
+            videos.forEach(video => {
+                // Check title
+                if (video.title.toLowerCase().includes(queryLower)) {
+                    const words = video.title.split(' ');
+                    for (let i = 0; i < Math.min(3, words.length); i++) {
+                        if (words[i].toLowerCase().includes(queryLower)) {
+                            suggestions.add(words.slice(0, i + 1).join(' '));
+                        }
+                    }
+                }
+                
+                // Check tags
+                video.tags.forEach(tag => {
+                    if (tag.toLowerCase().includes(queryLower)) {
+                        suggestions.add(tag);
+                        // Add related phrases
+                        if (tag.includes('film')) suggestions.add(`${tag} complet`);
+                        if (tag.includes('french')) suggestions.add(`film ${tag}`);
+                    }
+                });
+            });
+            
+            // Add genre suggestions
+            const genres = ['action', 'horror', 'sci-fi', 'adventure', 'thriller', 'zombie', 'french'];
+            genres.forEach(genre => {
+                if (queryLower.includes(genre)) {
+                    suggestions.add(`${genre} film`);
+                    suggestions.add(`${genre} movie`);
+                    suggestions.add(`film ${genre}`);
+                }
+            });
+            
+            // Add language suggestions
+            if (queryLower.includes('français') || queryLower.includes('french')) {
+                suggestions.add('film français');
+                suggestions.add('movie french');
+                suggestions.add('french film complet');
+            }
+            
+            // Limit to 8 suggestions
+            return Array.from(suggestions).slice(0, 8);
+        }
+
+        // Show recent searches
+        function showRecentSearches() {
+            const suggestionsContainer = searchSuggestionsEl;
+            suggestionsContainer.innerHTML = '';
+            
+            if (recentSearches.length === 0) {
+                const noRecent = document.createElement('div');
+                noRecent.className = 'recent-searches';
+                noRecent.innerHTML = '<span>No recent searches</span>';
+                suggestionsContainer.appendChild(noRecent);
+                
+                // Show trending searches instead
+                commonQueries.slice(0, 5).forEach(queryText => {
+                    const item = document.createElement('a');
+                    item.className = 'suggestion-item';
+                    item.href = '#';
+                    item.innerHTML = `
+                        <i class="fas fa-fire"></i>
+                        <span>${queryText}</span>
+                    `;
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        searchBox.value = queryText;
+                        performSearch(queryText);
+                    });
+                    suggestionsContainer.appendChild(item);
+                });
+            } else {
+                const recentHeader = document.createElement('div');
+                recentHeader.className = 'recent-searches';
+                recentHeader.innerHTML = `
+                    <span>Recent searches</span>
+                    <span class="clear-recent" id="clearRecent">Clear all</span>
+                `;
+                suggestionsContainer.appendChild(recentHeader);
+                
+                // Re-attach clear button event
+                recentHeader.querySelector('.clear-recent').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    clearRecentSearches();
+                });
+                
+                recentSearches.slice(0, 8).forEach(search => {
+                    const item = document.createElement('a');
+                    item.className = 'suggestion-item';
+                    item.href = '#';
+                    item.innerHTML = `
+                        <i class="fas fa-history"></i>
+                        <span>${search}</span>
+                    `;
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        searchBox.value = search;
+                        performSearch(search);
+                    });
+                    suggestionsContainer.appendChild(item);
+                });
+            }
+            
+            suggestionsContainer.style.display = 'block';
+        }
+
+        // Show mobile recent searches
+        function showMobileRecentSearches() {
+            const suggestionsContainer = mobileSearchSuggestions;
+            suggestionsContainer.innerHTML = '';
+            
+            if (recentSearches.length === 0) {
+                const noRecent = document.createElement('div');
+                noRecent.className = 'recent-searches';
+                noRecent.innerHTML = '<span>No recent searches</span>';
+                suggestionsContainer.appendChild(noRecent);
+            } else {
+                const recentHeader = document.createElement('div');
+                recentHeader.className = 'recent-searches';
+                recentHeader.innerHTML = `
+                    <span>Recent searches</span>
+                    <span class="clear-recent" id="mobileClearRecent">Clear all</span>
+                `;
+                suggestionsContainer.appendChild(recentHeader);
+                
+                // Attach clear button event for mobile
+                recentHeader.querySelector('.clear-recent').addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    clearRecentSearches();
+                    showMobileRecentSearches();
+                });
+                
+                recentSearches.slice(0, 8).forEach(search => {
+                    const item = document.createElement('a');
+                    item.className = 'suggestion-item';
+                    item.href = '#';
+                    item.innerHTML = `
+                        <i class="fas fa-history"></i>
+                        <span>${search}</span>
+                    `;
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        mobileSearchInput.value = search;
+                        performSearch(search);
+                        hideMobileSearch();
+                    });
+                    suggestionsContainer.appendChild(item);
+                });
+            }
+            
+            suggestionsContainer.style.display = 'block';
+        }
+
+        // Update recent searches UI
+        function updateRecentSearchesUI() {
+            // This will be called after login to update UI if needed
+        }
+
+        // Hide search suggestions
+        function hideSearchSuggestions() {
+            searchSuggestionsEl.style.display = 'none';
+        }
+
+        // Perform search
+        function performSearch(query) {
+            if (!isOnline) {
+                alert('You need to be online to search.');
+                return;
+            }
+            
+            const searchTerm = query.trim();
+            if (!searchTerm) return;
+            
+            // Add to recent searches
+            addToRecentSearches(searchTerm);
+            
+            // Filter videos based on search term
+            const filteredVideos = videos.filter(video => {
+                const searchLower = searchTerm.toLowerCase();
+                
+                // Check title
+                if (video.title.toLowerCase().includes(searchLower)) return true;
+                
+                // Check channel
+                if (video.channel.toLowerCase().includes(searchLower)) return true;
+                
+                // Check description
+                if (video.description.toLowerCase().includes(searchLower)) return true;
+                
+                // Check tags
+                if (video.tags.some(tag => tag.toLowerCase().includes(searchLower))) return true;
+                
+                return false;
+            });
+            
+            // Update video grid with search results
+            videoGrid.innerHTML = '';
+            
+            if (filteredVideos.length === 0) {
+                videoGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                        <h2>No videos found for "${searchTerm}"</h2>
+                        <p>Try different keywords or check spelling</p>
+                        <div style="margin-top: 20px;">
+                            <p style="color: #aaa; margin-bottom: 10px;">Try searching for:</p>
+                            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                                ${commonQueries.slice(0, 4).map(query => `
+                                    <button style="background: #272727; color: #f1f1f1; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer;" 
+                                            onclick="searchBox.value='${query}'; performSearch('${query}')">
+                                        ${query}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                filteredVideos.forEach(video => {
+                    const timeAgo = getTimeAgo(video.uploadDate);
+                    
+                    const videoCard = document.createElement('div');
+                    videoCard.className = 'video-card';
+                    videoCard.setAttribute('data-id', video.id);
+                    
+                    videoCard.innerHTML = `
+                        <div class="thumbnail-container">
+                            <img src="${video.thumbnail}" 
+                                 alt="${video.title}" 
+                                 class="thumbnail"
+                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80';">
+                            <div class="duration">${video.duration}</div>
+                        </div>
+                        <div class="video-info">
+                            <div class="channel-avatar">
+                                <img src="https://cdn.leonardo.ai/users/59cc19c6-be61-41ed-ab82-8485d4d58d54/generations/807f5487-c3b8-4ccd-9ab8-dabab318a67d/Phoenix_10_Create_a_clean_bold_modern_logo_for_an_app_named_St_0.jpg" 
+                                     alt="Streamflix Logo"
+                                     onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${video.channelInitial}</span>';">
+                            </div>
+                            <div class="video-details">
+                                <h3>${video.title.length > 60 ? video.title.substring(0, 60) + '...' : video.title}</h3>
+                                <p>${video.channel}</p>
+                                <p>${formatCount(video.views)} views • ${timeAgo}</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    videoCard.addEventListener('click', function() {
+                        if (!isOnline) {
+                            alert('You need an internet connection to watch videos. Please check your connection.');
+                            return;
+                        }
+                        const videoId = parseInt(this.getAttribute('data-id'));
+                        showVideoDetail(videoId);
+                    });
+                    
+                    videoGrid.appendChild(videoCard);
+                });
+            }
+            
+            // Show home page with search results
+            showHomePage();
+            
+            // Hide search suggestions
+            hideSearchSuggestions();
+        }
+
+        // Add search to recent searches
+        function addToRecentSearches(searchTerm) {
+            // Remove if already exists
+            recentSearches = recentSearches.filter(s => s.toLowerCase() !== searchTerm.toLowerCase());
+            
+            // Add to beginning
+            recentSearches.unshift(searchTerm);
+            
+            // Keep only last 10 searches
+            if (recentSearches.length > 10) {
+                recentSearches.pop();
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('streamflix_recent_searches', JSON.stringify(recentSearches));
+        }
+
+        // Clear recent searches
+        function clearRecentSearches() {
+            recentSearches = [];
+            localStorage.setItem('streamflix_recent_searches', JSON.stringify(recentSearches));
+            showRecentSearches();
+            
+            // Also update mobile if visible
+            if (mobileSearchOverlay.style.display === 'flex') {
+                showMobileRecentSearches();
+            }
+        }
+
+        // Voice search simulation
+        function initiateVoiceSearch() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert('Voice search is not supported in your browser. Please use Chrome or Edge.');
+                return;
+            }
+            
+            alert('Voice search activated. Say your search query. (Note: This is a simulation in this demo)');
+            
+            // In a real implementation, you would use the Web Speech API
+            // For demo purposes, we'll simulate it
+            setTimeout(() => {
+                const demoQueries = ['action movies', 'horror films', 'french cinema', 'zombie rats'];
+                const randomQuery = demoQueries[Math.floor(Math.random() * demoQueries.length)];
+                
+                searchBox.value = randomQuery;
+                performSearch(randomQuery);
+                
+                // Show voice animation
+                voiceSearchBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                voiceSearchBtn.style.color = '#ff0000';
+                
+                setTimeout(() => {
+                    voiceSearchBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                    voiceSearchBtn.style.color = '#f1f1f1';
+                }, 2000);
+            }, 1500);
+        }
+
+        // Toggle like
+        function toggleLike() {
+            if (!currentUser || !currentVideoId) {
+                alert('Please login to like videos');
+                return;
+            }
+            
+            if (!isOnline) {
+                alert('You need to be online to like videos.');
+                return;
+            }
+            
+            if (!isLiked) {
+                // Update video likes
+                if (currentVideoData) {
+                    currentVideoData.likes += 1;
+                    likeCount.textContent = formatCount(currentVideoData.likes);
+                    likeBtn.classList.add('active');
+                    isLiked = true;
+                    
+                    // Remove dislike if present
+                    if (isDisliked) {
+                        currentVideoData.dislikes -= 1;
+                        dislikeCount.textContent = formatCount(currentVideoData.dislikes);
+                        dislikeBtn.classList.remove('active');
+                        isDisliked = false;
+                    }
+                }
+            } else {
+                // Remove like
+                if (currentVideoData) {
+                    currentVideoData.likes -= 1;
+                    likeCount.textContent = formatCount(currentVideoData.likes);
+                    likeBtn.classList.remove('active');
+                    isLiked = false;
+                }
+            }
+        }
+
+        // Toggle dislike
+        function toggleDislike() {
+            if (!currentUser || !currentVideoId) {
+                alert('Please login to dislike videos');
+                return;
+            }
+            
+            if (!isOnline) {
+                alert('You need to be online to dislike videos.');
+                return;
+            }
+            
+            if (!isDisliked) {
+                // Update video dislikes
+                if (currentVideoData) {
+                    currentVideoData.dislikes += 1;
+                    dislikeCount.textContent = formatCount(currentVideoData.dislikes);
+                    dislikeBtn.classList.add('active');
+                    isDisliked = true;
+                    
+                    // Remove like if present
+                    if (isLiked) {
+                        currentVideoData.likes -= 1;
+                        likeCount.textContent = formatCount(currentVideoData.likes);
+                        likeBtn.classList.remove('active');
+                        isLiked = false;
+                    }
+                }
+            } else {
+                // Remove dislike
+                if (currentVideoData) {
+                    currentVideoData.dislikes -= 1;
+                    dislikeCount.textContent = formatCount(currentVideoData.dislikes);
+                    dislikeBtn.classList.remove('active');
+                    isDisliked = false;
+                }
+            }
+        }
+
+        // Toggle subscribe
+        function toggleSubscribe() {
+            if (!currentUser) {
+                alert('Please login to subscribe');
+                return;
+            }
+            
+            if (!isOnline) {
+                alert('You need to be online to subscribe.');
+                return;
+            }
+            
+            // Toggle UI state
+            if (!isSubscribed) {
+                subscribeBtn.textContent = 'SUBSCRIBED';
+                subscribeBtn.classList.add('subscribed');
+                isSubscribed = true;
+            } else {
+                subscribeBtn.textContent = 'SUBSCRIBE';
+                subscribeBtn.classList.remove('subscribed');
+                isSubscribed = false;
+            }
+        }
+
+        // Record a view for a video
+        function recordView(videoId) {
+            if (!currentUser || !videoId || !isOnline) return;
+            
+            // Update view count locally
+            const video = videos.find(v => v.id === videoId);
+            if (video) {
+                video.views += 1;
+                detailViews.textContent = `${formatCount(video.views)} views`;
+            }
+        }
+
+        // Helper Functions
+        function formatCount(num) {
             if (num >= 1000000) {
                 return (num / 1000000).toFixed(1) + 'M';
             } else if (num >= 1000) {
                 return (num / 1000).toFixed(1) + 'K';
             }
-            return num.toString();
+            return num;
         }
 
-        // ============================================
-        // VIDEO PLAYER & CRACKREVENUE ADS
-        // ============================================
-
-        // Initialize Video.js player with CrackRevenue VAST ads
-        function initVideoPlayer(videoUrl, title, videoId) {
-            // Destroy existing player if it exists
-            if (player) {
-                player.dispose();
-            }
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffSec = Math.floor(diffMs / 1000);
+            const diffMin = Math.floor(diffSec / 60);
+            const diffHour = Math.floor(diffMin / 60);
+            const diffDay = Math.floor(diffHour / 24);
+            const diffMonth = Math.floor(diffDay / 30);
+            const diffYear = Math.floor(diffDay / 365);
             
-            // Create new player
-            player = videojs('video-player', {
-                controls: true,
-                autoplay: false,
-                preload: 'auto',
-                fluid: true,
-                playbackRates: [0.5, 1, 1.5, 2],
-                controlBar: {
-                    children: [
-                        'playToggle',
-                        'volumePanel',
-                        'currentTimeDisplay',
-                        'timeDivider',
-                        'durationDisplay',
-                        'progressControl',
-                        'remainingTimeDisplay',
-                        'playbackRateMenuButton',
-                        'fullscreenToggle'
-                    ]
-                }
-            });
-            
-            // Set video source
-            player.src({
-                src: videoUrl,
-                type: 'video/mp4'
-            });
-            
-            // Set title for accessibility
-            player.el().setAttribute('aria-label', `Video player: ${title}`);
-            
-            // Configure VAST plugin for pre-roll ads
-            player.vastClient({
-                adTagUrl: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ar%3Dpreonly&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&correlator=',
-                playAdAlways: true,
-                adCancelTimeout: 8000,
-                adsEnabled: true,
-                vpaidFlashLoaderPath: false
-            });
-            
-            // Track ad events
-            player.on('vast.adStart', function() {
-                adImpressions++;
-                // Calculate ad revenue (varies by ad type)
-                const revenue = calculateAdRevenue();
-                adRevenue += revenue;
-                updateAdRevenueDisplay();
-                
-                // Update creator's earnings in Firebase
-                updateCreatorEarnings(videoId, revenue);
-            });
-            
-            player.on('vast.adEnd', function() {
-                console.log('Ad ended');
-                // Play video after ad
-                player.play();
-            });
-            
-            player.on('vast.adError', function() {
-                console.log('Ad error, playing video directly');
-                player.play();
-            });
-            
-            // Track video plays for views
-            player.on('play', () => {
-                recordView(videoId);
-            });
-            
-            // Set up mid-roll ads at specific time intervals
-            player.on('timeupdate', function() {
-                const currentTime = player.currentTime();
-                const duration = player.duration();
-                
-                // Mid-roll at 30% of video
-                if (currentTime > duration * 0.3 && currentTime < duration * 0.31) {
-                    if (!player.midRollPlayed) {
-                        player.midRollPlayed = true;
-                        player.pause();
-                        
-                        // Play mid-roll ad
-                        player.vastClient({
-                            adTagUrl: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ar%3Dmidroll&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&correlator=',
-                            playAdAlways: true
-                        });
-                    }
-                }
-                
-                // Another mid-roll at 70% of video
-                if (currentTime > duration * 0.7 && currentTime < duration * 0.71) {
-                    if (!player.secondMidRollPlayed) {
-                        player.secondMidRollPlayed = true;
-                        player.pause();
-                        
-                        // Play second mid-roll ad
-                        player.vastClient({
-                            adTagUrl: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ar%3Dmidroll&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&correlator=',
-                            playAdAlways: true
-                        });
-                    }
-                }
-            });
-            
-            // Set up post-roll ads
-            player.on('ended', () => {
-                player.vastClient({
-                    adTagUrl: 'https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ar%3Dpostonly&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&correlator=',
-                    playAdAlways: true
-                });
-            });
-        }
-
-        // Calculate ad revenue (simulated based on CPM)
-        function calculateAdRevenue() {
-            const baseCPM = 5.00;
-            return baseCPM / 1000;
-        }
-
-        // Update creator's earnings in Firebase
-        async function updateCreatorEarnings(videoId, amount) {
-            try {
-                const video = videos.find(v => v.id === videoId);
-                if (!video || !video.userId) return;
-                
-                const creatorId = video.userId;
-                
-                // Update creator's earnings in Firebase
-                const userRef = db.collection('users').doc(creatorId);
-                await userRef.update({
-                    earnings: firebase.firestore.FieldValue.increment(amount),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-            } catch (error) {
-                console.error('Error updating creator earnings:', error);
-            }
-        }
-
-        // Update ad revenue display
-        function updateAdRevenueDisplay() {
-            if (adRevenueDisplay) {
-                adRevenueDisplay.textContent = `Ad Revenue: $${adRevenue.toFixed(2)}`;
-            }
-        }
-
-        // ============================================
-        // USER AUTHENTICATION
-        // ============================================
-
-        // Update UI based on auth state
-        async function updateUI(user) {
-            currentUser = user;
-            
-            if (user) {
-                // User is signed in
-                signinBtn.style.display = 'none';
-                userMenuContainer.style.display = 'block';
-                uploadBtn.style.display = 'flex';
-                
-                // Update user info
-                const displayName = user.displayName || user.email.split('@')[0];
-                userName.textContent = displayName;
-                userAvatar.textContent = displayName.charAt(0).toUpperCase();
-                
-                // Close auth modal if open
-                authModal.classList.remove('show');
+            if (diffYear > 0) {
+                return `${diffYear} year${diffYear > 1 ? 's' : ''} ago`;
+            } else if (diffMonth > 0) {
+                return `${diffMonth} month${diffMonth > 1 ? 's' : ''} ago`;
+            } else if (diffDay > 0) {
+                if (diffDay === 1) return 'Yesterday';
+                return `${diffDay} day${diffDay > 1 ? 's' : ''} ago`;
+            } else if (diffHour > 0) {
+                return `${diffHour} hour${diffHour > 1 ? 's' : ''} ago`;
+            } else if (diffMin > 0) {
+                return `${diffMin} minute${diffMin > 1 ? 's' : ''} ago`;
             } else {
-                // User is signed out
-                signinBtn.style.display = 'flex';
-                userMenuContainer.style.display = 'none';
-                uploadBtn.style.display = 'none';
-            }
-            
-            // Close user menu
-            userMenu.classList.remove('show');
-        }
-
-        // ============================================
-        // VIDEO MANAGEMENT
-        // ============================================
-
-        // Initialize video boxes on homepage
-        function initHomepage() {
-            videoGrid.innerHTML = '';
-            
-            videos.forEach(video => {
-                const videoCard = document.createElement('div');
-                videoCard.className = 'video-card';
-                videoCard.dataset.id = video.id;
-                
-                videoCard.innerHTML = `
-                    <div class="thumbnail-container">
-                        <div class="video-preview">
-                            <video muted playsinline>
-                                <source src="${video.videoUrl}" type="video/mp4">
-                            </video>
-                            <div class="play-overlay">
-                                <div class="play-icon">
-                                    <i class="fas fa-play"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">${video.title}</h3>
-                        <p class="video-channel">${video.channel}</p>
-                        <div class="video-meta">
-                            <span>${formatNumber(video.views)} views</span>
-                            <span>${video.uploadDate}</span>
-                        </div>
-                    </div>
-                `;
-                
-                // Add hover video preview
-                const videoElement = videoCard.querySelector('video');
-                videoCard.addEventListener('mouseenter', () => {
-                    videoElement.currentTime = 0;
-                    videoElement.play().catch(e => console.log('Autoplay prevented'));
-                });
-                
-                videoCard.addEventListener('mouseleave', () => {
-                    videoElement.pause();
-                    videoElement.currentTime = 0;
-                });
-                
-                // Click to open video detail - PLAYS INSIDE SITE ONLY
-                videoCard.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    openVideoDetail(video.id);
-                });
-                
-                videoGrid.appendChild(videoCard);
-            });
-        }
-
-        // Open video detail page - NO REDIRECTS, PLAYS INSIDE SITE
-        function openVideoDetail(videoId) {
-            const video = videos.find(v => v.id === videoId);
-            if (!video) return;
-            
-            currentVideoId = videoId;
-            
-            // Hide homepage, show video detail
-            homepage.style.display = 'none';
-            videoDetail.style.display = 'block';
-            
-            // Initialize Video.js player with CrackRevenue ads
-            initVideoPlayer(video.videoUrl, video.title, videoId);
-            
-            // Update video details
-            detailVideoTitle.textContent = video.title;
-            viewCount.textContent = `${formatNumber(video.views)} views`;
-            uploadDate.textContent = video.uploadDate;
-            likeCount.textContent = formatNumber(video.likes);
-            dislikeCount.textContent = formatNumber(video.dislikes);
-            commentsCount.textContent = `Comments (${video.comments})`;
-            likeDislikeRatio.textContent = `${video.likesPercentage}% liked this video`;
-            
-            // Update channel info
-            detailChannelName.textContent = video.channel;
-            detailChannelSubs.textContent = `${formatNumber(video.likes + video.dislikes)} followers`;
-            detailChannelAvatar.textContent = video.channel.charAt(0);
-            
-            // Update comment form avatar
-            const commentUserAvatar = document.getElementById('comment-user-avatar');
-            if (currentUser) {
-                commentUserAvatar.textContent = currentUser.displayName ? currentUser.displayName.charAt(0).toUpperCase() : 'U';
-            } else {
-                commentUserAvatar.textContent = 'Y';
-            }
-            
-            // Reset ad revenue for this session
-            adRevenue = 0;
-            adImpressions = 0;
-            updateAdRevenueDisplay();
-            
-            // Load comments
-            loadComments(videoId);
-            
-            // Load related videos
-            loadRelatedVideos(videoId);
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
-            
-            // Update URL - NO REDIRECT
-            history.pushState({videoId: videoId}, '', `/watch/${videoId}`);
-        }
-
-        // Load related videos
-        function loadRelatedVideos(currentVideoId) {
-            relatedVideos.innerHTML = '';
-            
-            const currentVideo = videos.find(v => v.id === currentVideoId);
-            if (!currentVideo) return;
-            
-            // Filter related videos
-            const filteredVideos = videos.filter(v => v.id !== currentVideoId);
-            
-            // Take first 5 related videos
-            const related = filteredVideos.slice(0, 5);
-            
-            related.forEach(video => {
-                const relatedVideo = document.createElement('div');
-                relatedVideo.className = 'related-video';
-                relatedVideo.dataset.id = video.id;
-                
-                relatedVideo.innerHTML = `
-                    <img src="https://via.placeholder.com/168x94/333333/ffffff?text=+" alt="${video.title}" class="related-thumbnail">
-                    <div class="related-video-info">
-                        <h4>${video.title}</h4>
-                        <p>${video.channel}</p>
-                        <p>${formatNumber(video.views)} views • ${video.uploadDate}</p>
-                    </div>
-                `;
-                
-                // Click to open video detail - NO REDIRECT
-                relatedVideo.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    openVideoDetail(video.id);
-                });
-                
-                relatedVideos.appendChild(relatedVideo);
-            });
-        }
-
-        // Load comments
-        function loadComments(videoId) {
-            commentsList.innerHTML = '';
-            
-            // Get comments for this video (from localStorage or default)
-            if (!comments[videoId]) {
-                comments[videoId] = [
-                    {
-                        id: 'comment1',
-                        author: 'User123',
-                        text: 'Great video! 🔥',
-                        time: '2 hours ago',
-                        likes: 12
-                    },
-                    {
-                        id: 'comment2',
-                        author: 'Viewer456',
-                        text: 'Love this content!',
-                        time: '1 day ago',
-                        likes: 8
-                    },
-                    {
-                        id: 'comment3',
-                        author: 'Fan789',
-                        text: 'More videos like this please!',
-                        time: '3 days ago',
-                        likes: 15
-                    }
-                ];
-                
-                // Save to localStorage
-                localStorage.setItem('haitiantube_comments', JSON.stringify(comments));
-            }
-            
-            // Display comments
-            comments[videoId].forEach(comment => {
-                const commentElement = document.createElement('div');
-                commentElement.className = 'comment';
-                commentElement.dataset.id = comment.id;
-                
-                commentElement.innerHTML = `
-                    <div class="comment-avatar">${comment.author.charAt(0)}</div>
-                    <div class="comment-content">
-                        <h4>${comment.author}</h4>
-                        <p>${comment.text}</p>
-                        <div class="comment-time">${comment.time} • ${comment.likes} likes</div>
-                        <div class="comment-actions">
-                            <div class="comment-action">
-                                <i class="fas fa-thumbs-up"></i>
-                                <span>Like</span>
-                            </div>
-                            <div class="comment-action">
-                                <i class="fas fa-thumbs-down"></i>
-                            </div>
-                            <div class="comment-action">
-                                Reply
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                commentsList.appendChild(commentElement);
-            });
-        }
-
-        // Record a view for a video
-        function recordView(videoId) {
-            const video = videos.find(v => v.id === videoId);
-            if (video) {
-                video.views++;
-                viewCount.textContent = `${formatNumber(video.views)} views`;
-                
-                // Save to localStorage
-                localStorage.setItem('haitiantube_views', JSON.stringify(
-                    videos.map(v => ({id: v.id, views: v.views}))
-                ));
+                return 'Just now';
             }
         }
-
-        // Show homepage
-        function showHomepage() {
-            homepage.style.display = 'block';
-            videoDetail.style.display = 'none';
-            
-            if (player) {
-                player.pause();
-            }
-            
-            history.pushState({}, '', '/');
-        }
-
-        // ============================================
-        // INITIALIZATION
-        // ============================================
-
-        // Initialize the app
-        function initApp() {
-            // Load videos
-            initHomepage();
-            
-            // Load saved data from localStorage
-            const savedViews = localStorage.getItem('haitiantube_views');
-            if (savedViews) {
-                const viewsData = JSON.parse(savedViews);
-                viewsData.forEach(viewData => {
-                    const video = videos.find(v => v.id === viewData.id);
-                    if (video) {
-                        video.views = viewData.views;
-                    }
-                });
-            }
-            
-            const savedComments = localStorage.getItem('haitiantube_comments');
-            if (savedComments) {
-                comments = JSON.parse(savedComments);
-            }
-            
-            const savedLikes = localStorage.getItem('haitiantube_likes');
-            if (savedLikes) {
-                const likesData = JSON.parse(savedLikes);
-                likesData.forEach(likeData => {
-                    const video = videos.find(v => v.id === likeData.id);
-                    if (video) {
-                        video.likes = likeData.likes;
-                        video.dislikes = likeData.dislikes;
-                    }
-                });
-            }
-            
-            // Setup Firebase auth listener
-            auth.onAuthStateChanged(async (user) => {
-                await updateUI(user);
-                
-                // Check URL for video
-                const path = window.location.pathname;
-                const videoMatch = path.match(/\/watch\/(.+)/);
-                
-                if (videoMatch && videoMatch[1]) {
-                    const videoId = videoMatch[1];
-                    if (videos.some(v => v.id === videoId)) {
-                        openVideoDetail(videoId);
-                    }
-                }
-            });
-        }
-
-        // ============================================
-        // EVENT LISTENERS
-        // ============================================
-
-        document.addEventListener('DOMContentLoaded', initApp);
-
-        // Home link
-        homeLink.addEventListener('click', function(e) {
-            e.preventDefault();
-            showHomepage();
-        });
-
-        // Upload button
-        uploadBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('Upload feature coming soon!');
-        });
-
-        // Like button
-        likeBtn.addEventListener('click', function() {
-            if (!currentVideoId) return;
-            
-            const video = videos.find(v => v.id === currentVideoId);
-            if (!video) return;
-            
-            video.likes++;
-            likeCount.textContent = formatNumber(video.likes);
-            
-            // Calculate new percentage
-            const totalInteractions = video.likes + video.dislikes;
-            const likeRatio = totalInteractions > 0 ? Math.round((video.likes / totalInteractions) * 100) : 0;
-            likeDislikeRatio.textContent = `${likeRatio}% liked this video`;
-            
-            // Save to localStorage
-            localStorage.setItem('haitiantube_likes', JSON.stringify(
-                videos.map(v => ({id: v.id, likes: v.likes, dislikes: v.dislikes}))
-            ));
-            
-            this.classList.add('active');
-        });
-
-        // Dislike button
-        dislikeBtn.addEventListener('click', function() {
-            if (!currentVideoId) return;
-            
-            const video = videos.find(v => v.id === currentVideoId);
-            if (!video) return;
-            
-            video.dislikes++;
-            dislikeCount.textContent = formatNumber(video.dislikes);
-            
-            // Calculate new percentage
-            const totalInteractions = video.likes + video.dislikes;
-            const likeRatio = totalInteractions > 0 ? Math.round((video.likes / totalInteractions) * 100) : 0;
-            likeDislikeRatio.textContent = `${likeRatio}% liked this video`;
-            
-            // Save to localStorage
-            localStorage.setItem('haitiantube_likes', JSON.stringify(
-                videos.map(v => ({id: v.id, likes: v.likes, dislikes: v.dislikes}))
-            ));
-            
-            this.classList.add('active');
-        });
-
-        // Share button
-        shareBtn.addEventListener('click', function() {
-            const videoTitle = detailVideoTitle.textContent;
-            const url = window.location.href;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: videoTitle,
-                    text: `Check out this video on HaitianTube: ${videoTitle}`,
-                    url: url
-                });
-            } else {
-                navigator.clipboard.writeText(url).then(() => {
-                    alert(`Link copied to clipboard:\n\n${url}`);
-                });
-            }
-        });
-
-        // Subscribe button
-        subscribeBtn.addEventListener('click', function() {
-            if (!currentVideoId) return;
-            
-            const video = videos.find(v => v.id === currentVideoId);
-            if (!video) return;
-            
-            if (this.classList.contains('subscribed')) {
-                this.classList.remove('subscribed');
-                this.textContent = 'Subscribe';
-                alert(`Unsubscribed from ${video.channel}`);
-            } else {
-                this.classList.add('subscribed');
-                this.textContent = 'Subscribed';
-                alert(`Subscribed to ${video.channel}!`);
-            }
-        });
-
-        // Comment submission
-        commentSubmitBtn.addEventListener('click', function() {
-            if (!currentUser) {
-                authModal.classList.add('show');
-                return;
-            }
-            
-            if (!currentVideoId) return;
-            
-            const commentText = commentInput.value.trim();
-            if (!commentText) return;
-            
-            // Create new comment
-            const newComment = {
-                id: 'comment_' + Date.now(),
-                author: currentUser.displayName || currentUser.email.split('@')[0],
-                text: commentText,
-                time: 'Just now',
-                likes: 0
-            };
-            
-            // Add to comments list
-            if (!comments[currentVideoId]) {
-                comments[currentVideoId] = [];
-            }
-            
-            comments[currentVideoId].unshift(newComment);
-            
-            // Update comment count
-            const video = videos.find(v => v.id === currentVideoId);
-            if (video) {
-                video.comments++;
-                commentsCount.textContent = `Comments (${video.comments})`;
-            }
-            
-            // Save to localStorage
-            localStorage.setItem('haitiantube_comments', JSON.stringify(comments));
-            
-            // Clear input and reload comments
-            commentInput.value = '';
-            loadComments(currentVideoId);
-        });
-
-        // Search functionality
-        searchForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            performSearch();
-        });
-
-        function performSearch() {
-            const searchTerm = searchInput.value.toLowerCase().trim();
-            if (!searchTerm) {
-                sectionTitle.textContent = 'Trending Videos';
-                initHomepage();
-                return;
-            }
-            
-            const filteredVideos = videos.filter(video => 
-                video.title.toLowerCase().includes(searchTerm) || 
-                video.description.toLowerCase().includes(searchTerm) ||
-                video.channel.toLowerCase().includes(searchTerm)
-            );
-            
-            sectionTitle.textContent = `Search Results for "${searchTerm}"`;
-            
-            if (filteredVideos.length === 0) {
-                videoGrid.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
-                        <i class="fas fa-search" style="font-size: 48px; color: var(--yt-light-gray); margin-bottom: 16px;"></i>
-                        <h3>No videos found</h3>
-                        <p>Try different search terms</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            videoGrid.innerHTML = '';
-            
-            filteredVideos.forEach(video => {
-                const videoCard = document.createElement('div');
-                videoCard.className = 'video-card';
-                videoCard.dataset.id = video.id;
-                
-                videoCard.innerHTML = `
-                    <div class="thumbnail-container">
-                        <div class="video-preview">
-                            <video muted playsinline>
-                                <source src="${video.videoUrl}" type="video/mp4">
-                            </video>
-                            <div class="play-overlay">
-                                <div class="play-icon">
-                                    <i class="fas fa-play"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="video-info">
-                        <h3 class="video-title">${video.title}</h3>
-                        <p class="video-channel">${video.channel}</p>
-                        <div class="video-meta">
-                            <span>${formatNumber(video.views)} views</span>
-                            <span>${video.uploadDate}</span>
-                        </div>
-                    </div>
-                `;
-                
-                // Add hover video preview
-                const videoElement = videoCard.querySelector('video');
-                videoCard.addEventListener('mouseenter', () => {
-                    videoElement.currentTime = 0;
-                    videoElement.play().catch(e => console.log('Autoplay prevented'));
-                });
-                
-                videoCard.addEventListener('mouseleave', () => {
-                    videoElement.pause();
-                    videoElement.currentTime = 0;
-                });
-                
-                // Click to open video detail - NO REDIRECT
-                videoCard.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    openVideoDetail(video.id);
-                });
-                
-                videoGrid.appendChild(videoCard);
-            });
-        }
-
-        // Handle browser back/forward
-        window.addEventListener('popstate', function(event) {
-            const path = window.location.pathname;
-            const videoMatch = path.match(/\/watch\/(.+)/);
-            
-            if (videoMatch && videoMatch[1]) {
-                const videoId = videoMatch[1];
-                if (videos.some(v => v.id === videoId)) {
-                    openVideoDetail(videoId);
-                }
-            } else {
-                showHomepage();
-            }
-        });
-
-        // Allow Enter key to submit comment
-        commentInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                commentSubmitBtn.click();
-            }
-        });
-
-        // Modal close buttons
-        const modalCloses = document.querySelectorAll('.modal-close');
-        modalCloses.forEach(closeBtn => {
-            closeBtn.addEventListener('click', function() {
-                this.closest('.modal').classList.remove('show');
-            });
-        });
-
-        // Close modal when clicking outside
-        const modals = document.querySelectorAll('.modal');
-        modals.forEach(modal => {
-            modal.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.classList.remove('show');
-                }
-            });
-        });
-
-        // User menu toggle
-        userMenuBtn.addEventListener('click', function() {
-            userMenu.classList.toggle('show');
-        });
-
-        // Close user menu when clicking outside
-        document.addEventListener('click', function(e) {
-            if (userMenuContainer && !userMenuContainer.contains(e.target)) {
-                userMenu.classList.remove('show');
-            }
-        });
-
-        // Logout
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function() {
-                auth.signOut().then(() => {
-                    showHomepage();
-                });
-            });
-        }
-
-        // Switch between signin/signup forms
-        if (switchToSignup) {
-            switchToSignup.addEventListener('click', function(e) {
-                e.preventDefault();
-                signinForm.style.display = 'none';
-                signupForm.style.display = 'block';
-                authModalTitle.textContent = 'Sign Up';
-            });
-        }
-
-        if (switchToSignin) {
-            switchToSignin.addEventListener('click', function(e) {
-                e.preventDefault();
-                signupForm.style.display = 'none';
-                signinForm.style.display = 'block';
-                authModalTitle.textContent = 'Sign In';
-            });
-        }
-
-        // Sign in
-        if (signinSubmit && authEmail && authPassword) {
-            signinSubmit.addEventListener('click', async function() {
-                const email = authEmail.value.trim();
-                const password = authPassword.value;
-                
-                if (!email || !password) {
-                    if (authError) showError(authError, 'Please enter email and password');
-                    return;
-                }
-                
-                try {
-                    await auth.signInWithEmailAndPassword(email, password);
-                    if (authModal) authModal.classList.remove('show');
-                    authEmail.value = '';
-                    authPassword.value = '';
-                    if (authError) authError.style.display = 'none';
-                } catch (error) {
-                    console.error('Sign in error:', error);
-                    if (authError) showError(authError, 'Failed to sign in: ' + error.message);
-                }
-            });
-        }
-
-        // Sign up
-        if (signupSubmit && signupName && signupEmail && signupPassword && signupConfirmPassword) {
-            signupSubmit.addEventListener('click', async function() {
-                const name = signupName.value.trim();
-                const email = signupEmail.value.trim();
-                const password = signupPassword.value;
-                const confirmPassword = signupConfirmPassword.value;
-                
-                // Validation
-                if (!name) {
-                    if (authError) showError(authError, 'Please enter a display name');
-                    return;
-                }
-                
-                if (!email) {
-                    if (authError) showError(authError, 'Please enter an email');
-                    return;
-                }
-                
-                if (!password) {
-                    if (authError) showError(authError, 'Please enter a password');
-                    return;
-                }
-                
-                if (password !== confirmPassword) {
-                    if (authError) showError(authError, 'Passwords do not match');
-                    return;
-                }
-                
-                if (password.length < 6) {
-                    if (authError) showError(authError, 'Password must be at least 6 characters');
-                    return;
-                }
-                
-                try {
-                    // Create user
-                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                    
-                    // Update profile
-                    await userCredential.user.updateProfile({
-                        displayName: name
-                    });
-                    
-                    // Create user document in Firestore
-                    await db.collection('users').doc(userCredential.user.uid).set({
-                        name: name,
-                        email: email,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        earnings: 0
-                    });
-                    
-                    if (authSuccess) showSuccess(authSuccess, 'Account created successfully!');
-                    
-                    // Clear form
-                    signupName.value = '';
-                    signupEmail.value = '';
-                    signupPassword.value = '';
-                    signupConfirmPassword.value = '';
-                    
-                } catch (error) {
-                    console.error('Sign up error:', error);
-                    let errorMessage = 'Failed to create account. ';
-                    
-                    if (error.code === 'auth/email-already-in-use') {
-                        errorMessage += 'Email already in use.';
-                    } else if (error.code === 'auth/invalid-email') {
-                        errorMessage += 'Invalid email address.';
-                    } else if (error.code === 'auth/weak-password') {
-                        errorMessage += 'Password is too weak.';
-                    } else {
-                        errorMessage += error.message;
-                    }
-                    
-                    if (authError) showError(authError, errorMessage);
-                }
-            });
-        }
-
-        // Sign in button
-        if (signinBtn) {
-            signinBtn.addEventListener('click', function() {
-                if (signinForm) signinForm.style.display = 'block';
-                if (signupForm) signupForm.style.display = 'none';
-                if (authModalTitle) authModalTitle.textContent = 'Sign In';
-                if (authModal) authModal.classList.add('show');
-            });
-        }
-
-        // Prevent any external links from opening
-        document.addEventListener('click', function(e) {
-            // Prevent any anchor tags with href from navigating away
-            if (e.target.tagName === 'A' && e.target.getAttribute('href') && 
-                !e.target.getAttribute('href').startsWith('#') &&
-                !e.target.getAttribute('href').startsWith('/')) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-            
-            // Prevent video element from opening context menu
-            if (e.target.tagName === 'VIDEO') {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        }, true);
-
-        // Prevent right-click on videos
-        document.addEventListener('contextmenu', function(e) {
-            if (e.target.tagName === 'VIDEO') {
-                e.preventDefault();
-                return false;
-            }
-        });
-
     </script>
 </body>
 </html>
