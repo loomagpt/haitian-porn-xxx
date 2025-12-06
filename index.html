@@ -73,7 +73,7 @@
         #prerollAdVideo {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
         }
         
         .preroll-controls {
@@ -123,24 +123,6 @@
             padding: 8px 16px;
             border-radius: 20px;
             border: 1px solid #444;
-        }
-        
-        .preroll-sponsor {
-            text-align: center;
-            padding: 15px;
-            color: #aaa;
-            font-size: 13px;
-            background-color: #111;
-        }
-        
-        .preroll-sponsor a {
-            color: #3ea6ff;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .preroll-sponsor a:hover {
-            text-decoration: underline;
         }
         
         /* LOADING SPINNER FOR AD */
@@ -961,132 +943,6 @@
             margin-bottom: 20px;
         }
         
-        /* REWARD ADS BUTTON */
-        .reward-ad-btn {
-            background: linear-gradient(135deg, #ff6b6b, #ffa500);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-left: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-        }
-        
-        .reward-ad-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-        }
-        
-        .reward-ad-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        /* REWARD AD OVERLAY */
-        #rewardAdOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
-            z-index: 9998;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .reward-ad-container {
-            width: 90%;
-            max-width: 800px;
-            background-color: #1a1a1a;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
-        }
-        
-        .reward-ad-header {
-            padding: 20px;
-            background: linear-gradient(135deg, #ff6b6b, #ffa500);
-            text-align: center;
-            color: white;
-        }
-        
-        .reward-ad-header h2 {
-            margin: 0;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .reward-ad-content {
-            padding: 30px;
-            text-align: center;
-        }
-        
-        .reward-icon {
-            font-size: 64px;
-            color: #ffa500;
-            margin-bottom: 20px;
-        }
-        
-        .reward-ad-content h3 {
-            margin-bottom: 15px;
-            color: #f1f1f1;
-        }
-        
-        .reward-ad-content p {
-            color: #aaa;
-            margin-bottom: 25px;
-            font-size: 16px;
-            line-height: 1.6;
-        }
-        
-        .reward-ad-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        
-        .reward-btn {
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        .reward-watch-btn {
-            background: linear-gradient(135deg, #ff6b6b, #ffa500);
-            color: white;
-        }
-        
-        .reward-watch-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-        }
-        
-        .reward-close-btn {
-            background-color: #333;
-            color: #f1f1f1;
-        }
-        
-        .reward-close-btn:hover {
-            background-color: #444;
-        }
-        
         /* Responsive Design */
         @media (max-width: 1024px) {
             .video-container {
@@ -1154,14 +1010,6 @@
                 font-size: 14px;
                 padding: 6px 12px;
             }
-            
-            .reward-ad-buttons {
-                flex-direction: column;
-            }
-            
-            .reward-btn {
-                width: 100%;
-            }
         }
         
         /* Mobile Search Overlay */
@@ -1228,52 +1076,13 @@
                     <p>Starting your video in 3 seconds...</p>
                 </div>
                 
-                <!-- Ad Video - CrackRevenue ads only -->
-                <video id="prerollAdVideo" style="display: none;"></video>
-                
-                <!-- CrackRevenue Ad Image Placeholder -->
-                <div id="adImageFallback" style="display: none; width: 100%; height: 100%; background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); position: relative;">
-                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: white; padding: 20px;">
-                        <i class="fas fa-ad" style="font-size: 60px; margin-bottom: 20px; color: #3ea6ff;"></i>
-                        <h2 style="margin-bottom: 10px;">Advertisement by CrackRevenue</h2>
-                        <p>Your video will start after this message</p>
-                        <p style="margin-top: 20px; font-size: 12px; opacity: 0.8;">Pre-roll advertisement</p>
-                    </div>
-                </div>
+                <!-- VAST Ad Video -->
+                <video id="prerollAdVideo" style="display: none;" controls></video>
                 
                 <div class="preroll-controls">
                     <div class="skip-timer" id="skipTimer">Ad • Skip in <span id="skipSeconds">5</span> seconds</div>
                     <button class="skip-button" id="skipAdButton" disabled>
                         <i class="fas fa-forward"></i> Skip Ad
-                    </button>
-                </div>
-            </div>
-            
-            <div class="preroll-sponsor">
-                Advertisement by <a href="https://t.acrsmartcam.com/387067/3664/0?bo=2779,2778,2777,2776,2775&target=prerolls&po=6533&aff_sub5=SF_006OG000004lmDN" target="_blank" id="sponsorLink" rel="noopener noreferrer">CrackRevenue</a>
-            </div>
-        </div>
-    </div>
-    
-    <!-- REWARD AD OVERLAY -->
-    <div id="rewardAdOverlay">
-        <div class="reward-ad-container">
-            <div class="reward-ad-header">
-                <h2><i class="fas fa-gift"></i> Reward Ad</h2>
-            </div>
-            <div class="reward-ad-content">
-                <div class="reward-icon">
-                    <i class="fas fa-coins"></i>
-                </div>
-                <h3>Watch an Ad, Get Rewarded!</h3>
-                <p>Watch this short advertisement to unlock special features or get exclusive content. The ad will only take a moment and you'll receive a reward upon completion.</p>
-                <p><strong>Reward:</strong> Unlock premium features for 24 hours</p>
-                <div class="reward-ad-buttons">
-                    <button class="reward-btn reward-watch-btn" id="watchRewardAdBtn">
-                        <i class="fas fa-play-circle"></i> Watch Ad for Reward
-                    </button>
-                    <button class="reward-btn reward-close-btn" id="closeRewardAdBtn">
-                        <i class="fas fa-times"></i> Maybe Later
                     </button>
                 </div>
             </div>
@@ -1373,9 +1182,6 @@
             </div>
             
             <div class="user-actions">
-                <button class="reward-ad-btn" id="rewardAdBtn">
-                    <i class="fas fa-gift"></i> Reward Ad
-                </button>
                 <div class="user-avatar" id="userAvatar">U</div>
             </div>
         </header>
@@ -1398,11 +1204,6 @@
         <div class="main-container" id="homePage">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h1>Recommended Videos</h1>
-                <div style="display: flex; gap: 10px;">
-                    <button class="reward-ad-btn" id="homeRewardBtn">
-                        <i class="fas fa-gift"></i> Watch Reward Ad
-                    </button>
-                </div>
             </div>
             
             <div class="video-grid" id="videoGrid">
@@ -1466,9 +1267,6 @@
                             <button class="action-btn" id="downloadBtn">
                                 <i class="fas fa-download"></i> Download
                             </button>
-                            <button class="reward-ad-btn" id="detailRewardBtn">
-                                <i class="fas fa-gift"></i> Reward
-                            </button>
                         </div>
                     </div>
                     
@@ -1514,45 +1312,7 @@
             </div>
         </div>
     </div>
-    
-    <!-- CrackRevenue Postitial Ads Script -->
-    <script src="https://crxcr2.com/popin/latest/popin-min.js"></script>
-    <script>
-    var crakPopInParamsIframe = {
-        url: 'https://t.crjmpy.com/387067/8023?aff_sub5=SF_006OG000004lmDN',
-        decryptUrl: false,
-        contentUrl: 'https://app.aimour.ai/?aff_id=1&transaction_id=postitial',
-        decryptContentUrl: false,
-        contentType: 'iframe',
-        width: '85%',
-        height: '85%',
-        timeout: false,
-        delayClose: 0,
-        clickStart: false,
-        closeIntent: false,
-        postitialBehavior: true,
-        closeButtonColor: '#000',
-        closeCrossColor: '#fff',
-        shadow: true,
-        shadowColor: '#000',
-        shadowOpacity: '.5',
-        shadeColor: '#111',
-        shadeOpacity: '0',
-        border: '1px',
-        borderColor: '#000',
-        borderRadius: '0px',
-        leadOut: true,
-        animation: 'slide',
-        direction: 'up',
-        verticalPosition: 'center',
-        horizontalPosition: 'center',
-        expireDays: 0.01
-    };
-    </script>
-    
-    <!-- Monetag Interstitial Ads -->
-    <script>(function(s){s.dataset.zone='10282578',s.src='https://groleegni.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-    
+
     <script>
         // App State
         let currentUser = null;
@@ -1565,8 +1325,9 @@
         let isOnline = navigator.onLine;
         let recentSearches = JSON.parse(localStorage.getItem('streamflix_recent_searches')) || [];
         let searchTimeout = null;
-        let postitialAdShown = false;
-        let rewardAdCooldown = false;
+        
+        // HilltopAds VAST URL
+        const VAST_TAG_URL = "https://homelybottle.com/demBF/zfd.GrNmvVZjGGU-/WecmX9-uGZhU/lzkyP_TVYS3XMyjtA/4EN/j/getFNdjEclyRM/DUg/2/OpQr";
         
         // Pre-roll Ad State
         let prerollAdVisible = false;
@@ -1575,17 +1336,6 @@
         let pendingVideoId = null;
         let pendingVideoData = null;
         let adStarted = false;
-        
-        // ONLY CrackRevenue pre-roll ad URLs - NO external video sources
-        const prerollAdUrls = [
-            {
-                url: "https://t.acrsmartcam.com/387067/3664/0?bo=2779,2778,2777,2776,2775&target=prerolls&po=6533&aff_sub5=SF_006OG000004lmDN",
-                type: "tracking"
-            }
-        ];
-
-        // CrackRevenue Reward Ad URL
-        const rewardAdUrl = "https://t.crjmpy.com/387067/3788/0?bo=3471,3472,3473,3474,3475&target=rewards&po=6456&aff_sub5=SF_006OG000004lmDN";
 
         // Smart search suggestions database
         const searchSuggestions = {
@@ -1617,7 +1367,7 @@
             'Full movie'
         ];
 
-        // Video Data - INCLUDING NEW ZOMBIE RAT FILM
+        // Video Data
         const videoData = [
             {
                 id: 1,
@@ -1738,19 +1488,9 @@
         const skipAdButton = document.getElementById('skipAdButton');
         const skipTimer = document.getElementById('skipTimer');
         const skipSeconds = document.getElementById('skipSeconds');
-        const sponsorLink = document.getElementById('sponsorLink');
         const adLoading = document.getElementById('adLoading');
         const adError = document.getElementById('adError');
-        const adImageFallback = document.getElementById('adImageFallback');
         const adCountdown = document.getElementById('adCountdown');
-        
-        // Reward Ad Elements
-        const rewardAdOverlay = document.getElementById('rewardAdOverlay');
-        const rewardAdBtn = document.getElementById('rewardAdBtn');
-        const homeRewardBtn = document.getElementById('homeRewardBtn');
-        const detailRewardBtn = document.getElementById('detailRewardBtn');
-        const watchRewardAdBtn = document.getElementById('watchRewardAdBtn');
-        const closeRewardAdBtn = document.getElementById('closeRewardAdBtn');
         
         // Detail page elements
         const mainVideo = document.getElementById('mainVideo');
@@ -1804,11 +1544,6 @@
                 showMainApp();
                 loadVideos();
                 updateRecentSearchesUI();
-                
-                // Show postitial ad after login
-                setTimeout(() => {
-                    showPostitialAd();
-                }, 2000);
             });
             
             // Set up main app event listeners
@@ -1955,8 +1690,7 @@
                     return;
                 }
                 
-                // Show reward ad before download
-                showRewardAd('download');
+                alert('Download feature would start here in a real implementation.');
             });
             
             // Pre-roll ad event listeners
@@ -1965,168 +1699,76 @@
             prerollAdVideo.addEventListener('error', prerollAdError);
             prerollAdVideo.addEventListener('loadeddata', prerollAdLoaded);
             
-            // Reward ad event listeners
-            rewardAdBtn.addEventListener('click', function() {
-                showRewardAd('general');
-            });
-            
-            homeRewardBtn.addEventListener('click', function() {
-                showRewardAd('home');
-            });
-            
-            detailRewardBtn.addEventListener('click', function() {
-                showRewardAd('detail');
-            });
-            
-            watchRewardAdBtn.addEventListener('click', function() {
-                watchRewardAd();
-            });
-            
-            closeRewardAdBtn.addEventListener('click', function() {
-                hideRewardAd();
-            });
-            
             console.log('Streamflix initialization complete');
         });
 
-        // POSTITTIAL AD FUNCTION
-        function showPostitialAd() {
-            if (postitialAdShown) return;
-            
-            console.log('Showing postitial ad');
-            
-            // Check if CrackRevenue popin script is loaded
-            if (typeof crakPopIn !== 'undefined') {
-                try {
-                    crakPopIn.init(crakPopInParamsIframe);
-                    postitialAdShown = true;
-                    console.log('Postitial ad launched successfully');
-                } catch (error) {
-                    console.error('Error launching postitial ad:', error);
-                }
-            } else {
-                console.warn('CrackRevenue popin script not loaded');
+        // VAST PARSER FUNCTION
+        function fetchAndParseVAST(vastUrl) {
+            return new Promise((resolve, reject) => {
+                console.log('Fetching VAST from:', vastUrl);
                 
-                // Fallback: Open in new tab after delay
-                setTimeout(() => {
-                    window.open('https://t.crjmpy.com/387067/8023?aff_sub5=SF_006OG000004lmDN', '_blank');
-                    postitialAdShown = true;
-                }, 3000);
-            }
-        }
-
-        // REWARD AD FUNCTIONS
-        function showRewardAd(context) {
-            if (rewardAdCooldown) {
-                alert('Please wait a moment before watching another reward ad.');
-                return;
-            }
-            
-            if (!isOnline) {
-                alert('You need an internet connection to watch reward ads.');
-                return;
-            }
-            
-            console.log('Showing reward ad for context:', context);
-            rewardAdOverlay.style.display = 'flex';
-        }
-
-        function hideRewardAd() {
-            rewardAdOverlay.style.display = 'none';
-        }
-
-        function watchRewardAd() {
-            console.log('Watching reward ad');
-            
-            // Set cooldown
-            rewardAdCooldown = true;
-            
-            // Hide reward ad overlay
-            hideRewardAd();
-            
-            // Track reward ad start
-            trackRewardAdStart();
-            
-            // Show loading message
-            alert('Loading reward ad... Please wait.');
-            
-            // Open reward ad in new window
-            const rewardWindow = window.open(rewardAdUrl, '_blank', 'width=800,height=600');
-            
-            if (rewardWindow) {
-                // Check if window closed (ad completed)
-                const checkClosed = setInterval(() => {
-                    if (rewardWindow.closed) {
-                        clearInterval(checkClosed);
-                        rewardAdCompleted();
+                // Create XMLHttpRequest to fetch VAST XML
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', vastUrl, true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            try {
+                                const parser = new DOMParser();
+                                const xmlDoc = parser.parseFromString(xhr.responseText, "text/xml");
+                                
+                                // Parse VAST XML
+                                const vastElement = xmlDoc.getElementsByTagName('VAST')[0];
+                                if (!vastElement) {
+                                    reject(new Error('Invalid VAST response'));
+                                    return;
+                                }
+                                
+                                // Find the first media file
+                                const mediaFiles = xmlDoc.getElementsByTagName('MediaFile');
+                                if (mediaFiles.length === 0) {
+                                    reject(new Error('No media files found in VAST'));
+                                    return;
+                                }
+                                
+                                // Get the first media file URL
+                                const mediaUrl = mediaFiles[0].textContent;
+                                console.log('Found media URL:', mediaUrl);
+                                
+                                // Find impression URLs for tracking
+                                const impressionElements = xmlDoc.getElementsByTagName('Impression');
+                                const impressionUrls = [];
+                                for (let i = 0; i < impressionElements.length; i++) {
+                                    impressionUrls.push(impressionElements[i].textContent);
+                                }
+                                
+                                // Find clickthrough URL
+                                const clickThroughElements = xmlDoc.getElementsByTagName('ClickThrough');
+                                const clickThroughUrl = clickThroughElements.length > 0 ? clickThroughElements[0].textContent : null;
+                                
+                                resolve({
+                                    mediaUrl: mediaUrl,
+                                    impressionUrls: impressionUrls,
+                                    clickThroughUrl: clickThroughUrl
+                                });
+                                
+                            } catch (error) {
+                                console.error('Error parsing VAST XML:', error);
+                                reject(error);
+                            }
+                        } else {
+                            reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`));
+                        }
                     }
-                }, 1000);
-                
-                // Auto-close check after 30 seconds
-                setTimeout(() => {
-                    clearInterval(checkClosed);
-                    if (!rewardWindow.closed) {
-                        rewardWindow.close();
-                        rewardAdCompleted();
-                    }
-                }, 30000);
-            } else {
-                // If popup blocked, redirect in same window
-                alert('Popup blocked! Redirecting to reward ad...');
-                window.location.href = rewardAdUrl;
-                
-                // Simulate completion after delay
-                setTimeout(() => {
-                    rewardAdCompleted();
-                }, 10000);
-            }
+                };
+                xhr.onerror = function() {
+                    reject(new Error('Network error fetching VAST'));
+                };
+                xhr.send();
+            });
         }
 
-        function rewardAdCompleted() {
-            console.log('Reward ad completed');
-            
-            // Track completion
-            trackRewardAdCompletion();
-            
-            // Show success message
-            alert('🎉 Reward ad completed! You have unlocked premium features for 24 hours!');
-            
-            // Reset cooldown after 2 minutes
-            setTimeout(() => {
-                rewardAdCooldown = false;
-            }, 120000);
-        }
-
-        // Reward Ad Tracking Functions
-        function trackRewardAdStart() {
-            console.log('Tracking reward ad start');
-            
-            const trackingPixel = document.createElement('img');
-            trackingPixel.style.display = 'none';
-            trackingPixel.width = 1;
-            trackingPixel.height = 1;
-            
-            const trackingUrl = `https://t.crjmpy.com/387067/3788/0?bo=3471,3472,3473,3474,3475&target=rewards&po=6456&aff_sub5=SF_006OG000004lmDN&action=start&ref=${encodeURIComponent(window.location.href)}&t=${Date.now()}`;
-            trackingPixel.src = trackingUrl;
-            
-            document.body.appendChild(trackingPixel);
-        }
-
-        function trackRewardAdCompletion() {
-            console.log('Tracking reward ad completion');
-            
-            const trackingPixel = document.createElement('img');
-            trackingPixel.style.display = 'none';
-            trackingPixel.width = 1;
-            trackingPixel.height = 1;
-            
-            const trackingUrl = `https://t.crjmpy.com/387067/3788/0?bo=3471,3472,3473,3474,3475&target=rewards&po=6456&aff_sub5=SF_006OG000004lmDN&action=complete&ref=${encodeURIComponent(window.location.href)}&t=${Date.now()}`;
-            trackingPixel.src = trackingUrl;
-            
-            document.body.appendChild(trackingPixel);
-        }
-
-        // PRE-ROLL AD FUNCTIONS - ONLY CrackRevenue ads
+        // PRE-ROLL AD FUNCTIONS - HilltopAds VAST Integration
         function showPrerollAd(videoId, videoData) {
             console.log('Showing pre-roll ad for video:', videoId);
             
@@ -2151,34 +1793,53 @@
             adLoading.style.display = 'block';
             adError.style.display = 'none';
             prerollAdVideo.style.display = 'none';
-            adImageFallback.style.display = 'none';
             
             // Show pre-roll overlay
             prerollAdOverlay.style.display = 'flex';
             prerollAdVisible = true;
             
-            // Track impression
-            trackAdImpression();
-            
             // Start skip timer
             startSkipTimer();
             
-            // Show CrackRevenue ad placeholder
-            setTimeout(() => {
-                if (!adStarted && prerollAdVisible) {
-                    console.log('Showing CrackRevenue ad placeholder');
-                    adLoading.style.display = 'none';
-                    adImageFallback.style.display = 'block';
-                    adStarted = true;
+            // Fetch and play VAST ad
+            fetchAndParseVAST(VAST_TAG_URL)
+                .then(adData => {
+                    console.log('VAST ad data loaded:', adData);
                     
-                    // Auto-skip after 5 seconds (simulating ad completion)
+                    // Track impressions
+                    if (adData.impressionUrls && adData.impressionUrls.length > 0) {
+                        adData.impressionUrls.forEach(url => {
+                            const trackingImg = new Image();
+                            trackingImg.src = url;
+                        });
+                    }
+                    
+                    // Set up click tracking
+                    if (adData.clickThroughUrl) {
+                        prerollAdVideo.addEventListener('click', function() {
+                            window.open(adData.clickThroughUrl, '_blank');
+                        });
+                        prerollAdVideo.style.cursor = 'pointer';
+                    }
+                    
+                    // Load and play the ad video
+                    prerollAdVideo.src = adData.mediaUrl;
+                    prerollAdVideo.load();
+                    
+                })
+                .catch(error => {
+                    console.error('Error loading VAST ad:', error);
+                    adLoading.style.display = 'none';
+                    adError.style.display = 'block';
+                    
+                    // Auto-continue after 3 seconds if ad fails
                     setTimeout(() => {
                         if (prerollAdVisible) {
-                            skipPrerollAd();
+                            closePrerollAd();
+                            playPendingVideo();
                         }
-                    }, 5000);
-                }
-            }, 1000);
+                    }, 3000);
+                });
         }
 
         function startSkipTimer() {
@@ -2202,13 +1863,19 @@
             adLoading.style.display = 'none';
             prerollAdVideo.style.display = 'block';
             adStarted = true;
+            
+            // Play the ad
+            const playPromise = prerollAdVideo.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Ad auto-play prevented:", error);
+                    // Show play button or handle error
+                });
+            }
         }
 
         function skipPrerollAd() {
             console.log('Skipping pre-roll ad');
-            
-            // Track skip event
-            trackAdSkip();
             
             // Close ad and play video
             closePrerollAd();
@@ -2233,10 +1900,7 @@
         function prerollAdEnded() {
             console.log('Pre-roll ad ended');
             
-            // Track completion
-            trackAdCompletion();
-            
-            // Close ad and play video
+            // Callback to unlock/play main video after ad completes
             closePrerollAd();
             playPendingVideo();
         }
@@ -2264,56 +1928,6 @@
                 pendingVideoId = null;
                 pendingVideoData = null;
             }
-        }
-
-        // Ad Tracking Functions - CrackRevenue ONLY
-        function trackAdImpression() {
-            console.log('Tracking ad impression');
-            
-            // Create tracking pixel for CrackRevenue
-            const trackingPixel = document.createElement('img');
-            trackingPixel.style.display = 'none';
-            trackingPixel.width = 1;
-            trackingPixel.height = 1;
-            
-            // CrackRevenue URL with impression tracking
-            const trackingUrl = `https://t.acrsmartcam.com/387067/3664/0?bo=2779,2778,2777,2776,2775&target=prerolls&po=6533&aff_sub5=SF_006OG000004lmDN&action=impression&ref=${encodeURIComponent(window.location.href)}&t=${Date.now()}`;
-            trackingPixel.src = trackingUrl;
-            
-            document.body.appendChild(trackingPixel);
-            
-            // Also set the sponsor link
-            sponsorLink.href = "https://t.acrsmartcam.com/387067/3664/0?bo=2779,2778,2777,2776,2775&target=prerolls&po=6533&aff_sub5=SF_006OG000004lmDN";
-        }
-
-        function trackAdSkip() {
-            console.log('Tracking ad skip');
-            
-            const trackingPixel = document.createElement('img');
-            trackingPixel.style.display = 'none';
-            trackingPixel.width = 1;
-            trackingPixel.height = 1;
-            
-            // CrackRevenue URL
-            const trackingUrl = `https://t.acrsmartcam.com/387067/3664/0?bo=2779,2778,2777,2776,2775&target=prerolls&po=6533&aff_sub5=SF_006OG000004lmDN&action=skip&ref=${encodeURIComponent(window.location.href)}&t=${Date.now()}`;
-            trackingPixel.src = trackingUrl;
-            
-            document.body.appendChild(trackingPixel);
-        }
-
-        function trackAdCompletion() {
-            console.log('Tracking ad completion');
-            
-            const trackingPixel = document.createElement('img');
-            trackingPixel.style.display = 'none';
-            trackingPixel.width = 1;
-            trackingPixel.height = 1;
-            
-            // CrackRevenue URL
-            const trackingUrl = `https://t.acrsmartcam.com/387067/3664/0?bo=2779,2778,2777,2776,2775&target=prerolls&po=6533&aff_sub5=SF_006OG000004lmDN&action=complete&ref=${encodeURIComponent(window.location.href)}&t=${Date.now()}`;
-            trackingPixel.src = trackingUrl;
-            
-            document.body.appendChild(trackingPixel);
         }
 
         function showVideoDetailDirect(videoId) {
@@ -2574,9 +2188,6 @@
             if (prerollAdVisible) {
                 closePrerollAd();
             }
-            
-            // Close any open reward ad
-            hideRewardAd();
             
             homePage.style.display = 'block';
             detailPage.style.display = 'none';
