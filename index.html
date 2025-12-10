@@ -6,7 +6,6 @@
     <title>Streamflix - Streaming Vidéo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-    <!-- Plyr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3/dist/plyr.css" />
     
     <script type="module">
@@ -90,130 +89,7 @@
             overflow-x: hidden;
         }
         
-        .video-slider-container {
-            width: 100%;
-            margin: 20px 0 40px 0;
-            position: relative;
-        }
-        
-        .section-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            padding: 0 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .section-title .see-all {
-            color: #3ea6ff;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        
-        .swiper {
-            width: 100%;
-            height: 280px;
-            padding: 0 24px;
-        }
-        
-        .swiper-slide {
-            position: relative;
-            border-radius: 12px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        
-        .swiper-slide:hover {
-            transform: scale(1.03);
-        }
-        
-        .slider-thumbnail {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-        
-        .slider-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.9));
-            color: white;
-        }
-        
-        .slider-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .slider-channel {
-            font-size: 14px;
-            color: #aaa;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .verified-badge {
-            color: #3ea6ff;
-            font-size: 12px;
-        }
-        
-        .swiper-button-next,
-        .swiper-button-prev {
-            color: white !important;
-            background: rgba(0,0,0,0.7);
-            width: 40px !important;
-            height: 40px !important;
-            border-radius: 50%;
-            display: flex !important;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .swiper-button-next:after,
-        .swiper-button-prev:after {
-            font-size: 20px !important;
-            font-weight: bold;
-        }
-        
-        #multiTagSlider {
-            margin-top: 0;
-        }
-        
-        .multitag-slider {
-            height: 320px;
-        }
-        
-        #offlineMessage {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: #ffcc00;
-            color: #000;
-            text-align: center;
-            padding: 12px;
-            z-index: 2000;
-            display: none;
-            font-weight: 500;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            font-size: 14px;
-        }
-        
+        /* Splash Screen */
         #splashScreen {
             position: fixed;
             top: 0;
@@ -263,6 +139,68 @@
             100% { transform: rotate(360deg); }
         }
         
+        /* Offline Message */
+        #offlineMessage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #ffcc00;
+            color: #000;
+            text-align: center;
+            padding: 12px;
+            z-index: 2000;
+            display: none;
+            font-weight: 500;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-size: 14px;
+        }
+        
+        /* Refresh System */
+        .refresh-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(to bottom, #ff0000, #cc0000);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1999;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .refresh-indicator.active {
+            transform: translateY(0);
+        }
+        
+        .refresh-btn {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background-color: #ff0000;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 99;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .refresh-btn:hover {
+            transform: rotate(180deg);
+        }
+        
+        /* Auth Screen */
         #authScreen {
             position: fixed;
             top: 0;
@@ -415,10 +353,144 @@
             text-decoration: underline;
         }
         
+        /* Avatar Selection Modal */
+        .avatar-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        
+        .avatar-modal-content {
+            background-color: #1a1a1a;
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .avatar-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .avatar-modal-header h2 {
+            font-size: 22px;
+            color: #fff;
+        }
+        
+        .avatar-modal-close {
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .avatar-option {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .avatar-option:hover {
+            transform: scale(1.05);
+            border-color: #3ea6ff;
+        }
+        
+        .avatar-option.selected {
+            border-color: #ff0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+        
+        .avatar-option img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .avatar-upload {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            border: 2px dashed #333;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        
+        .avatar-upload input {
+            display: none;
+        }
+        
+        .avatar-upload label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            color: #aaa;
+        }
+        
+        .avatar-upload label:hover {
+            color: #fff;
+        }
+        
+        .avatar-modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .avatar-save-btn {
+            flex: 1;
+            padding: 12px;
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .avatar-cancel-btn {
+            flex: 1;
+            padding: 12px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* Main App */
         #mainApp {
             display: none;
         }
         
+        /* Header */
         header {
             display: flex;
             justify-content: space-between;
@@ -462,6 +534,7 @@
             text-decoration: none;
         }
         
+        /* Search */
         .search-container {
             display: flex;
             flex: 0 1 640px;
@@ -585,6 +658,7 @@
             text-decoration: underline;
         }
         
+        /* User Actions */
         .user-actions {
             display: flex;
             gap: 20px;
@@ -602,12 +676,12 @@
             font-weight: bold;
             cursor: pointer;
             position: relative;
+            overflow: hidden;
         }
         
         .user-avatar img {
             width: 100%;
             height: 100%;
-            border-radius: 50%;
             object-fit: cover;
         }
         
@@ -618,7 +692,7 @@
             background-color: #212121;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            width: 200px;
+            width: 220px;
             display: none;
             z-index: 1000;
             margin-top: 10px;
@@ -649,6 +723,7 @@
             color: #ff4444;
         }
         
+        /* Navigation */
         .nav-container {
             padding: 0 24px;
             background-color: #0f0f0f;
@@ -702,12 +777,158 @@
             font-weight: 500;
         }
         
+        /* Main Container */
         .main-container {
             padding: 20px;
             max-width: 1600px;
             margin: 0 auto;
         }
         
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ff0000;
+        }
+        
+        .section-header h2 {
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-header .see-all {
+            color: #3ea6ff;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        /* Video Sliders */
+        .video-slider-container {
+            width: 100%;
+            margin: 20px 0 40px 0;
+            position: relative;
+        }
+        
+        .swiper {
+            width: 100%;
+            height: 280px;
+            padding: 0 24px;
+        }
+        
+        .swiper-slide {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .swiper-slide:hover {
+            transform: scale(1.03);
+        }
+        
+        .slider-thumbnail {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .slider-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            color: white;
+        }
+        
+        .slider-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .slider-channel {
+            font-size: 14px;
+            color: #aaa;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .verified-badge {
+            color: #3ea6ff;
+            font-size: 12px;
+        }
+        
+        .swiper-button-next,
+        .swiper-button-prev {
+            color: white !important;
+            background: rgba(0,0,0,0.7);
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 50%;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+            font-size: 20px !important;
+            font-weight: bold;
+        }
+        
+        /* Continue Watching Section */
+        .continue-watching-slider {
+            height: 240px;
+        }
+        
+        .continue-watching-slider .swiper-slide {
+            border: 2px solid #ff0000;
+        }
+        
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: #333;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: #ff0000;
+            transition: width 0.3s ease;
+        }
+        
+        .resume-time {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        /* Video Grid */
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -724,6 +945,7 @@
             transform: scale(1.02);
         }
         
+        /* Thumbnail */
         .thumbnail-container {
             position: relative;
             width: 100%;
@@ -753,6 +975,45 @@
             font-weight: 500;
         }
         
+        /* Watch Later Button */
+        .watch-later-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+        
+        .watch-later-btn:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+        
+        .watch-later-btn.active {
+            color: #ff0000;
+        }
+        
+        .watch-later-btn.active i {
+            animation: popIn 0.3s ease;
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            70% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        /* Video Info */
         .video-info {
             display: flex;
             gap: 12px;
@@ -820,6 +1081,7 @@
             gap: 5px;
         }
         
+        /* Detail Page */
         .detail-page {
             display: none;
         }
@@ -851,6 +1113,26 @@
             width: 100%;
             height: auto;
             display: block;
+        }
+        
+        /* Plyr Player */
+        .plyr-wrapper {
+            width: 100%;
+            max-width: 100%;
+            margin: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        .plyr {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .plyr video {
+            width: 100% !important;
+            height: auto !important;
         }
         
         .video-title {
@@ -1201,101 +1483,162 @@
             background-color: #3f3f3f;
         }
         
-        .offline-content {
-            text-align: center;
-            padding: 40px 20px;
+        /* Lists Pages */
+        .list-page {
+            display: none;
+            padding: 20px;
         }
         
-        .offline-icon {
-            font-size: 64px;
-            color: #666;
-            margin-bottom: 20px;
+        .list-header {
+            margin-bottom: 30px;
         }
         
-        .offline-content h2 {
-            font-size: 24px;
+        .list-header h1 {
+            font-size: 28px;
             margin-bottom: 10px;
-            color: #f1f1f1;
-        }
-        
-        .offline-content p {
-            color: #aaa;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-        
-        /* Nouveaux styles pour les fonctionnalités ajoutées */
-        .rating-stars {
             display: flex;
-            gap: 5px;
-            margin: 10px 0;
+            align-items: center;
+            gap: 10px;
         }
         
-        .star {
-            color: #666;
-            cursor: pointer;
-            font-size: 20px;
-            transition: color 0.2s;
-        }
-        
-        .star:hover {
-            color: #ffcc00;
-        }
-        
-        .star.active {
-            color: #ffcc00;
-        }
-        
-        .feature-buttons {
+        .list-actions {
             display: flex;
             gap: 10px;
-            margin: 15px 0;
-            flex-wrap: wrap;
+            margin-bottom: 20px;
         }
         
-        .feature-btn {
-            background: #272727;
-            border: 1px solid #444;
-            color: #f1f1f1;
+        .clear-list-btn {
+            background-color: #ff4444;
+            color: white;
+            border: none;
             padding: 8px 16px;
-            border-radius: 6px;
+            border-radius: 20px;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 14px;
-            transition: all 0.2s;
+            transition: background-color 0.3s;
         }
         
-        .feature-btn:hover {
-            background: #3a3a3a;
+        .clear-list-btn:hover {
+            background-color: #cc0000;
         }
         
-        .feature-btn.active {
-            background: #ff0000;
-            border-color: #ff0000;
+        .empty-list-message {
+            text-align: center;
+            padding: 60px 20px;
+            color: #aaa;
         }
         
-        /* Styles Plyr personnalisés */
-        .plyr-wrapper {
+        .empty-list-message i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .empty-list-message h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #f1f1f1;
+        }
+        
+        /* Remove from list button */
+        .remove-from-list {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #ff4444;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 11;
+        }
+        
+        .remove-from-list:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+        
+        .video-card:hover .remove-from-list {
+            opacity: 1;
+        }
+        
+        /* Mobile Search */
+        .mobile-search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 100%;
-            margin: 0;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #000;
+            height: 100%;
+            background-color: #0f0f0f;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
         }
         
-        .plyr {
-            border-radius: 12px;
-            overflow: hidden;
+        .mobile-search-header {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background-color: #0f0f0f;
+            border-bottom: 1px solid #303030;
         }
         
-        .plyr video {
-            width: 100% !important;
-            height: auto !important;
+        .mobile-search-input {
+            flex: 1;
+            padding: 12px 16px;
+            background-color: #121212;
+            border: 1px solid #303030;
+            border-radius: 20px;
+            color: #f1f1f1;
+            font-size: 16px;
+            margin: 0 12px;
         }
         
+        .mobile-search-close {
+            background: none;
+            border: none;
+            color: #f1f1f1;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        /* Loading Animation */
+        .loading-animation {
+            text-align: center;
+            padding: 40px;
+            color: #aaa;
+        }
+        
+        .loading-animation i {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #ff0000;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        
+        /* Subscription Count */
+        .subscription-count {
+            font-size: 12px;
+            color: #aaa;
+            margin-left: 8px;
+        }
+        
+        /* Responsive Design */
         @media (max-width: 1024px) {
             .video-container {
                 flex-direction: column;
@@ -1316,6 +1659,10 @@
             
             .swiper {
                 height: 240px;
+            }
+            
+            .avatar-grid {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
             }
         }
         
@@ -1358,12 +1705,19 @@
                 height: 200px;
             }
             
-            .multitag-slider {
-                height: 240px;
+            .continue-watching-slider {
+                height: 200px;
             }
             
             .main-container {
                 padding: 15px;
+            }
+            
+            .refresh-btn {
+                top: 70px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
             }
         }
         
@@ -1398,47 +1752,42 @@
             .main-container {
                 padding: 12px;
             }
+            
+            .avatar-modal-content {
+                padding: 20px;
+            }
+            
+            .avatar-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+                gap: 10px;
+            }
         }
         
-        .mobile-search-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #0f0f0f;
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
+        /* Offline Content */
+        .offline-content {
+            text-align: center;
+            padding: 40px 20px;
         }
         
-        .mobile-search-header {
-            display: flex;
-            align-items: center;
-            padding: 16px;
-            background-color: #0f0f0f;
-            border-bottom: 1px solid #303030;
+        .offline-icon {
+            font-size: 64px;
+            color: #666;
+            margin-bottom: 20px;
         }
         
-        .mobile-search-input {
-            flex: 1;
-            padding: 12px 16px;
-            background-color: #121212;
-            border: 1px solid #303030;
-            border-radius: 20px;
+        .offline-content h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
             color: #f1f1f1;
+        }
+        
+        .offline-content p {
+            color: #aaa;
             font-size: 16px;
-            margin: 0 12px;
+            margin-bottom: 20px;
         }
         
-        .mobile-search-close {
-            background: none;
-            border: none;
-            color: #f1f1f1;
-            font-size: 20px;
-            cursor: pointer;
-        }
-        
+        /* No Results */
         .no-results {
             grid-column: 1 / -1;
             text-align: center;
@@ -1451,81 +1800,24 @@
             margin-bottom: 10px;
             color: #f1f1f1;
         }
-        
-        .loading-animation {
-            text-align: center;
-            padding: 40px;
-            color: #aaa;
-        }
-        
-        .loading-animation i {
-            font-size: 40px;
-            margin-bottom: 20px;
-            color: #ff0000;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 0.6; }
-            50% { opacity: 1; }
-            100% { opacity: 0.6; }
-        }
-        
-        .comment-like-btn {
-            background: none;
-            border: none;
-            color: #aaa;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 13px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            transition: all 0.2s;
-        }
-        
-        .comment-like-btn:hover {
-            background-color: #272727;
-        }
-        
-        .comment-like-btn.liked {
-            color: #3ea6ff;
-        }
-        
-        .comment-reply-btn {
-            background: none;
-            border: none;
-            color: #aaa;
-            cursor: pointer;
-            font-size: 13px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            transition: all 0.2s;
-        }
-        
-        .comment-reply-btn:hover {
-            background-color: #272727;
-        }
-        
-        .comment-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        
-        .subscription-count {
-            font-size: 12px;
-            color: #aaa;
-            margin-left: 8px;
-        }
     </style>
 </head>
 <body>
+    <!-- Offline Message -->
     <div id="offlineMessage">
         <i class="fas fa-wifi"></i> Vous êtes hors ligne. Vérifiez votre connexion.
     </div>
     
+    <!-- Refresh System -->
+    <div class="refresh-indicator" id="refreshIndicator">
+        <i class="fas fa-sync-alt fa-spin"></i> Actualisation...
+    </div>
+    
+    <div class="refresh-btn" id="refreshButton" title="Actualiser">
+        <i class="fas fa-sync-alt"></i>
+    </div>
+    
+    <!-- Splash Screen -->
     <div id="splashScreen">
         <div class="splash-logo">
             <i class="fas fa-play-circle"></i>
@@ -1535,6 +1827,34 @@
         <div class="loading-spinner"></div>
     </div>
     
+    <!-- Avatar Selection Modal -->
+    <div class="avatar-modal" id="avatarModal">
+        <div class="avatar-modal-content">
+            <div class="avatar-modal-header">
+                <h2><i class="fas fa-user-circle"></i> Choisir votre avatar</h2>
+                <button class="avatar-modal-close" id="avatarModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="avatar-grid" id="avatarGrid">
+                <!-- Avatars will be dynamically added -->
+            </div>
+            <div class="avatar-upload">
+                <input type="file" id="avatarUpload" accept="image/*">
+                <label for="avatarUpload">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 32px;"></i>
+                    <span>Télécharger votre propre avatar</span>
+                    <small>JPG, PNG, GIF (max 2MB)</small>
+                </label>
+            </div>
+            <div class="avatar-modal-actions">
+                <button class="avatar-cancel-btn" id="avatarCancelBtn">Annuler</button>
+                <button class="avatar-save-btn" id="avatarSaveBtn">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Auth Screen -->
     <div id="authScreen">
         <div class="auth-container">
             <div class="auth-tabs">
@@ -1596,6 +1916,7 @@
         </div>
     </div>
     
+    <!-- Mobile Search -->
     <div class="mobile-search-overlay" id="mobileSearchOverlay">
         <div class="mobile-search-header">
             <button class="mobile-search-close" id="mobileSearchClose">
@@ -1609,6 +1930,7 @@
         <div class="search-suggestions" id="mobileSearchSuggestions"></div>
     </div>
     
+    <!-- Main App -->
     <div id="mainApp">
         <header>
             <div class="logo-container">
@@ -1646,8 +1968,14 @@
                 <div class="user-avatar" id="userAvatar">
                     <span id="avatarInitial">U</span>
                     <div class="user-menu" id="userMenu">
-                        <div class="user-menu-item" id="userProfile">
-                            <i class="fas fa-user"></i> Profil
+                        <div class="user-menu-item" id="changeAvatarBtn">
+                            <i class="fas fa-user-circle"></i> Changer l'avatar
+                        </div>
+                        <div class="user-menu-item" id="watchHistoryBtn">
+                            <i class="fas fa-history"></i> Historique
+                        </div>
+                        <div class="user-menu-item" id="watchLaterBtn">
+                            <i class="fas fa-clock"></i> À regarder plus tard
                         </div>
                         <div class="user-menu-item logout" id="logoutButton">
                             <i class="fas fa-sign-out-alt"></i> Déconnexion
@@ -1657,40 +1985,77 @@
             </div>
         </header>
         
+        <!-- Navigation -->
         <div class="nav-container">
             <div class="nav-items">
-                <button class="nav-item active" data-category="all">Tous</button>
-                <button class="nav-item" data-category="drame">Drame</button>
-                <button class="nav-item" data-category="thriller">Thriller</button>
-                <button class="nav-item" data-category="francais">Français</button>
+                <button class="nav-item active" data-category="all">Accueil</button>
+                <button class="nav-item" data-category="trending">Tendances</button>
+                <button class="nav-item" data-category="popular">Populaires</button>
+                <button class="nav-item" data-category="recommended">Recommandés</button>
+                <button class="nav-item" data-category="continue">Continuer à regarder</button>
                 <button class="nav-item" data-category="action">Action</button>
-                <button class="nav-item" data-category="films">Films</button>
-                <button class="nav-item" data-category="affiche">À l'affiche</button>
-                <button class="nav-item" data-category="nouveau">Nouveau</button>
+                <button class="nav-item" data-category="horror">Horreur</button>
+                <button class="nav-item" data-category="francais">Français</button>
             </div>
         </div>
         
+        <!-- Home Page -->
         <div class="main-container" id="homePage">
-            <div class="video-slider-container" id="multiTagSlider">
-                <div class="section-title">
-                    <span>À l'affiche</span>
-                    <a href="#" class="see-all">Voir le film</a>
+            <!-- Continue Watching Section -->
+            <div class="video-slider-container" id="continueWatchingSection">
+                <div class="section-header">
+                    <h2><i class="fas fa-play-circle"></i> Continuer à regarder</h2>
+                    <a href="#" class="see-all" id="seeAllContinue">Voir tout</a>
                 </div>
-                <div class="swiper multitag-slider">
-                    <div class="swiper-wrapper" id="multiTagSliderContent">
-                        <!-- Le film unique "À Bout" sera ajouté ici -->
-                    </div>
+                <div class="swiper continue-watching-slider">
+                    <div class="swiper-wrapper" id="continueWatchingSlider"></div>
                     <div class="swiper-button-next"></div>
                     <div class="swiper-button-prev"></div>
                 </div>
             </div>
             
-            <h1 style="margin: 40px 0 20px 0; font-size: 22px;">Film à la une</h1>
-            
-            <div class="video-grid" id="videoGrid">
-                <!-- Le film unique "À Bout" sera affiché ici -->
+            <!-- Recommended for You Section -->
+            <div class="video-slider-container" id="recommendedSection">
+                <div class="section-header">
+                    <h2><i class="fas fa-star"></i> Recommandé pour vous</h2>
+                    <a href="#" class="see-all" id="seeAllRecommended">Voir tout</a>
+                </div>
+                <div class="swiper recommended-slider">
+                    <div class="swiper-wrapper" id="recommendedSlider"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
             </div>
             
+            <!-- Trending Movies Section -->
+            <div class="video-slider-container" id="trendingSection">
+                <div class="section-header">
+                    <h2><i class="fas fa-fire"></i> Films tendance</h2>
+                    <a href="#" class="see-all" id="seeAllTrending">Voir tout</a>
+                </div>
+                <div class="swiper trending-slider">
+                    <div class="swiper-wrapper" id="trendingSlider"></div>
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+            
+            <!-- Popular This Week Section -->
+            <div class="section-header">
+                <h2><i class="fas fa-chart-line"></i> Populaire cette semaine</h2>
+                <a href="#" class="see-all" id="seeAllPopular">Voir tout</a>
+            </div>
+            
+            <div class="video-grid" id="popularVideosGrid"></div>
+            
+            <!-- All Movies Section -->
+            <div class="section-header">
+                <h2><i class="fas fa-film"></i> Tous les films</h2>
+            </div>
+            
+            <div class="video-grid" id="videoGrid"></div>
+            
+            <!-- Offline Content -->
             <div id="offlineContent" class="offline-content" style="display: none;">
                 <div class="offline-icon">
                     <i class="fas fa-wifi-slash"></i>
@@ -1701,6 +2066,51 @@
             </div>
         </div>
         
+        <!-- Watch History Page -->
+        <div class="main-container list-page" id="watchHistoryPage">
+            <div class="list-header">
+                <h1><i class="fas fa-history"></i> Historique de visionnage</h1>
+                <p>Films que vous avez regardés</p>
+            </div>
+            
+            <div class="list-actions">
+                <button class="clear-list-btn" id="clearHistoryBtn">
+                    <i class="fas fa-trash"></i> Effacer l'historique
+                </button>
+            </div>
+            
+            <div class="video-grid" id="historyVideoGrid"></div>
+            
+            <div id="emptyHistoryMessage" class="empty-list-message" style="display: none;">
+                <i class="fas fa-history"></i>
+                <h3>Historique vide</h3>
+                <p>Les films que vous regardez apparaîtront ici</p>
+            </div>
+        </div>
+        
+        <!-- Watch Later Page -->
+        <div class="main-container list-page" id="watchLaterPage">
+            <div class="list-header">
+                <h1><i class="fas fa-clock"></i> À regarder plus tard</h1>
+                <p>Films que vous avez sauvegardés</p>
+            </div>
+            
+            <div class="list-actions">
+                <button class="clear-list-btn" id="clearWatchLaterBtn">
+                    <i class="fas fa-trash"></i> Tout supprimer
+                </button>
+            </div>
+            
+            <div class="video-grid" id="watchLaterGrid"></div>
+            
+            <div id="emptyWatchLaterMessage" class="empty-list-message" style="display: none;">
+                <i class="fas fa-clock"></i>
+                <h3>Liste vide</h3>
+                <p>Ajoutez des films à regarder plus tard</p>
+            </div>
+        </div>
+        
+        <!-- Video Detail Page -->
         <div class="main-container detail-page" id="detailPage">
             <a href="#" class="back-home" id="backHomeBtn">
                 <i class="fas fa-arrow-left"></i> Retour à l'accueil
@@ -1712,41 +2122,20 @@
                     <div class="video-player" id="videoPlayerContainer">
                         <div class="plyr-wrapper">
                             <video id="player" playsinline controls poster="">
-                                <source 
-                                    src="https://archive.org/download/145134979426528090/-145134979426528090.mp4" 
-                                    type="video/mp4"
-                                />
+                                <source src="" type="video/mp4">
                             </video>
                         </div>
                     </div>
                     
                     <h1 class="video-title" id="detailVideoTitle"></h1>
                     
-                    <!-- Système de notation -->
-                    <div class="rating-section" id="ratingSection">
-                        <p style="margin-bottom: 8px;">Notez ce film:</p>
-                        <div class="rating-stars" id="ratingStars">
-                            <span class="star" data-value="1"><i class="far fa-star"></i></span>
-                            <span class="star" data-value="2"><i class="far fa-star"></i></span>
-                            <span class="star" data-value="3"><i class="far fa-star"></i></span>
-                            <span class="star" data-value="4"><i class="far fa-star"></i></span>
-                            <span class="star" data-value="5"><i class="far fa-star"></i></span>
-                        </div>
-                        <p id="averageRating" style="font-size: 14px; color: #aaa; margin-top: 5px;">Aucune note pour l'instant</p>
-                    </div>
-                    
+                    <!-- Watch Later Button -->
                     <div class="feature-buttons">
+                        <button class="feature-btn" id="watchLaterDetailBtn">
+                            <i class="fas fa-clock"></i> À regarder plus tard
+                        </button>
                         <button class="feature-btn" id="qualityBtn">
                             <i class="fas fa-hd"></i> Qualité: 1080p
-                        </button>
-                        <button class="feature-btn" id="subtitleBtn">
-                            <i class="fas fa-closed-captioning"></i> Sous-titres
-                        </button>
-                        <button class="feature-btn" id="autoplayBtn">
-                            <i class="fas fa-play-circle"></i> Lecture auto
-                        </button>
-                        <button class="feature-btn" id="historyBtn">
-                            <i class="fas fa-history"></i> Historique
                         </button>
                     </div>
                     
@@ -1817,26 +2206,19 @@
                 
                 <div class="sidebar">
                     <div class="recommendations-header">
-                        <h3>Plus de contenus</h3>
+                        <h3>Recommandations</h3>
                         <div class="ai-badge">
-                            <i class="fas fa-robot"></i> Bientôt
+                            <i class="fas fa-robot"></i> Recommandé par IA
                         </div>
                     </div>
                     
-                    <div id="recommendationsContainer">
-                        <div style="padding: 20px; text-align: center; color: #aaa;">
-                            <i class="fas fa-film" style="font-size: 40px; margin-bottom: 15px; display: block;"></i>
-                            <p>De nouveaux films arrivent bientôt sur Streamflix !</p>
-                            <p style="margin-top: 10px; font-size: 14px;">Restez connecté pour découvrir notre catalogue en expansion.</p>
-                        </div>
-                    </div>
+                    <div id="recommendationsContainer"></div>
                 </div>
             </div>
         </div>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <!-- Plyr JS -->
     <script src="https://cdn.jsdelivr.net/npm/plyr@3/dist/plyr.polyfilled.js"></script>
 
     <script>
@@ -1848,27 +2230,41 @@
             console.log('Streamflix initializing...');
             
             let currentUser = null;
-            let videos = []; // Initialiser avec un seul film
+            let videos = [];
             let currentVideoId = null;
-            let isSubscribed = false;
-            let isLiked = false;
-            let isDisliked = false;
             let currentVideoData = null;
             let isOnline = navigator.onLine;
-            let recentSearches = JSON.parse(localStorage.getItem('streamflix_recent_searches')) || [];
-            let searchTimeout = null;
-            let currentCategory = 'all';
-            let userSubscriptions = new Set();
-            let userLikedComments = new Set();
-            let userRating = 0;
-            let autoplayEnabled = true;
             let plyrPlayer = null;
+            let selectedAvatar = null;
+            
+            // User Data
+            let watchHistory = [];
+            let watchLater = [];
+            let continueWatching = [];
+            let userRecommendations = [];
+            
+            // Swiper instances
+            let continueWatchingSwiper = null;
+            let recommendedSwiper = null;
+            let trendingSwiper = null;
+            
+            // Avatar options
+            const avatarOptions = [
+                "https://cdn.leonardo.ai/users/59cc19c6-be61-41ed-ab82-8485d4d58d54/generations/1f0d5ee7-e70f-64b0-8983-bc08f5c88071/ideogram-v3.0_Create_a_smiley_avatar_artist_shakira_lil_Wayne_icon_with_name_app_Streamflix-0.jpg",
+                "https://cdn.leonardo.ai/users/59cc19c6-be61-41ed-ab82-8485d4d58d54/generations/10cf07d4-b24b-41b7-b5e9-0f7fbe11981f/Default_Create_a_smiley_avatar_artist_icon_Streamflix_app_1.jpg",
+                "https://cdn.leonardo.ai/users/59cc19c6-be61-41ed-ab82-8485d4d58d54/generations/df5b3bd5-e133-4420-b02a-cf8195a0d6a3/ideogram-v3.0_Create_a_smiley_avatar_artist_shakira_lil_Wayne_icon_with_name_app_Streamflix-0.jpg",
+                "https://cdn.leonardo.ai/users/59cc19c6-be61-41ed-ab82-8485d4d58d54/generations/0b5191ca-a702-424d-8105-12b637b5a7a0/ideogram-v3.0_Create_a_smiley_avatar_artist_shakira_lil_Wayne_icon_with_name_app_Streamflix-0.jpg",
+                "https://cdn.leonardo.ai/users/59cc19c6-be61-41ed-ab82-8485d4d58d54/generations/4d6bdcd8-9f6c-4ce8-aa22-843ccb4bae19/ideogram-v3.0_Create_a_smiley_avatar_artist_shakira_lil_Wayne_icon_with_name_app_Streamflix-0.jpg",
+                "https://cdn.leonardo.ai/users/59cc19c6-be61-41ed-ab82-8485d4d58d54/generations/55f3a359-45ed-4209-88e6-9c7c8ccd85a8/Default_Create_a_smiley_avatar_artist_icon_Streamflix_app_0.jpg",
+                "https://cdn.leonardo.ai/users/59cc19c6-be61-41ed-ab82-8485d4d58d54/generations/8b3ba748-5543-42a7-96e7-d952e57e5a6f/Default_Create_a_smiley_avatar_artist_icon_Streamflix_app_3.jpg",
+                "https://cdn.leonardo.ai/users/59cc19c6-be61-41ed-ab82-8485d4d58d54/generations/1967dd96-3d2f-4678-b4aa-8b58377e5c05/ideogram-v3.0_Create_a_smiley_avatar_artist_shakira_lil_Wayne_icon_with_name_app_Streamflix-0.jpg"
+            ];
             
             const db = window.firebase.database;
             const auth = window.firebase.auth;
             const fbFunctions = window.firebase.functions;
             
-            // SEUL FILM DANS LE CATALOGUE - AVEC LA NOUVELLE URL
+            // Video Catalog
             const videoData = [
                 {
                     id: 1,
@@ -1876,24 +2272,85 @@
                     channel: "Streamflix Films",
                     channelId: "streamflix_films",
                     channelInitial: "S",
-                    views: 0,
-                    uploadDate: Date.now(),
+                    views: 125000,
+                    uploadDate: Date.now() - 7 * 24 * 60 * 60 * 1000,
                     duration: "1:45:00",
                     thumbnail: "https://occ-0-1305-3934.1.nflxso.net/dnm/api/v6/6AYY37jfdO6hpXcMjf9Yu5cnmO0/AAAABeQAFqlv9RjvBQmbubUxtbv7-b1aBTNdW70_7SrRKZCp5h41B2TUTvPyPXrbdqXVCE_aXw1q01jLXSjOqWQeET2tfTRCr5qL_I4G.jpg?r=6bc",
-                    videoUrl: "https://archive.org/download/145134979426528090/-145134979426528090.mp4", // NOUVELLE URL
+                    videoUrl: "https://archive.org/download/145134979426528090/-145134979426528090.mp4",
                     description: "Quel sera le coup de grâce ? Une journée affreusement pénible pousse une mère célibataire travailleuse vers le point de rupture… et un acte de désespoir choquant. Un drame psychologique intense qui explore les limites de la résistance humaine face à l'adversité quotidienne.",
-                    subscribers: 0,
-                    likes: 0,
-                    dislikes: 0,
-                    comments: 0,
-                    commentsList: [],
-                    tags: ["drame", "thriller", "français", "psychologique", "mère célibataire", "désespoir", "film complet"],
+                    subscribers: 50000,
+                    likes: 2500,
+                    dislikes: 150,
+                    comments: 340,
+                    tags: ["drame", "thriller", "français", "psychologique", "mère célibataire"],
                     verified: true,
-                    categories: ["drame", "thriller", "français", "films", "affiche", "nouveau"]
+                    categories: ["drame", "thriller", "français", "nouveau"]
+                },
+                {
+                    id: 2,
+                    title: "Badland Hunters Film complet Française",
+                    channel: "Streamflix Action",
+                    channelId: "streamflix_action",
+                    channelInitial: "S",
+                    views: 98000,
+                    uploadDate: Date.now() - 14 * 24 * 60 * 60 * 1000,
+                    duration: "1:52:00",
+                    thumbnail: "https://occ-0-1323-3933.1.nflxso.net/dnm/api/v6/E8vDc_W8CLv7-yMQu8KMEC7Rrr8/AAAABaMYW0BRFCfHk0kdTPLUv9CNBe_2aoVquNCgcxfXovE0RJDBDvFATZHtF2Rs8_B7YHJm0RoXR8dIB7RZdXdjdP9iMF9JNxNhMzcP.jpg?r=533",
+                    videoUrl: "https://archive.org/download/badland-hunters-version-francaise-360-p/Badland_Hunters_%5BVersion_fran%C3%A7aise%5D_360P.mp4",
+                    description: "Badland Hunters - Un film d'action post-apocalyptique intense. Dans un monde ravagé, des chasseurs survivent dans les badlands. Quand un groupe de survivants est kidnappé par une secte dangereuse, un chasseur solitaire se lance dans une mission de sauvetage désespérée.",
+                    subscribers: 75000,
+                    likes: 4200,
+                    dislikes: 200,
+                    comments: 560,
+                    tags: ["action", "post-apocalyptique", "français", "chasseurs", "survie"],
+                    verified: true,
+                    categories: ["action", "survie", "français", "nouveau", "thriller"]
+                },
+                {
+                    id: 3,
+                    title: "Des rats se transforment en zombies !",
+                    channel: "Streamflix Horror",
+                    channelId: "streamflix_horror",
+                    channelInitial: "S",
+                    views: 150000,
+                    uploadDate: Date.now() - 3 * 24 * 60 * 60 * 1000,
+                    duration: "1:32:15",
+                    thumbnail: "https://archive.org/download/11d-8d-0d-1-2852-4a-87-b-739-d-5fac-85f-6d-8c/11d8d0d1-2852-4a87-b739-d5fac85f6d8c.jpeg",
+                    videoUrl: "https://archive.org/download/des-rats-se-transforment-en-zombies-une-horde-de-rats-mutants-attaque-feroceme/YTDown.com_YouTube_Media_Z91WwO5nCyE_001_1080p.mp4",
+                    description: "💕【Sous licence officielle】Toutes les vidéos de cette chaîne sont sous licence. 🙌Abonnez-vous pour être informé des nouvelles vidéos. Un film d'horreur intense où des rats se transforment en zombies ! Une horde de rats mutants attaque férocement des survivants qui tentent désespérément de s'échapper d'un wagon de train exigu. Suspense, action et horreur garantis !",
+                    subscribers: 120000,
+                    likes: 6800,
+                    dislikes: 300,
+                    comments: 890,
+                    tags: ["horror", "zombie", "rats", "mutants", "survival", "train"],
+                    verified: true,
+                    categories: ["horror", "zombie", "thriller", "survie", "français"]
+                },
+                {
+                    id: 4,
+                    title: "🦖🔬💥 Lab T Rex Escaped",
+                    channel: "YOUKU Monsters",
+                    channelId: "youku_monsters",
+                    channelInitial: "Y",
+                    views: 85000,
+                    uploadDate: Date.now() - 21 * 24 * 60 * 60 * 1000,
+                    duration: "1:15:00",
+                    thumbnail: "https://img.youtube.com/vi/d7yqZf6Y43w/maxresdefault.jpg",
+                    videoUrl: "https://archive.org/download/lab-t-rex-escaped-the-killing-begins-are-metamorphosis-youku-monster-movie/%F0%9F%A6%96%F0%9F%94%AC%F0%9F%92%A5Lab%20T-Rex%20escaped%2C%20the%20killing%20begins%21%20_are%20%20Metamorphosis%20_%20YOUKU%20MONSTER%20MOVIE.mp4",
+                    description: "Un laboratoire génétique secret perd le contrôle de son expérience la plus dangereuse : un T-Rex génétiquement modifié. La créature s'échappe et commence une série de meurtres horribles. Une équipe de scientifiques et de soldats doit l'arrêter avant qu'elle ne détruise la ville entière.",
+                    subscribers: 95000,
+                    likes: 5100,
+                    dislikes: 180,
+                    comments: 720,
+                    tags: ["monstre", "t-rex", "laboratoire", "science-fiction", "horreur", "action"],
+                    verified: true,
+                    categories: ["monstre", "science-fiction", "horreur", "action", "thriller"]
                 }
             ];
 
+            // DOM Elements
             const DOM = {
+                // Basic elements
                 splashScreen: document.getElementById('splashScreen'),
                 authScreen: document.getElementById('authScreen'),
                 mainApp: document.getElementById('mainApp'),
@@ -1901,18 +2358,54 @@
                 detailPage: document.getElementById('detailPage'),
                 videoGrid: document.getElementById('videoGrid'),
                 offlineMessage: document.getElementById('offlineMessage'),
-                offlineContent: document.getElementById('offlineContent'),
                 homeLogo: document.getElementById('homeLogo'),
                 backHomeBtn: document.getElementById('backHomeBtn'),
-                searchBox: document.getElementById('searchBox'),
-                searchBtn: document.getElementById('searchBtn'),
-                voiceSearchBtn: document.getElementById('voiceSearchBtn'),
-                searchSuggestionsEl: document.getElementById('searchSuggestions'),
-                clearRecentBtn: document.getElementById('clearRecent'),
-                userAvatar: document.getElementById('userAvatar'),
-                avatarInitial: document.getElementById('avatarInitial'),
-                userMenu: document.getElementById('userMenu'),
-                logoutButton: document.getElementById('logoutButton'),
+                
+                // Refresh elements
+                refreshIndicator: document.getElementById('refreshIndicator'),
+                refreshButton: document.getElementById('refreshButton'),
+                
+                // Avatar modal
+                avatarModal: document.getElementById('avatarModal'),
+                avatarModalClose: document.getElementById('avatarModalClose'),
+                avatarGrid: document.getElementById('avatarGrid'),
+                avatarUpload: document.getElementById('avatarUpload'),
+                avatarCancelBtn: document.getElementById('avatarCancelBtn'),
+                avatarSaveBtn: document.getElementById('avatarSaveBtn'),
+                changeAvatarBtn: document.getElementById('changeAvatarBtn'),
+                
+                // List pages
+                watchHistoryPage: document.getElementById('watchHistoryPage'),
+                watchLaterPage: document.getElementById('watchLaterPage'),
+                historyVideoGrid: document.getElementById('historyVideoGrid'),
+                watchLaterGrid: document.getElementById('watchLaterGrid'),
+                emptyHistoryMessage: document.getElementById('emptyHistoryMessage'),
+                emptyWatchLaterMessage: document.getElementById('emptyWatchLaterMessage'),
+                
+                // User menu buttons
+                watchHistoryBtn: document.getElementById('watchHistoryBtn'),
+                watchLaterBtn: document.getElementById('watchLaterBtn'),
+                
+                // Clear buttons
+                clearHistoryBtn: document.getElementById('clearHistoryBtn'),
+                clearWatchLaterBtn: document.getElementById('clearWatchLaterBtn'),
+                
+                // Slider containers
+                continueWatchingSlider: document.getElementById('continueWatchingSlider'),
+                recommendedSlider: document.getElementById('recommendedSlider'),
+                trendingSlider: document.getElementById('trendingSlider'),
+                popularVideosGrid: document.getElementById('popularVideosGrid'),
+                
+                // See all buttons
+                seeAllContinue: document.getElementById('seeAllContinue'),
+                seeAllRecommended: document.getElementById('seeAllRecommended'),
+                seeAllTrending: document.getElementById('seeAllTrending'),
+                seeAllPopular: document.getElementById('seeAllPopular'),
+                
+                // Watch later button
+                watchLaterDetailBtn: document.getElementById('watchLaterDetailBtn'),
+                
+                // Auth elements
                 loginTab: document.getElementById('loginTab'),
                 registerTab: document.getElementById('registerTab'),
                 loginForm: document.getElementById('loginForm'),
@@ -1930,13 +2423,30 @@
                 switchToLogin: document.getElementById('switchToLogin'),
                 googleLoginButton: document.getElementById('googleLoginButton'),
                 googleRegisterButton: document.getElementById('googleRegisterButton'),
+                
+                // Search elements
+                searchBox: document.getElementById('searchBox'),
+                searchBtn: document.getElementById('searchBtn'),
+                voiceSearchBtn: document.getElementById('voiceSearchBtn'),
+                searchSuggestionsEl: document.getElementById('searchSuggestions'),
+                clearRecentBtn: document.getElementById('clearRecent'),
+                
+                // User avatar
+                userAvatar: document.getElementById('userAvatar'),
+                avatarInitial: document.getElementById('avatarInitial'),
+                userMenu: document.getElementById('userMenu'),
+                logoutButton: document.getElementById('logoutButton'),
+                
+                // Mobile search
                 mobileSearchBtnIcon: document.getElementById('mobileSearchBtnIcon'),
                 mobileSearchOverlay: document.getElementById('mobileSearchOverlay'),
                 mobileSearchClose: document.getElementById('mobileSearchClose'),
                 mobileSearchInput: document.getElementById('mobileSearchInput'),
                 mobileSearchBtn: document.getElementById('mobileSearchBtn'),
                 mobileSearchSuggestions: document.getElementById('mobileSearchSuggestions'),
-                player: document.getElementById('player'), // Plyr player
+                
+                // Detail page elements
+                player: document.getElementById('player'),
                 detailVideoTitle: document.getElementById('detailVideoTitle'),
                 channelNameText: document.getElementById('channelNameText'),
                 channelVerifiedBadge: document.getElementById('channelVerifiedBadge'),
@@ -1961,19 +2471,10 @@
                 submitComment: document.getElementById('submitComment'),
                 shareBtn: document.getElementById('shareBtn'),
                 saveBtn: document.getElementById('saveBtn'),
-                multiTagSliderContent: document.getElementById('multiTagSliderContent'),
-                trendingSliderContent: document.getElementById('trendingSliderContent'),
-                navItems: document.querySelectorAll('.nav-item'),
-                ratingStars: document.getElementById('ratingStars'),
-                averageRating: document.getElementById('averageRating'),
-                qualityBtn: document.getElementById('qualityBtn'),
-                subtitleBtn: document.getElementById('subtitleBtn'),
-                autoplayBtn: document.getElementById('autoplayBtn'),
-                historyBtn: document.getElementById('historyBtn'),
-                videoPlayerContainer: document.getElementById('videoPlayerContainer')
+                
+                // Navigation
+                navItems: document.querySelectorAll('.nav-item')
             };
-
-            let multiTagSwiper = null;
 
             function init() {
                 console.log('Streamflix initialization complete');
@@ -1996,83 +2497,206 @@
                 }, 1500);
                 
                 setupEventListeners();
-                loadViewingHistory();
+                setupPullToRefresh();
+                loadLocalData();
+                initAvatarGrid();
             }
 
-            function initPlyrPlayer() {
-                // Détruire le player existant s'il y en a un
-                if (plyrPlayer) {
-                    plyrPlayer.destroy();
-                }
-                
-                // Initialiser le nouveau player Plyr
-                plyrPlayer = new Plyr('#player', {
-                    controls: [
-                        'play',
-                        'progress',
-                        'current-time',
-                        'mute',
-                        'volume',
-                        'fullscreen'
-                    ],
-                    autoplay: false,
-                    clickToPlay: true,
-                    hideControls: true,
-                    ratio: '16:9',
-                    fullscreen: { enabled: true, fallback: true, iosNative: true }
+            function initAvatarGrid() {
+                DOM.avatarGrid.innerHTML = '';
+                avatarOptions.forEach((avatarUrl, index) => {
+                    const avatarOption = document.createElement('div');
+                    avatarOption.className = 'avatar-option';
+                    avatarOption.dataset.avatar = avatarUrl;
+                    avatarOption.innerHTML = `<img src="${avatarUrl}" alt="Avatar ${index + 1}">`;
+                    
+                    avatarOption.addEventListener('click', () => {
+                        document.querySelectorAll('.avatar-option').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        avatarOption.classList.add('selected');
+                        selectedAvatar = avatarUrl;
+                    });
+                    
+                    DOM.avatarGrid.appendChild(avatarOption);
                 });
+            }
+
+            function setupPullToRefresh() {
+                let touchStartY = 0;
+                let touchCurrentY = 0;
+                let isDragging = false;
                 
-                // Événements Plyr
-                plyrPlayer.on('play', function() {
-                    if (currentVideoId && currentUser) {
-                        recordView(currentVideoId);
+                document.addEventListener('touchstart', function(e) {
+                    if (window.scrollY === 0) {
+                        touchStartY = e.touches[0].clientY;
+                        isDragging = true;
                     }
                 });
                 
-                plyrPlayer.on('ended', function() {
-                    if (autoplayEnabled && currentVideoData) {
-                        alert('Film terminé! Plus de films arrivent bientôt sur Streamflix.');
+                document.addEventListener('touchmove', function(e) {
+                    if (!isDragging) return;
+                    
+                    touchCurrentY = e.touches[0].clientY;
+                    const diff = touchCurrentY - touchStartY;
+                    
+                    if (diff > 0 && window.scrollY === 0) {
+                        e.preventDefault();
+                        const progress = Math.min(diff / 150, 1);
+                        DOM.refreshIndicator.style.transform = `translateY(${progress * 60 - 60}px)`;
+                        
+                        if (progress === 1 && !isRefreshing) {
+                            triggerRefresh();
+                        }
                     }
                 });
                 
-                console.log('Plyr player initialized');
-            }
-
-            function loadViewingHistory() {
-                const history = JSON.parse(localStorage.getItem('streamflix_viewing_history')) || [];
-                return history;
-            }
-
-            function saveViewingHistory(videoId, timestamp, duration) {
-                const history = loadViewingHistory();
-                history.unshift({
-                    videoId,
-                    timestamp,
-                    duration,
-                    date: new Date().toISOString()
+                document.addEventListener('touchend', function() {
+                    if (isDragging) {
+                        DOM.refreshIndicator.style.transform = 'translateY(-100%)';
+                        isDragging = false;
+                    }
                 });
                 
-                if (history.length > 20) {
-                    history.pop();
-                }
-                
-                localStorage.setItem('streamflix_viewing_history', JSON.stringify(history));
+                DOM.refreshButton.addEventListener('click', triggerRefresh);
             }
 
-            function handleAuthStateChanged(user) {
+            let isRefreshing = false;
+            function triggerRefresh() {
+                if (isRefreshing) return;
+                
+                isRefreshing = true;
+                DOM.refreshIndicator.classList.add('active');
+                
+                // Show refreshing animation
+                DOM.refreshButton.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i>';
+                
+                // Refresh data
+                setTimeout(async () => {
+                    if (currentUser) {
+                        await syncFromFirebase(currentUser.uid);
+                    }
+                    loadVideos().then(() => {
+                        renderHomePage();
+                        showNotification('Actualisation terminée');
+                    });
+                    
+                    // Reset UI
+                    setTimeout(() => {
+                        DOM.refreshIndicator.classList.remove('active');
+                        DOM.refreshButton.innerHTML = '<i class="fas fa-sync-alt"></i>';
+                        isRefreshing = false;
+                    }, 1000);
+                }, 1500);
+            }
+
+            async function loadLocalData() {
+                const localHistory = JSON.parse(localStorage.getItem('streamflix_watch_history')) || [];
+                const localWatchLater = JSON.parse(localStorage.getItem('streamflix_watch_later')) || [];
+                const localContinue = JSON.parse(localStorage.getItem('streamflix_continue_watching')) || [];
+                const localAvatar = localStorage.getItem('streamflix_user_avatar');
+                
+                watchHistory = localHistory;
+                watchLater = localWatchLater;
+                continueWatching = localContinue;
+                
+                if (localAvatar && currentUser) {
+                    currentUser.photoURL = localAvatar;
+                    updateUserAvatarUI(localAvatar);
+                }
+            }
+
+            async function saveLocalData() {
+                localStorage.setItem('streamflix_watch_history', JSON.stringify(watchHistory));
+                localStorage.setItem('streamflix_watch_later', JSON.stringify(watchLater));
+                localStorage.setItem('streamflix_continue_watching', JSON.stringify(continueWatching));
+                
+                if (currentUser && currentUser.photoURL) {
+                    localStorage.setItem('streamflix_user_avatar', currentUser.photoURL);
+                }
+            }
+
+            async function syncUserDataToFirebase(userId) {
+                if (!isOnline || !userId) return;
+                
+                try {
+                    const userRef = fbFunctions.ref(db, `users/${userId}`);
+                    const userData = {
+                        watchHistory: watchHistory,
+                        watchLater: watchLater,
+                        continueWatching: continueWatching,
+                        photoURL: currentUser.photoURL || '',
+                        lastSync: Date.now()
+                    };
+                    
+                    await fbFunctions.set(userRef, userData);
+                    console.log('User data synced to Firebase');
+                } catch (error) {
+                    console.error('Error syncing to Firebase:', error);
+                }
+            }
+
+            async function syncFromFirebase(userId) {
+                if (!isOnline || !userId) return;
+                
+                try {
+                    const userRef = fbFunctions.ref(db, `users/${userId}`);
+                    const snapshot = await fbFunctions.get(userRef);
+                    
+                    if (snapshot.exists()) {
+                        const firebaseData = snapshot.val();
+                        
+                        if (firebaseData.watchHistory) {
+                            watchHistory = mergeArraysUnique(watchHistory, firebaseData.watchHistory, 'videoId');
+                        }
+                        if (firebaseData.watchLater) {
+                            watchLater = mergeArraysUnique(watchLater, firebaseData.watchLater, 'videoId');
+                        }
+                        if (firebaseData.continueWatching) {
+                            continueWatching = mergeArraysUnique(continueWatching, firebaseData.continueWatching, 'videoId');
+                        }
+                        if (firebaseData.photoURL && firebaseData.photoURL !== currentUser.photoURL) {
+                            currentUser.photoURL = firebaseData.photoURL;
+                            updateUserAvatarUI(firebaseData.photoURL);
+                            localStorage.setItem('streamflix_user_avatar', firebaseData.photoURL);
+                        }
+                        
+                        saveLocalData();
+                    }
+                } catch (error) {
+                    console.error('Error syncing from Firebase:', error);
+                }
+            }
+
+            function mergeArraysUnique(localArray, firebaseArray, idKey) {
+                const merged = [...localArray];
+                const seen = new Set(localArray.map(item => item[idKey]));
+                
+                firebaseArray.forEach(item => {
+                    if (!seen.has(item[idKey])) {
+                        merged.push(item);
+                        seen.add(item[idKey]);
+                    }
+                });
+                
+                return merged;
+            }
+
+            async function handleAuthStateChanged(user) {
                 if (user) {
                     console.log('User logged in:', user.email);
                     currentUser = {
                         uid: user.uid,
                         email: user.email,
-                        displayName: user.displayName || 'User',
-                        photoURL: user.photoURL
+                        displayName: user.displayName || 'Utilisateur',
+                        photoURL: user.photoURL || ''
                     };
                     
-                    loadUserData(user.uid);
+                    await loadUserData(user.uid);
+                    await syncFromFirebase(user.uid);
                     showMainApp();
                     loadVideos();
-                    updateRecentSearchesUI();
+                    updateUserUI();
                 }
             }
 
@@ -2084,14 +2708,6 @@
                     if (snapshot.exists()) {
                         const userData = snapshot.val();
                         currentUser = { ...currentUser, ...userData };
-                        
-                        if (userData.subscribedChannels) {
-                            userSubscriptions = new Set(userData.subscribedChannels);
-                        }
-                        if (userData.likedComments) {
-                            userLikedComments = new Set(userData.likedComments);
-                        }
-                        
                         updateUserUI();
                     } else {
                         await createUserData(userId);
@@ -2107,36 +2723,72 @@
                     username: currentUser.displayName,
                     email: currentUser.email,
                     createdAt: Date.now(),
-                    photoURL: currentUser.photoURL || '',
-                    subscribedChannels: [],
-                    likedVideos: [],
-                    dislikedVideos: [],
-                    savedVideos: [],
-                    likedComments: [],
-                    watchedVideos: [],
-                    ratings: {}
+                    photoURL: currentUser.photoURL || avatarOptions[0],
+                    watchHistory: [],
+                    watchLater: [],
+                    continueWatching: [],
+                    preferences: []
                 };
                 
                 await fbFunctions.set(userRef, userData);
                 console.log('User data created in Firebase');
+                
+                // Set default avatar
+                currentUser.photoURL = avatarOptions[0];
+                updateUserAvatarUI(avatarOptions[0]);
+                localStorage.setItem('streamflix_user_avatar', avatarOptions[0]);
             }
 
             function setupEventListeners() {
+                // Avatar modal
+                DOM.changeAvatarBtn.addEventListener('click', showAvatarModal);
+                DOM.avatarModalClose.addEventListener('click', hideAvatarModal);
+                DOM.avatarCancelBtn.addEventListener('click', hideAvatarModal);
+                DOM.avatarSaveBtn.addEventListener('click', saveAvatar);
+                DOM.avatarUpload.addEventListener('change', handleAvatarUpload);
+                
+                // List pages
+                DOM.watchHistoryBtn.addEventListener('click', showWatchHistory);
+                DOM.clearHistoryBtn.addEventListener('click', clearWatchHistory);
+                DOM.watchLaterBtn.addEventListener('click', showWatchLater);
+                DOM.clearWatchLaterBtn.addEventListener('click', clearWatchLater);
+                
+                // See all buttons
+                DOM.seeAllContinue.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showContinueWatchingPage();
+                });
+                
+                DOM.seeAllRecommended.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showRecommendedPage();
+                });
+                
+                // Watch later button
+                DOM.watchLaterDetailBtn.addEventListener('click', toggleWatchLater);
+                
+                // Auth
                 DOM.loginTab.addEventListener('click', () => switchAuthTab('login'));
                 DOM.registerTab.addEventListener('click', () => switchAuthTab('register'));
                 DOM.switchToRegister.addEventListener('click', () => switchAuthTab('register'));
                 DOM.switchToLogin.addEventListener('click', () => switchAuthTab('login'));
-                
                 DOM.loginButton.addEventListener('click', handleLogin);
-                DOM.loginPassword.addEventListener('keypress', (e) => e.key === 'Enter' && handleLogin());
-                
                 DOM.registerButton.addEventListener('click', handleRegister);
-                DOM.registerPassword.addEventListener('keypress', (e) => e.key === 'Enter' && handleRegister());
-                
                 DOM.googleLoginButton.addEventListener('click', () => handleGoogleAuth('login'));
                 DOM.googleRegisterButton.addEventListener('click', () => handleGoogleAuth('register'));
-                
                 DOM.logoutButton.addEventListener('click', handleLogout);
+                
+                // Navigation
+                DOM.homeLogo.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showHomePage();
+                });
+                DOM.backHomeBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showHomePage();
+                });
+                
+                // User menu
                 DOM.userAvatar.addEventListener('click', toggleUserMenu);
                 document.addEventListener('click', (event) => {
                     if (!DOM.userAvatar.contains(event.target) && !DOM.userMenu.contains(event.target)) {
@@ -2144,191 +2796,778 @@
                     }
                 });
                 
-                DOM.homeLogo.addEventListener('click', (e) => { e.preventDefault(); showHomePage(); });
-                DOM.backHomeBtn.addEventListener('click', (e) => { e.preventDefault(); showHomePage(); });
-                
+                // Search
                 DOM.searchBtn.addEventListener('click', () => performSearch(DOM.searchBox.value));
                 DOM.searchBox.addEventListener('keypress', (e) => e.key === 'Enter' && performSearch(DOM.searchBox.value));
-                DOM.searchBox.addEventListener('input', () => showSmartSearchSuggestions(DOM.searchBox.value));
-                DOM.searchBox.addEventListener('focus', () => DOM.searchBox.value.trim() === '' && showRecentSearches());
-                DOM.voiceSearchBtn.addEventListener('click', initiateVoiceSearch);
-                DOM.clearRecentBtn.addEventListener('click', (e) => { e.stopPropagation(); clearRecentSearches(); });
-                
-                document.addEventListener('click', (event) => {
-                    if (!DOM.searchBox.contains(event.target) && !DOM.searchSuggestionsEl.contains(event.target)) {
-                        hideSearchSuggestions();
-                    }
+                DOM.clearRecentBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    clearRecentSearches();
                 });
                 
+                // Mobile search
                 DOM.mobileSearchBtnIcon.addEventListener('click', showMobileSearch);
                 DOM.mobileSearchClose.addEventListener('click', hideMobileSearch);
                 DOM.mobileSearchBtn.addEventListener('click', () => {
                     performSearch(DOM.mobileSearchInput.value);
                     hideMobileSearch();
                 });
-                DOM.mobileSearchInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        performSearch(DOM.mobileSearchInput.value);
-                        hideMobileSearch();
-                    }
-                });
-                DOM.mobileSearchInput.addEventListener('input', () => showMobileSmartSearchSuggestions(DOM.mobileSearchInput.value));
                 
-                DOM.likeBtn.addEventListener('click', toggleLike);
-                DOM.dislikeBtn.addEventListener('click', toggleDislike);
-                DOM.subscribeBtn.addEventListener('click', toggleSubscribe);
-                DOM.saveBtn.addEventListener('click', toggleSaveVideo);
-                
-                DOM.commentInput.addEventListener('input', function() {
-                    const hasText = this.value.trim().length > 0;
-                    DOM.commentButtons.style.display = hasText ? 'flex' : 'none';
-                    DOM.submitComment.disabled = !hasText;
-                });
-                
-                DOM.commentInput.addEventListener('focus', function() {
-                    if (this.value.trim().length > 0) {
-                        DOM.commentButtons.style.display = 'flex';
-                    }
-                });
-                
-                DOM.submitComment.addEventListener('click', function() {
-                    if (DOM.commentInput.value.trim()) {
-                        addComment(DOM.commentInput.value.trim());
-                        DOM.commentInput.value = '';
-                        DOM.commentButtons.style.display = 'none';
-                    }
-                });
-                
-                DOM.cancelComment.addEventListener('click', function() {
-                    DOM.commentInput.value = '';
-                    DOM.commentButtons.style.display = 'none';
-                });
-                
-                DOM.commentInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter' && this.value.trim()) {
-                        addComment(this.value.trim());
-                        this.value = '';
-                        DOM.commentButtons.style.display = 'none';
-                    }
-                });
-                
-                DOM.shareBtn.addEventListener('click', function() {
-                    if (currentVideoData) {
-                        shareVideo(currentVideoData);
-                    }
-                });
-                
+                // Navigation items
                 DOM.navItems.forEach(item => {
                     item.addEventListener('click', function() {
                         DOM.navItems.forEach(navItem => navItem.classList.remove('active'));
                         this.classList.add('active');
-                        currentCategory = this.getAttribute('data-category');
-                        filterVideosByCategory(currentCategory);
+                        const category = this.getAttribute('data-category');
+                        filterVideosByCategory(category);
                     });
                 });
-                
-                // Nouveaux écouteurs d'événements
-                // Système de notation
-                DOM.ratingStars.addEventListener('click', function(e) {
-                    if (e.target.classList.contains('star') || e.target.parentElement.classList.contains('star')) {
-                        const star = e.target.classList.contains('star') ? e.target : e.target.parentElement;
-                        const value = parseInt(star.getAttribute('data-value'));
-                        rateVideo(value);
-                    }
-                });
-                
-                // Qualité vidéo
-                DOM.qualityBtn.addEventListener('click', function() {
-                    const qualities = ['360p', '480p', '720p', '1080p'];
-                    const current = this.textContent.split(': ')[1];
-                    let nextIndex = (qualities.indexOf(current) + 1) % qualities.length;
-                    this.innerHTML = `<i class="fas fa-hd"></i> Qualité: ${qualities[nextIndex]}`;
-                    alert(`Qualité vidéo changée à ${qualities[nextIndex]}`);
-                });
-                
-                // Sous-titres
-                DOM.subtitleBtn.addEventListener('click', function() {
-                    const subtitles = ['Aucun', 'Français', 'Anglais', 'Espagnol'];
-                    const current = this.textContent.split(': ')[1] || 'Aucun';
-                    let nextIndex = (subtitles.indexOf(current) + 1) % subtitles.length;
-                    this.innerHTML = `<i class="fas fa-closed-captioning"></i> Sous-titres: ${subtitles[nextIndex]}`;
-                    alert(`Sous-titres activés: ${subtitles[nextIndex]}`);
-                });
-                
-                // Lecture automatique
-                DOM.autoplayBtn.addEventListener('click', function() {
-                    autoplayEnabled = !autoplayEnabled;
-                    this.classList.toggle('active');
-                    this.innerHTML = autoplayEnabled ? 
-                        '<i class="fas fa-play-circle"></i> Lecture auto: ON' : 
-                        '<i class="fas fa-play-circle"></i> Lecture auto: OFF';
-                    localStorage.setItem('streamflix_autoplay', autoplayEnabled);
-                });
-                
-                // Historique
-                DOM.historyBtn.addEventListener('click', showViewingHistory);
             }
 
-            async function rateVideo(rating) {
-                if (!currentUser) {
-                    alert('Veuillez vous connecter pour noter ce film');
+            function showAvatarModal() {
+                DOM.avatarModal.style.display = 'flex';
+                selectedAvatar = currentUser.photoURL || avatarOptions[0];
+                
+                // Select current avatar
+                document.querySelectorAll('.avatar-option').forEach(opt => {
+                    opt.classList.toggle('selected', opt.dataset.avatar === selectedAvatar);
+                });
+            }
+
+            function hideAvatarModal() {
+                DOM.avatarModal.style.display = 'none';
+                DOM.avatarUpload.value = '';
+            }
+
+            async function saveAvatar() {
+                if (!selectedAvatar) return;
+                
+                if (currentUser) {
+                    currentUser.photoURL = selectedAvatar;
+                    updateUserAvatarUI(selectedAvatar);
+                    localStorage.setItem('streamflix_user_avatar', selectedAvatar);
+                    
+                    // Save to Firebase
+                    if (isOnline) {
+                        const userRef = fbFunctions.ref(db, `users/${currentUser.uid}`);
+                        await fbFunctions.update(userRef, { photoURL: selectedAvatar });
+                    }
+                    
+                    showNotification('Avatar mis à jour avec succès !');
+                }
+                
+                hideAvatarModal();
+            }
+
+            function handleAvatarUpload(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                if (!file.type.startsWith('image/')) {
+                    alert('Veuillez sélectionner une image valide');
                     return;
                 }
                 
-                userRating = rating;
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('L\'image est trop volumineuse (max 2MB)');
+                    return;
+                }
                 
-                // Mettre à jour l'interface
-                const stars = DOM.ratingStars.querySelectorAll('.star');
-                stars.forEach((star, index) => {
-                    const starValue = index + 1;
-                    if (starValue <= rating) {
-                        star.innerHTML = '<i class="fas fa-star"></i>';
-                        star.classList.add('active');
-                    } else {
-                        star.innerHTML = '<i class="far fa-star"></i>';
-                        star.classList.remove('active');
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedAvatar = e.target.result;
+                    
+                    // Create temporary avatar option
+                    const tempAvatar = document.createElement('div');
+                    tempAvatar.className = 'avatar-option selected';
+                    tempAvatar.innerHTML = `<img src="${selectedAvatar}" alt="Avatar uploadé">`;
+                    
+                    // Clear selection and add temp avatar
+                    document.querySelectorAll('.avatar-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    tempAvatar.classList.add('selected');
+                    
+                    // Insert at beginning
+                    if (DOM.avatarGrid.firstChild) {
+                        DOM.avatarGrid.insertBefore(tempAvatar, DOM.avatarGrid.firstChild);
                     }
-                });
+                };
                 
-                // Sauvegarder dans Firebase
-                if (currentVideoId && isOnline) {
-                    const videoRef = fbFunctions.ref(db, `videos/${currentVideoId}/ratings/${currentUser.uid}`);
-                    await fbFunctions.set(videoRef, {
-                        userId: currentUser.uid,
-                        rating: rating,
-                        timestamp: Date.now()
+                reader.readAsDataURL(file);
+            }
+
+            function updateUserAvatarUI(avatarUrl) {
+                if (avatarUrl) {
+                    DOM.avatarInitial.style.display = 'none';
+                    DOM.userAvatar.innerHTML = `<img src="${avatarUrl}" alt="${currentUser.displayName}">`;
+                    
+                    // Update comment avatar
+                    DOM.commentUserAvatarImg.src = avatarUrl;
+                    DOM.commentUserAvatarImg.style.display = 'block';
+                    DOM.commentUserAvatar.innerHTML = '';
+                    DOM.commentUserAvatar.appendChild(DOM.commentUserAvatarImg);
+                } else {
+                    DOM.avatarInitial.textContent = currentUser.displayName.charAt(0).toUpperCase();
+                    DOM.avatarInitial.style.display = 'flex';
+                    DOM.userAvatar.innerHTML = `<span id="avatarInitial">${currentUser.displayName.charAt(0).toUpperCase()}</span>`;
+                }
+            }
+
+            function updateUserUI() {
+                updateUserAvatarUI(currentUser.photoURL);
+            }
+
+            function toggleUserMenu() {
+                DOM.userMenu.style.display = DOM.userMenu.style.display === 'block' ? 'none' : 'block';
+            }
+
+            function showHomePage() {
+                DOM.homePage.style.display = 'block';
+                DOM.detailPage.style.display = 'none';
+                DOM.watchHistoryPage.style.display = 'none';
+                DOM.watchLaterPage.style.display = 'none';
+                
+                renderHomePage();
+                window.scrollTo(0, 0);
+            }
+
+            async function loadVideos() {
+                try {
+                    // Load videos from Firebase or use local data
+                    videos = videoData;
+                    renderHomePage();
+                } catch (error) {
+                    console.error('Error loading videos:', error);
+                    videos = videoData;
+                    renderHomePage();
+                }
+            }
+
+            function renderHomePage() {
+                renderVideoGrid(videos);
+                renderContinueWatching();
+                renderRecommendedVideos();
+                renderTrendingVideos();
+                renderPopularVideos();
+            }
+
+            function renderContinueWatching() {
+                DOM.continueWatchingSlider.innerHTML = '';
+                
+                if (continueWatching.length === 0) {
+                    DOM.continueWatchingSection.style.display = 'none';
+                    return;
+                }
+                
+                DOM.continueWatchingSection.style.display = 'block';
+                
+                continueWatching.slice(0, 5).forEach(item => {
+                    const video = videos.find(v => v.id === item.videoId);
+                    if (!video) return;
+                    
+                    const slide = document.createElement('div');
+                    slide.className = 'swiper-slide';
+                    slide.setAttribute('data-id', video.id);
+                    
+                    const progressPercent = item.progress ? (item.progress / getDurationInSeconds(video.duration)) * 100 : 0;
+                    const isInWatchLater = watchLater.some(w => w.videoId === video.id);
+                    
+                    slide.innerHTML = `
+                        <button class="watch-later-btn ${isInWatchLater ? 'active' : ''}" data-id="${video.id}">
+                            <i class="fas fa-clock"></i>
+                        </button>
+                        <img src="${video.thumbnail}" alt="${video.title}" class="slider-thumbnail">
+                        <div class="progress-bar">
+                            <div class="progress" style="width: ${progressPercent}%"></div>
+                        </div>
+                        <div class="resume-time">
+                            ${formatTime(item.progress || 0)} / ${video.duration}
+                        </div>
+                        <div class="slider-overlay">
+                            <div class="slider-title">${video.title}</div>
+                            <div class="slider-channel">
+                                ${video.channel}
+                                ${video.verified ? '<i class="fas fa-check verified-badge"></i>' : ''}
+                            </div>
+                        </div>
+                    `;
+                    
+                    slide.addEventListener('click', () => {
+                        showVideoDetailDirect(video.id, item.progress || 0);
                     });
                     
-                    // Calculer la note moyenne
-                    const ratingsRef = fbFunctions.ref(db, `videos/${currentVideoId}/ratings`);
-                    const snapshot = await fbFunctions.get(ratingsRef);
-                    if (snapshot.exists()) {
-                        const ratings = snapshot.val();
-                        const ratingsArray = Object.values(ratings);
-                        const average = ratingsArray.reduce((sum, r) => sum + r.rating, 0) / ratingsArray.length;
-                        DOM.averageRating.textContent = `Note moyenne: ${average.toFixed(1)}/5 (${ratingsArray.length} votes)`;
+                    // Watch later button
+                    const watchLaterBtn = slide.querySelector('.watch-later-btn');
+                    watchLaterBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        toggleWatchLaterForVideo(video.id);
+                    });
+                    
+                    DOM.continueWatchingSlider.appendChild(slide);
+                });
+                
+                // Initialize or update Swiper
+                if (continueWatchingSwiper) {
+                    continueWatchingSwiper.update();
+                } else {
+                    continueWatchingSwiper = new Swiper('.continue-watching-slider', {
+                        slidesPerView: 1.2,
+                        spaceBetween: 10,
+                        navigation: {
+                            nextEl: '#continueWatchingSection .swiper-button-next',
+                            prevEl: '#continueWatchingSection .swiper-button-prev',
+                        },
+                        breakpoints: {
+                            640: { slidesPerView: 2.2, spaceBetween: 15 },
+                            1024: { slidesPerView: 3.2, spaceBetween: 20 }
+                        }
+                    });
+                }
+            }
+
+            function renderRecommendedVideos() {
+                DOM.recommendedSlider.innerHTML = '';
+                
+                // Generate recommendations
+                let recommendedVideos = [];
+                
+                if (watchHistory.length > 0) {
+                    const lastWatched = watchHistory[0];
+                    const lastVideo = videos.find(v => v.id === lastWatched.videoId);
+                    
+                    if (lastVideo) {
+                        recommendedVideos = videos.filter(v => 
+                            v.id !== lastVideo.id && 
+                            !watchHistory.some(h => h.videoId === v.id) &&
+                            v.tags.some(tag => lastVideo.tags.includes(tag))
+                        ).slice(0, 5);
                     }
                 }
                 
-                alert(`Merci! Vous avez donné ${rating} étoile${rating > 1 ? 's' : ''} à ce film.`);
-            }
-
-            function showViewingHistory() {
-                const history = loadViewingHistory();
-                if (history.length === 0) {
-                    alert('Aucun historique de visionnage pour le moment.');
+                if (recommendedVideos.length === 0) {
+                    recommendedVideos = videos
+                        .filter(v => !watchHistory.some(h => h.videoId === v.id))
+                        .sort(() => Math.random() - 0.5)
+                        .slice(0, 5);
+                }
+                
+                if (recommendedVideos.length === 0) {
+                    DOM.recommendedSection.style.display = 'none';
                     return;
                 }
                 
-                let message = 'Votre historique de visionnage:\n\n';
-                history.forEach((item, index) => {
-                    const date = new Date(item.date).toLocaleDateString('fr-FR');
-                    message += `${index + 1}. Film visionné le ${date} (${item.duration || 'durée inconnue'})\n`;
+                DOM.recommendedSection.style.display = 'block';
+                userRecommendations = recommendedVideos;
+                
+                recommendedVideos.forEach(video => {
+                    const slide = createVideoSlide(video);
+                    DOM.recommendedSlider.appendChild(slide);
                 });
                 
-                alert(message);
+                if (recommendedSwiper) {
+                    recommendedSwiper.update();
+                } else {
+                    recommendedSwiper = new Swiper('.recommended-slider', {
+                        slidesPerView: 1.2,
+                        spaceBetween: 10,
+                        navigation: {
+                            nextEl: '#recommendedSection .swiper-button-next',
+                            prevEl: '#recommendedSection .swiper-button-prev',
+                        },
+                        breakpoints: {
+                            640: { slidesPerView: 2.2, spaceBetween: 15 },
+                            1024: { slidesPerView: 3.2, spaceBetween: 20 }
+                        }
+                    });
+                }
             }
 
+            function renderTrendingVideos() {
+                DOM.trendingSlider.innerHTML = '';
+                
+                const trendingVideos = [...videos]
+                    .sort((a, b) => b.views - a.views)
+                    .slice(0, 5);
+                
+                trendingVideos.forEach(video => {
+                    const slide = createVideoSlide(video);
+                    DOM.trendingSlider.appendChild(slide);
+                });
+                
+                if (trendingSwiper) {
+                    trendingSwiper.update();
+                } else {
+                    trendingSwiper = new Swiper('.trending-slider', {
+                        slidesPerView: 1.2,
+                        spaceBetween: 10,
+                        navigation: {
+                            nextEl: '#trendingSection .swiper-button-next',
+                            prevEl: '#trendingSection .swiper-button-prev',
+                        },
+                        breakpoints: {
+                            640: { slidesPerView: 2.2, spaceBetween: 15 },
+                            1024: { slidesPerView: 3.2, spaceBetween: 20 }
+                        }
+                    });
+                }
+            }
+
+            function renderPopularVideos() {
+                DOM.popularVideosGrid.innerHTML = '';
+                
+                const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+                const popularVideos = videos
+                    .filter(video => video.uploadDate > oneWeekAgo)
+                    .sort((a, b) => b.views - a.views)
+                    .slice(0, 8);
+                
+                popularVideos.forEach(video => {
+                    const videoCard = createVideoCard(video);
+                    DOM.popularVideosGrid.appendChild(videoCard);
+                });
+            }
+
+            function createVideoSlide(video) {
+                const slide = document.createElement('div');
+                slide.className = 'swiper-slide';
+                slide.setAttribute('data-id', video.id);
+                
+                const isInWatchLater = watchLater.some(item => item.videoId === video.id);
+                
+                slide.innerHTML = `
+                    <button class="watch-later-btn ${isInWatchLater ? 'active' : ''}" data-id="${video.id}">
+                        <i class="fas fa-clock"></i>
+                    </button>
+                    <img src="${video.thumbnail}" alt="${video.title}" class="slider-thumbnail">
+                    <div class="slider-overlay">
+                        <div class="slider-title">${video.title}</div>
+                        <div class="slider-channel">
+                            ${video.channel}
+                            ${video.verified ? '<i class="fas fa-check verified-badge"></i>' : ''}
+                        </div>
+                    </div>
+                `;
+                
+                slide.addEventListener('click', () => {
+                    showVideoDetailDirect(video.id);
+                });
+                
+                const watchLaterBtn = slide.querySelector('.watch-later-btn');
+                watchLaterBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleWatchLaterForVideo(video.id);
+                });
+                
+                return slide;
+            }
+
+            function renderVideoGrid(videosToRender) {
+                DOM.videoGrid.innerHTML = '';
+                
+                if (videosToRender.length === 0) {
+                    DOM.videoGrid.innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-film" style="font-size: 50px; margin-bottom: 20px; color: #666;"></i>
+                            <h3>Aucune vidéo trouvée</h3>
+                            <p>Essayez une autre catégorie ou recherche</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                videosToRender.forEach(video => {
+                    const videoCard = createVideoCard(video);
+                    DOM.videoGrid.appendChild(videoCard);
+                });
+            }
+
+            function createVideoCard(video) {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.setAttribute('data-id', video.id);
+                
+                const isInWatchLater = watchLater.some(item => item.videoId === video.id);
+                const timeAgo = getTimeAgo(video.uploadDate);
+                const channelLogo = getChannelLogo(video.channelId);
+                
+                videoCard.innerHTML = `
+                    <div class="thumbnail-container">
+                        <img src="${video.thumbnail}" alt="${video.title}" class="thumbnail">
+                        <div class="duration">${video.duration}</div>
+                        <button class="watch-later-btn ${isInWatchLater ? 'active' : ''}" data-id="${video.id}">
+                            <i class="fas fa-clock"></i>
+                        </button>
+                    </div>
+                    <div class="video-info">
+                        <div class="channel-avatar">
+                            <img src="${channelLogo}" alt="${video.channel}">
+                            ${video.verified ? '<div class="verified-channel"><i class="fas fa-check"></i></div>' : ''}
+                        </div>
+                        <div class="video-details">
+                            <h3>${video.title.length > 60 ? video.title.substring(0, 60) + '...' : video.title}</h3>
+                            <p class="channel-name">
+                                ${video.channel}
+                                ${video.verified ? '<i class="fas fa-check verified-badge"></i>' : ''}
+                            </p>
+                            <p>${formatCount(video.views)} vues • ${timeAgo}</p>
+                        </div>
+                    </div>
+                `;
+                
+                videoCard.addEventListener('click', () => {
+                    showVideoDetailDirect(video.id);
+                });
+                
+                const watchLaterBtn = videoCard.querySelector('.watch-later-btn');
+                watchLaterBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleWatchLaterForVideo(video.id);
+                });
+                
+                return videoCard;
+            }
+
+            function showVideoDetailDirect(videoId, resumeTime = 0) {
+                const video = videos.find(v => v.id === videoId);
+                if (!video) return;
+                
+                currentVideoId = videoId;
+                currentVideoData = video;
+                
+                // Initialize player
+                initPlyrPlayer(video.videoUrl, video.thumbnail, resumeTime);
+                
+                // Update UI
+                DOM.detailVideoTitle.textContent = video.title;
+                DOM.channelNameText.textContent = video.channel;
+                DOM.detailDescription.textContent = video.description;
+                DOM.detailViews.textContent = `${formatCount(video.views)} vues`;
+                DOM.detailDate.textContent = getTimeAgo(video.uploadDate);
+                DOM.likeCount.textContent = formatCount(video.likes);
+                DOM.dislikeCount.textContent = formatCount(video.dislikes);
+                DOM.detailSubscribers.textContent = `${formatCount(video.subscribers)} abonnés`;
+                
+                // Update watch later button
+                const isInWatchLater = watchLater.some(item => item.videoId === videoId);
+                DOM.watchLaterDetailBtn.innerHTML = isInWatchLater ? 
+                    '<i class="fas fa-check"></i> Dans la liste' : 
+                    '<i class="fas fa-clock"></i> À regarder plus tard';
+                DOM.watchLaterDetailBtn.classList.toggle('active', isInWatchLater);
+                
+                // Show detail page
+                DOM.homePage.style.display = 'none';
+                DOM.detailPage.style.display = 'block';
+                window.scrollTo(0, 0);
+                
+                // Start playback
+                setTimeout(() => {
+                    if (plyrPlayer) {
+                        plyrPlayer.play();
+                    }
+                }, 500);
+            }
+
+            function initPlyrPlayer(videoUrl, thumbnail, resumeTime = 0) {
+                if (plyrPlayer) {
+                    plyrPlayer.destroy();
+                }
+                
+                const playerElement = document.getElementById('player');
+                const sourceElement = playerElement.querySelector('source');
+                sourceElement.src = videoUrl;
+                playerElement.poster = thumbnail;
+                playerElement.load();
+                
+                plyrPlayer = new Plyr('#player', {
+                    controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+                    autoplay: false,
+                    clickToPlay: true,
+                    ratio: '16:9'
+                });
+                
+                // Set resume time
+                plyrPlayer.on('ready', () => {
+                    if (resumeTime > 0) {
+                        plyrPlayer.currentTime = resumeTime;
+                    }
+                });
+                
+                // Save progress
+                let progressTimer;
+                plyrPlayer.on('timeupdate', () => {
+                    if (currentVideoId && plyrPlayer.playing) {
+                        clearTimeout(progressTimer);
+                        progressTimer = setTimeout(() => {
+                            saveProgress(currentVideoId, plyrPlayer.currentTime);
+                        }, 1000);
+                    }
+                });
+                
+                // Add to watch history when video ends
+                plyrPlayer.on('ended', () => {
+                    if (currentVideoId) {
+                        addToWatchHistory(currentVideoId);
+                        removeFromContinueWatching(currentVideoId);
+                    }
+                });
+            }
+
+            function saveProgress(videoId, currentTime) {
+                const existingIndex = continueWatching.findIndex(item => item.videoId === videoId);
+                const video = videos.find(v => v.id === videoId);
+                const duration = getDurationInSeconds(video.duration);
+                
+                if (currentTime < duration - 60) {
+                    if (existingIndex !== -1) {
+                        continueWatching[existingIndex].progress = currentTime;
+                        continueWatching[existingIndex].timestamp = Date.now();
+                    } else {
+                        continueWatching.unshift({
+                            videoId,
+                            progress: currentTime,
+                            timestamp: Date.now()
+                        });
+                        
+                        if (continueWatching.length > 10) {
+                            continueWatching.pop();
+                        }
+                    }
+                    
+                    saveLocalData();
+                    if (currentUser && isOnline) {
+                        syncUserDataToFirebase(currentUser.uid);
+                    }
+                    
+                    renderContinueWatching();
+                }
+            }
+
+            function addToWatchHistory(videoId) {
+                const existingIndex = watchHistory.findIndex(item => item.videoId === videoId);
+                
+                if (existingIndex !== -1) {
+                    const [item] = watchHistory.splice(existingIndex, 1);
+                    item.timestamp = Date.now();
+                    watchHistory.unshift(item);
+                } else {
+                    watchHistory.unshift({
+                        videoId,
+                        timestamp: Date.now(),
+                        completed: true
+                    });
+                    
+                    if (watchHistory.length > 50) {
+                        watchHistory.pop();
+                    }
+                }
+                
+                saveLocalData();
+                if (currentUser && isOnline) {
+                    syncUserDataToFirebase(currentUser.uid);
+                }
+                
+                userRecommendations = userRecommendations.filter(v => v.id !== videoId);
+                renderRecommendedVideos();
+            }
+
+            function toggleWatchLater() {
+                if (!currentVideoId) return;
+                toggleWatchLaterForVideo(currentVideoId);
+            }
+
+            function toggleWatchLaterForVideo(videoId) {
+                const existingIndex = watchLater.findIndex(item => item.videoId === videoId);
+                
+                if (existingIndex !== -1) {
+                    watchLater.splice(existingIndex, 1);
+                    showNotification('Retiré de la liste "À regarder plus tard"');
+                } else {
+                    watchLater.unshift({
+                        videoId,
+                        addedAt: Date.now()
+                    });
+                    showNotification('Ajouté à "À regarder plus tard"');
+                }
+                
+                saveLocalData();
+                if (currentUser && isOnline) {
+                    syncUserDataToFirebase(currentUser.uid);
+                }
+                
+                updateWatchLaterButtonState(videoId);
+                if (DOM.watchLaterPage.style.display === 'block') {
+                    renderWatchLaterPage();
+                }
+                
+                renderContinueWatching();
+            }
+
+            function updateWatchLaterButtonState(videoId) {
+                const isInWatchLater = watchLater.some(item => item.videoId === videoId);
+                
+                DOM.watchLaterDetailBtn.innerHTML = isInWatchLater ? 
+                    '<i class="fas fa-check"></i> Dans la liste' : 
+                    '<i class="fas fa-clock"></i> À regarder plus tard';
+                DOM.watchLaterDetailBtn.classList.toggle('active', isInWatchLater);
+                
+                document.querySelectorAll(`.watch-later-btn[data-id="${videoId}"]`).forEach(btn => {
+                    btn.classList.toggle('active', isInWatchLater);
+                    btn.innerHTML = `<i class="fas fa-clock"></i>`;
+                });
+            }
+
+            function removeFromContinueWatching(videoId) {
+                const index = continueWatching.findIndex(item => item.videoId === videoId);
+                if (index !== -1) {
+                    continueWatching.splice(index, 1);
+                    saveLocalData();
+                    if (currentUser && isOnline) {
+                        syncUserDataToFirebase(currentUser.uid);
+                    }
+                    renderContinueWatching();
+                }
+            }
+
+            function showWatchHistory() {
+                DOM.homePage.style.display = 'none';
+                DOM.detailPage.style.display = 'none';
+                DOM.watchLaterPage.style.display = 'none';
+                DOM.watchHistoryPage.style.display = 'block';
+                
+                renderWatchHistoryPage();
+                window.scrollTo(0, 0);
+            }
+
+            function renderWatchHistoryPage() {
+                DOM.historyVideoGrid.innerHTML = '';
+                
+                if (watchHistory.length === 0) {
+                    DOM.emptyHistoryMessage.style.display = 'block';
+                    return;
+                }
+                
+                DOM.emptyHistoryMessage.style.display = 'none';
+                
+                watchHistory.forEach(item => {
+                    const video = videos.find(v => v.id === item.videoId);
+                    if (!video) return;
+                    
+                    const videoCard = createVideoCard(video);
+                    
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'remove-from-list';
+                    removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                    removeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        removeFromWatchHistory(item.videoId);
+                    });
+                    
+                    videoCard.querySelector('.thumbnail-container').appendChild(removeBtn);
+                    DOM.historyVideoGrid.appendChild(videoCard);
+                });
+            }
+
+            function removeFromWatchHistory(videoId) {
+                const index = watchHistory.findIndex(item => item.videoId === videoId);
+                if (index !== -1) {
+                    watchHistory.splice(index, 1);
+                    saveLocalData();
+                    if (currentUser && isOnline) {
+                        syncUserDataToFirebase(currentUser.uid);
+                    }
+                    renderWatchHistoryPage();
+                    showNotification('Retiré de l\'historique');
+                }
+            }
+
+            function clearWatchHistory() {
+                if (confirm('Voulez-vous vraiment effacer tout votre historique ?')) {
+                    watchHistory = [];
+                    saveLocalData();
+                    if (currentUser && isOnline) {
+                        syncUserDataToFirebase(currentUser.uid);
+                    }
+                    renderWatchHistoryPage();
+                    showNotification('Historique effacé');
+                }
+            }
+
+            function showWatchLater() {
+                DOM.homePage.style.display = 'none';
+                DOM.detailPage.style.display = 'none';
+                DOM.watchHistoryPage.style.display = 'none';
+                DOM.watchLaterPage.style.display = 'block';
+                
+                renderWatchLaterPage();
+                window.scrollTo(0, 0);
+            }
+
+            function renderWatchLaterPage() {
+                DOM.watchLaterGrid.innerHTML = '';
+                
+                if (watchLater.length === 0) {
+                    DOM.emptyWatchLaterMessage.style.display = 'block';
+                    return;
+                }
+                
+                DOM.emptyWatchLaterMessage.style.display = 'none';
+                
+                watchLater.forEach(item => {
+                    const video = videos.find(v => v.id === item.videoId);
+                    if (!video) return;
+                    
+                    const videoCard = createVideoCard(video);
+                    
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'remove-from-list';
+                    removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                    removeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        removeFromWatchLater(item.videoId);
+                    });
+                    
+                    videoCard.querySelector('.thumbnail-container').appendChild(removeBtn);
+                    DOM.watchLaterGrid.appendChild(videoCard);
+                });
+            }
+
+            function removeFromWatchLater(videoId) {
+                const index = watchLater.findIndex(item => item.videoId === videoId);
+                if (index !== -1) {
+                    watchLater.splice(index, 1);
+                    saveLocalData();
+                    if (currentUser && isOnline) {
+                        syncUserDataToFirebase(currentUser.uid);
+                    }
+                    updateWatchLaterButtonState(videoId);
+                    renderWatchLaterPage();
+                    showNotification('Retiré de la liste');
+                }
+            }
+
+            function clearWatchLater() {
+                if (confirm('Voulez-vous vraiment vider votre liste "À regarder plus tard" ?')) {
+                    watchLater = [];
+                    saveLocalData();
+                    if (currentUser && isOnline) {
+                        syncUserDataToFirebase(currentUser.uid);
+                    }
+                    renderWatchLaterPage();
+                    showNotification('Liste "À regarder plus tard" vidée');
+                }
+            }
+
+            function showContinueWatchingPage() {
+                showHomePage();
+                // You could add filtering logic here
+            }
+
+            function showRecommendedPage() {
+                showHomePage();
+                // You could add filtering logic here
+            }
+
+            // Auth Functions
             function switchAuthTab(tab) {
                 if (tab === 'login') {
                     DOM.loginTab.classList.add('active');
@@ -2360,7 +3599,6 @@
                     await fbFunctions.signInWithEmailAndPassword(auth, email, password);
                     DOM.loginError.style.display = 'none';
                 } catch (error) {
-                    console.error('Login error:', error);
                     showAuthError(DOM.loginError, getAuthErrorMessage(error.code));
                 }
             }
@@ -2391,14 +3629,11 @@
                         username: username,
                         email: email,
                         createdAt: Date.now(),
-                        photoURL: '',
-                        subscribedChannels: [],
-                        likedVideos: [],
-                        dislikedVideos: [],
-                        savedVideos: [],
-                        likedComments: [],
-                        watchedVideos: [],
-                        ratings: {}
+                        photoURL: avatarOptions[0],
+                        watchHistory: [],
+                        watchLater: [],
+                        continueWatching: [],
+                        preferences: []
                     };
                     
                     await fbFunctions.set(userRef, userData);
@@ -2409,9 +3644,9 @@
                     DOM.registerUsername.value = '';
                     DOM.registerEmail.value = '';
                     DOM.registerPassword.value = '';
-                    alert('Compte créé avec succès ! Veuillez vous connecter.');
+                    
+                    showNotification('Compte créé avec succès ! Veuillez vous connecter.');
                 } catch (error) {
-                    console.error('Registration error:', error);
                     showAuthError(DOM.registerError, getAuthErrorMessage(error.code));
                 }
             }
@@ -2429,20 +3664,16 @@
                             username: user.displayName,
                             email: user.email,
                             createdAt: Date.now(),
-                            photoURL: user.photoURL || '',
-                            subscribedChannels: [],
-                            likedVideos: [],
-                            dislikedVideos: [],
-                            savedVideos: [],
-                            likedComments: [],
-                            watchedVideos: [],
-                            ratings: {}
+                            photoURL: user.photoURL || avatarOptions[0],
+                            watchHistory: [],
+                            watchLater: [],
+                            continueWatching: [],
+                            preferences: []
                         };
                         
                         await fbFunctions.set(userRef, userData);
                     }
                 } catch (error) {
-                    console.error('Google auth error:', error);
                     const errorElement = mode === 'login' ? DOM.loginError : DOM.registerError;
                     showAuthError(errorElement, getAuthErrorMessage(error.code));
                 }
@@ -2451,7 +3682,6 @@
             async function handleLogout() {
                 try {
                     await fbFunctions.signOut(auth);
-                    console.log('User logged out');
                     DOM.userMenu.style.display = 'none';
                     showAuthScreen();
                     switchAuthTab('login');
@@ -2479,430 +3709,14 @@
                 return messages[errorCode] || 'Erreur d\'authentification. Veuillez réessayer';
             }
 
-            async function toggleSubscribe() {
-                if (!currentUser) {
-                    alert('Veuillez vous connecter pour vous abonner');
-                    return;
-                }
+            // Utility Functions
+            function updateNetworkStatus() {
+                isOnline = navigator.onLine;
                 
-                if (!currentVideoData) return;
-                
-                if (!isOnline) {
-                    alert('Vous devez être en ligne pour vous abonner.');
-                    return;
-                }
-                
-                const channelId = currentVideoData.channelId;
-                const channelRef = fbFunctions.ref(db, `channels/${channelId}`);
-                const userRef = fbFunctions.ref(db, `users/${currentUser.uid}`);
-                
-                try {
-                    const [userSnapshot, channelSnapshot] = await Promise.all([
-                        fbFunctions.get(userRef),
-                        fbFunctions.get(channelRef)
-                    ]);
-                    
-                    if (userSnapshot.exists() && channelSnapshot.exists()) {
-                        const userData = userSnapshot.val();
-                        const channelData = channelSnapshot.val();
-                        const subscribedChannels = userData.subscribedChannels || [];
-                        
-                        let newSubscribers = channelData.subscribers || 0;
-                        let newSubscribedChannels = [...subscribedChannels];
-                        
-                        if (!isSubscribed) {
-                            newSubscribers += 1;
-                            if (!newSubscribedChannels.includes(channelId)) {
-                                newSubscribedChannels.push(channelId);
-                            }
-                            userSubscriptions.add(channelId);
-                            
-                            isSubscribed = true;
-                            DOM.subscribeBtn.textContent = 'ABONNÉ';
-                            DOM.subscribeBtn.classList.add('subscribed');
-                        } else {
-                            newSubscribers = Math.max(0, newSubscribers - 1);
-                            newSubscribedChannels = newSubscribedChannels.filter(id => id !== channelId);
-                            userSubscriptions.delete(channelId);
-                            
-                            isSubscribed = false;
-                            DOM.subscribeBtn.textContent = 'S\'ABONNER';
-                            DOM.subscribeBtn.classList.remove('subscribed');
-                        }
-                        
-                        await Promise.all([
-                            fbFunctions.update(channelRef, { subscribers: newSubscribers }),
-                            fbFunctions.update(userRef, { subscribedChannels: newSubscribedChannels })
-                        ]);
-                        
-                        DOM.detailSubscribers.textContent = `${formatCount(newSubscribers)} abonnés`;
-                        DOM.subscriptionCount.textContent = formatCount(newSubscribers);
-                    }
-                } catch (error) {
-                    console.error('Subscription error:', error);
-                    alert('Erreur lors de l\'abonnement. Veuillez réessayer.');
-                }
-            }
-
-            async function toggleLike() {
-                if (!currentUser) {
-                    alert('Veuillez vous connecter pour aimer des vidéos');
-                    return;
-                }
-                
-                if (!currentVideoId) return;
-                
-                if (!isOnline) {
-                    alert('Vous devez être en ligne pour aimer des vidéos.');
-                    return;
-                }
-                
-                const videoRef = fbFunctions.ref(db, `videos/${currentVideoId}`);
-                const userRef = fbFunctions.ref(db, `users/${currentUser.uid}`);
-                
-                try {
-                    const [videoSnapshot, userSnapshot] = await Promise.all([
-                        fbFunctions.get(videoRef),
-                        fbFunctions.get(userRef)
-                    ]);
-                    
-                    if (videoSnapshot.exists() && userSnapshot.exists()) {
-                        const videoData = videoSnapshot.val();
-                        const userData = userSnapshot.val();
-                        
-                        const likedVideos = userData.likedVideos || [];
-                        const dislikedVideos = userData.dislikedVideos || [];
-                        
-                        let newLikes = videoData.likes || 0;
-                        let newDislikes = videoData.dislikes || 0;
-                        let newLikedVideos = [...likedVideos];
-                        let newDislikedVideos = [...dislikedVideos];
-                        
-                        if (!isLiked) {
-                            newLikes += 1;
-                            if (!newLikedVideos.includes(currentVideoId)) {
-                                newLikedVideos.push(currentVideoId);
-                            }
-                            
-                            if (isDisliked) {
-                                newDislikes = Math.max(0, newDislikes - 1);
-                                newDislikedVideos = newDislikedVideos.filter(id => id !== currentVideoId);
-                                isDisliked = false;
-                                DOM.dislikeBtn.classList.remove('active');
-                            }
-                            
-                            isLiked = true;
-                            DOM.likeBtn.classList.add('active');
-                        } else {
-                            newLikes = Math.max(0, newLikes - 1);
-                            newLikedVideos = newLikedVideos.filter(id => id !== currentVideoId);
-                            isLiked = false;
-                            DOM.likeBtn.classList.remove('active');
-                        }
-                        
-                        await Promise.all([
-                            fbFunctions.update(videoRef, {
-                                likes: newLikes,
-                                dislikes: newDislikes
-                            }),
-                            fbFunctions.update(userRef, {
-                                likedVideos: newLikedVideos,
-                                dislikedVideos: newDislikedVideos
-                            })
-                        ]);
-                        
-                        DOM.likeCount.textContent = formatCount(newLikes);
-                        DOM.dislikeCount.textContent = formatCount(newDislikes);
-                    }
-                } catch (error) {
-                    console.error('Like error:', error);
-                }
-            }
-
-            async function toggleDislike() {
-                if (!currentUser) {
-                    alert('Veuillez vous connecter pour ne pas aimer des vidéos');
-                    return;
-                }
-                
-                if (!currentVideoId) return;
-                
-                if (!isOnline) {
-                    alert('Vous devez être en ligne pour ne pas aimer des vidéos.');
-                    return;
-                }
-                
-                const videoRef = fbFunctions.ref(db, `videos/${currentVideoId}`);
-                const userRef = fbFunctions.ref(db, `users/${currentUser.uid}`);
-                
-                try {
-                    const [videoSnapshot, userSnapshot] = await Promise.all([
-                        fbFunctions.get(videoRef),
-                        fbFunctions.get(userRef)
-                    ]);
-                    
-                    if (videoSnapshot.exists() && userSnapshot.exists()) {
-                        const videoData = videoSnapshot.val();
-                        const userData = userSnapshot.val();
-                        
-                        const likedVideos = userData.likedVideos || [];
-                        const dislikedVideos = userData.dislikedVideos || [];
-                        
-                        let newLikes = videoData.likes || 0;
-                        let newDislikes = videoData.dislikes || 0;
-                        let newLikedVideos = [...likedVideos];
-                        let newDislikedVideos = [...dislikedVideos];
-                        
-                        if (!isDisliked) {
-                            newDislikes += 1;
-                            if (!newDislikedVideos.includes(currentVideoId)) {
-                                newDislikedVideos.push(currentVideoId);
-                            }
-                            
-                            if (isLiked) {
-                                newLikes = Math.max(0, newLikes - 1);
-                                newLikedVideos = newLikedVideos.filter(id => id !== currentVideoId);
-                                isLiked = false;
-                                DOM.likeBtn.classList.remove('active');
-                            }
-                            
-                            isDisliked = true;
-                            DOM.dislikeBtn.classList.add('active');
-                        } else {
-                            newDislikes = Math.max(0, newDislikes - 1);
-                            newDislikedVideos = newDislikedVideos.filter(id => id !== currentVideoId);
-                            isDisliked = false;
-                            DOM.dislikeBtn.classList.remove('active');
-                        }
-                        
-                        await Promise.all([
-                            fbFunctions.update(videoRef, {
-                                likes: newLikes,
-                                dislikes: newDislikes
-                            }),
-                            fbFunctions.update(userRef, {
-                                likedVideos: newLikedVideos,
-                                dislikedVideos: newDislikedVideos
-                            })
-                        ]);
-                        
-                        DOM.likeCount.textContent = formatCount(newLikes);
-                        DOM.dislikeCount.textContent = formatCount(newDislikes);
-                    }
-                } catch (error) {
-                    console.error('Dislike error:', error);
-                }
-            }
-
-            async function toggleSaveVideo() {
-                if (!currentUser) {
-                    alert('Veuillez vous connecter pour sauvegarder des vidéos');
-                    return;
-                }
-                
-                if (!currentVideoId) return;
-                
-                const userRef = fbFunctions.ref(db, `users/${currentUser.uid}`);
-                
-                try {
-                    const userSnapshot = await fbFunctions.get(userRef);
-                    if (userSnapshot.exists()) {
-                        const userData = userSnapshot.val();
-                        const savedVideos = userData.savedVideos || [];
-                        
-                        if (savedVideos.includes(currentVideoId)) {
-                            const newSavedVideos = savedVideos.filter(id => id !== currentVideoId);
-                            await fbFunctions.update(userRef, { savedVideos: newSavedVideos });
-                            DOM.saveBtn.innerHTML = '<i class="fas fa-bookmark"></i> Sauvegarder';
-                            alert('Vidéo retirée des sauvegardes');
-                        } else {
-                            const newSavedVideos = [...savedVideos, currentVideoId];
-                            await fbFunctions.update(userRef, { savedVideos: newSavedVideos });
-                            DOM.saveBtn.innerHTML = '<i class="fas fa-check"></i> Sauvegardée';
-                            alert('Vidéo sauvegardée');
-                        }
-                    }
-                } catch (error) {
-                    console.error('Save video error:', error);
-                }
-            }
-
-            async function addComment(text) {
-                if (!currentUser || !currentVideoId) {
-                    alert('Veuillez vous connecter pour commenter');
-                    return;
-                }
-                
-                if (!text.trim()) return;
-                
-                const commentId = Date.now().toString();
-                const commentRef = fbFunctions.ref(db, `videos/${currentVideoId}/comments/${commentId}`);
-                const videoRef = fbFunctions.ref(db, `videos/${currentVideoId}`);
-                
-                const commentData = {
-                    id: commentId,
-                    userId: currentUser.uid,
-                    username: currentUser.displayName || 'Anonyme',
-                    userPhoto: currentUser.photoURL || '',
-                    text: text.trim(),
-                    timestamp: Date.now(),
-                    likes: 0,
-                    replies: []
-                };
-                
-                try {
-                    await fbFunctions.set(commentRef, commentData);
-                    
-                    const videoSnapshot = await fbFunctions.get(videoRef);
-                    if (videoSnapshot.exists()) {
-                        const videoData = videoSnapshot.val();
-                        const newCommentCount = (videoData.commentCount || 0) + 1;
-                        await fbFunctions.update(videoRef, { commentCount: newCommentCount });
-                    }
-                    
-                    console.log('Comment added to Firebase');
-                } catch (error) {
-                    console.error('Error adding comment:', error);
-                    alert('Erreur lors de l\'ajout du commentaire. Veuillez réessayer.');
-                }
-            }
-
-            async function loadCommentsFromFirebase(videoId) {
-                const commentsRef = fbFunctions.ref(db, `videos/${videoId}/comments`);
-                
-                fbFunctions.onValue(commentsRef, (snapshot) => {
-                    DOM.commentsContainer.innerHTML = '';
-                    
-                    if (snapshot.exists()) {
-                        const comments = snapshot.val();
-                        const commentArray = Object.values(comments).sort((a, b) => b.timestamp - a.timestamp);
-                        
-                        commentArray.forEach(comment => {
-                            addCommentToUI(comment);
-                        });
-                    } else {
-                        DOM.commentsContainer.innerHTML = `
-                            <div style="text-align: center; padding: 40px; color: #aaa;">
-                                <p>Aucun commentaire pour l'instant. Soyez le premier à commenter !</p>
-                            </div>
-                        `;
-                    }
-                });
-            }
-
-            function addCommentToUI(comment) {
-                const commentElement = document.createElement('div');
-                commentElement.className = 'comment';
-                commentElement.dataset.commentId = comment.id;
-                
-                const userAvatar = comment.userPhoto ? 
-                    `<img src="${comment.userPhoto}" alt="${comment.username}" style="width: 100%; height: 100%; object-fit: cover;">` :
-                    `<span>${comment.username.charAt(0)}</span>`;
-                
-                const isLiked = userLikedComments.has(comment.id);
-                
-                commentElement.innerHTML = `
-                    <div class="comment-user-avatar">
-                        ${userAvatar}
-                    </div>
-                    <div class="comment-content">
-                        <h4>
-                            ${comment.username} 
-                            <span style="color: #aaa; font-weight: normal; font-size: 12px;">${getTimeAgo(comment.timestamp)}</span>
-                        </h4>
-                        <p class="comment-text">${comment.text}</p>
-                        <div class="comment-actions">
-                            <button class="comment-like-btn ${isLiked ? 'liked' : ''}" data-comment-id="${comment.id}">
-                                <i class="fas fa-thumbs-up"></i> ${comment.likes || 0}
-                            </button>
-                            <button class="comment-reply-btn">
-                                <i class="fas fa-reply"></i> Répondre
-                            </button>
-                        </div>
-                    </div>
-                `;
-                
-                DOM.commentsContainer.appendChild(commentElement);
-                
-                const likeBtn = commentElement.querySelector('.comment-like-btn');
-                likeBtn.addEventListener('click', () => toggleCommentLike(comment.id));
-            }
-
-            async function toggleCommentLike(commentId) {
-                if (!currentUser) {
-                    alert('Veuillez vous connecter pour aimer des commentaires');
-                    return;
-                }
-                
-                const commentRef = fbFunctions.ref(db, `videos/${currentVideoId}/comments/${commentId}`);
-                const userRef = fbFunctions.ref(db, `users/${currentUser.uid}`);
-                
-                try {
-                    const [commentSnapshot, userSnapshot] = await Promise.all([
-                        fbFunctions.get(commentRef),
-                        fbFunctions.get(userRef)
-                    ]);
-                    
-                    if (commentSnapshot.exists() && userSnapshot.exists()) {
-                        const commentData = commentSnapshot.val();
-                        const userData = userSnapshot.val();
-                        
-                        const likedComments = userData.likedComments || [];
-                        let newLikes = commentData.likes || 0;
-                        let newLikedComments = [...likedComments];
-                        
-                        if (userLikedComments.has(commentId)) {
-                            newLikes = Math.max(0, newLikes - 1);
-                            newLikedComments = newLikedComments.filter(id => id !== commentId);
-                            userLikedComments.delete(commentId);
-                        } else {
-                            newLikes += 1;
-                            newLikedComments.push(commentId);
-                            userLikedComments.add(commentId);
-                        }
-                        
-                        await Promise.all([
-                            fbFunctions.update(commentRef, { likes: newLikes }),
-                            fbFunctions.update(userRef, { likedComments: newLikedComments })
-                        ]);
-                        
-                        const likeBtn = document.querySelector(`.comment-like-btn[data-comment-id="${commentId}"]`);
-                        if (likeBtn) {
-                            likeBtn.classList.toggle('liked');
-                            likeBtn.innerHTML = `<i class="fas fa-thumbs-up"></i> ${newLikes}`;
-                        }
-                    }
-                } catch (error) {
-                    console.error('Comment like error:', error);
-                }
-            }
-
-            async function recordView(videoId) {
-                if (!currentUser || !videoId || !isOnline) return;
-                
-                const videoRef = fbFunctions.ref(db, `videos/${videoId}`);
-                const userRef = fbFunctions.ref(db, `users/${currentUser.uid}/viewedVideos/${videoId}`);
-                
-                try {
-                    const userSnapshot = await fbFunctions.get(userRef);
-                    const today = new Date().toDateString();
-                    
-                    if (!userSnapshot.exists() || userSnapshot.val().date !== today) {
-                        const videoSnapshot = await fbFunctions.get(videoRef);
-                        if (videoSnapshot.exists()) {
-                            const videoData = videoSnapshot.val();
-                            const newViews = (videoData.views || 0) + 1;
-                            
-                            await Promise.all([
-                                fbFunctions.update(videoRef, { views: newViews }),
-                                fbFunctions.set(userRef, { date: today })
-                            ]);
-                            
-                            console.log('View recorded:', videoId);
-                        }
-                    }
-                } catch (error) {
-                    console.error('Record view error:', error);
+                if (isOnline) {
+                    DOM.offlineMessage.style.display = 'none';
+                } else {
+                    DOM.offlineMessage.style.display = 'block';
                 }
             }
 
@@ -2913,48 +3727,7 @@
                 } else {
                     document.querySelector('.search-container').style.display = 'flex';
                     DOM.mobileSearchBtnIcon.style.display = 'none';
-                    if (DOM.mobileSearchOverlay.style.display === 'flex') {
-                        hideMobileSearch();
-                    }
                 }
-            }
-
-            function showMobileSearch() {
-                DOM.mobileSearchOverlay.style.display = 'flex';
-                DOM.mobileSearchInput.focus();
-            }
-
-            function hideMobileSearch() {
-                DOM.mobileSearchOverlay.style.display = 'none';
-                DOM.mobileSearchInput.value = '';
-                DOM.mobileSearchSuggestions.innerHTML = '';
-                DOM.mobileSearchSuggestions.style.display = 'none';
-            }
-
-            function updateNetworkStatus() {
-                isOnline = navigator.onLine;
-                
-                if (isOnline) {
-                    DOM.offlineMessage.style.display = 'none';
-                    if (DOM.homePage.style.display !== 'none' && DOM.offlineContent.style.display === 'block') {
-                        loadVideos();
-                    }
-                } else {
-                    DOM.offlineMessage.style.display = 'block';
-                    if (DOM.homePage.style.display !== 'none') {
-                        showOfflineContent();
-                    }
-                }
-            }
-
-            function showOfflineContent() {
-                DOM.videoGrid.style.display = 'none';
-                DOM.offlineContent.style.display = 'block';
-            }
-
-            function showOnlineContent() {
-                DOM.videoGrid.style.display = 'grid';
-                DOM.offlineContent.style.display = 'none';
             }
 
             function showAuthScreen() {
@@ -2966,790 +3739,35 @@
                 DOM.authScreen.style.display = 'none';
                 DOM.mainApp.style.display = 'block';
                 updateUserUI();
-                
-                // Charger le paramètre de lecture automatique
-                const savedAutoplay = localStorage.getItem('streamflix_autoplay');
-                if (savedAutoplay !== null) {
-                    autoplayEnabled = savedAutoplay === 'true';
-                    DOM.autoplayBtn.classList.toggle('active', autoplayEnabled);
-                    DOM.autoplayBtn.innerHTML = autoplayEnabled ? 
-                        '<i class="fas fa-play-circle"></i> Lecture auto: ON' : 
-                        '<i class="fas fa-play-circle"></i> Lecture auto: OFF';
+            }
+
+            function getDurationInSeconds(durationStr) {
+                const parts = durationStr.split(':');
+                if (parts.length === 3) {
+                    return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseInt(parts[2]);
+                } else if (parts.length === 2) {
+                    return parseInt(parts[0]) * 60 + parseInt(parts[1]);
                 }
+                return 0;
             }
 
-            function updateUserUI() {
-                if (currentUser) {
-                    if (currentUser.photoURL) {
-                        DOM.avatarInitial.style.display = 'none';
-                        DOM.userAvatar.innerHTML = `<img src="${currentUser.photoURL}" alt="${currentUser.displayName}">`;
-                    } else {
-                        DOM.avatarInitial.textContent = currentUser.displayName.charAt(0).toUpperCase();
-                    }
-                    
-                    if (currentUser.photoURL) {
-                        DOM.commentUserAvatarImg.src = currentUser.photoURL;
-                        DOM.commentUserAvatarImg.style.display = 'block';
-                        DOM.commentUserAvatar.innerHTML = '';
-                        DOM.commentUserAvatar.appendChild(DOM.commentUserAvatarImg);
-                    } else {
-                        DOM.commentUserAvatarImg.style.display = 'none';
-                        DOM.commentUserAvatar.innerHTML = `<span>${currentUser.displayName.charAt(0).toUpperCase()}</span>`;
-                    }
+            function formatTime(seconds) {
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const secs = Math.floor(seconds % 60);
+                
+                if (hours > 0) {
+                    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
                 }
+                return `${minutes}:${secs.toString().padStart(2, '0')}`;
             }
 
-            function toggleUserMenu() {
-                DOM.userMenu.style.display = DOM.userMenu.style.display === 'block' ? 'none' : 'block';
-            }
-
-            async function loadVideos() {
-                try {
-                    await loadVideosFromFirebase();
-                    showOnlineContent();
-                    renderHomePage();
-                    initSliders();
-                } catch (error) {
-                    console.error('Error loading videos:', error);
-                    videos = videoData;
-                    showOnlineContent();
-                    renderHomePage();
-                    initSliders();
+            function getChannelLogo(channelId) {
+                if (channelId === 'youku_monsters') {
+                    return 'https://yt3.googleusercontent.com/ytc/AIdro_k6E6UKOm59PC4O8rDXS0RDNlIx15yVmpCyNkm_n_PCmg=s800-c-k-c0x00ffffff-no-rj';
                 }
+                return 'https://cdn.leonardo.ai/users/59cc19c6-be61-41ed-ab82-8485d4d58d54/generations/807f5487-c3b8-4ccd-9ab8-dabab318a67d/Phoenix_10_Create_a_clean_bold_modern_logo_for_an_app_named_St_3.jpg';
             }
-
-            async function loadVideosFromFirebase() {
-                return new Promise((resolve, reject) => {
-                    const videosRef = fbFunctions.ref(db, 'videos');
-                    
-                    fbFunctions.onValue(videosRef, (snapshot) => {
-                        if (snapshot.exists()) {
-                            const firebaseVideos = snapshot.val();
-                            
-                            videos = videoData.map(video => {
-                                const firebaseData = firebaseVideos[video.id];
-                                if (firebaseData) {
-                                    return {
-                                        ...video,
-                                        views: firebaseData.views || 0,
-                                        likes: firebaseData.likes || 0,
-                                        dislikes: firebaseData.dislikes || 0,
-                                        comments: firebaseData.commentCount || 0,
-                                        uploadDate: firebaseData.uploadDate || video.uploadDate
-                                    };
-                                }
-                                
-                                initializeVideoInFirebase(video);
-                                return video;
-                            });
-                            
-                            resolve();
-                        } else {
-                            initializeAllVideosInFirebase();
-                            videos = videoData;
-                            resolve();
-                        }
-                    }, reject);
-                });
-            }
-
-            async function initializeVideoInFirebase(video) {
-                const videoRef = fbFunctions.ref(db, `videos/${video.id}`);
-                const channelRef = fbFunctions.ref(db, `channels/${video.channelId}`);
-                
-                const videoData = {
-                    title: video.title,
-                    channel: video.channel,
-                    channelId: video.channelId,
-                    views: 0,
-                    likes: 0,
-                    dislikes: 0,
-                    commentCount: 0,
-                    uploadDate: video.uploadDate,
-                    duration: video.duration,
-                    thumbnail: video.thumbnail,
-                    videoUrl: video.videoUrl,
-                    description: video.description,
-                    tags: video.tags,
-                    verified: video.verified,
-                    categories: video.categories || []
-                };
-                
-                await fbFunctions.set(videoRef, videoData);
-                
-                const channelSnapshot = await fbFunctions.get(channelRef);
-                if (!channelSnapshot.exists()) {
-                    const channelData = {
-                        name: video.channel,
-                        subscribers: 0,
-                        verified: video.verified,
-                        avatar: `https://cdn.leonardo.ai/users/59cc19c6-be61-41ed-ab82-8485d4d58d54/generations/807f5487-c3b8-4ccd-9ab8-dabab318a67d/Phoenix_10_Create_a_clean_bold_modern_logo_for_an_app_named_St_0.jpg`
-                    };
-                    
-                    await fbFunctions.set(channelRef, channelData);
-                }
-            }
-
-            async function initializeAllVideosInFirebase() {
-                for (const video of videoData) {
-                    await initializeVideoInFirebase(video);
-                }
-            }
-
-            function renderHomePage() {
-                renderVideoGrid(videos);
-                console.log('Home page rendered with', videos.length, 'videos');
-            }
-
-            function renderVideoGrid(videosToRender) {
-                DOM.videoGrid.innerHTML = '';
-                
-                if (videosToRender.length === 0) {
-                    DOM.videoGrid.innerHTML = `
-                        <div class="no-results">
-                            <i class="fas fa-film" style="font-size: 50px; margin-bottom: 20px; color: #666;"></i>
-                            <h3>Aucune vidéo trouvée</h3>
-                            <p>Essayez une autre catégorie ou recherche</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                const sortedVideos = [...videosToRender].sort((a, b) => b.uploadDate - a.uploadDate);
-                
-                sortedVideos.forEach(video => {
-                    const videoCard = document.createElement('div');
-                    videoCard.className = 'video-card';
-                    videoCard.setAttribute('data-id', video.id);
-                    
-                    const timeAgo = getTimeAgo(video.uploadDate);
-                    
-                    // Sélectionner le logo approprié pour la chaîne
-                    let channelLogo = 'https://cdn.leonardo.ai/users/59cc19c6-be61-41ed-ab82-8485d4d58d54/generations/807f5487-c3b8-4ccd-9ab8-dabab318a67d/Phoenix_10_Create_a_clean_bold_modern_logo_for_an_app_named_St_0.jpg';
-                    
-                    videoCard.innerHTML = `
-                        <div class="thumbnail-container">
-                            <img src="${video.thumbnail}" 
-                                 alt="${video.title}" 
-                                 class="thumbnail"
-                                 onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80';">
-                            <div class="duration">${video.duration}</div>
-                        </div>
-                        <div class="video-info">
-                            <div class="channel-avatar">
-                                <img src="${channelLogo}" 
-                                     alt="${video.channel}"
-                                     onerror="this.style.display='none'; this.parentElement.innerHTML='<span>${video.channelInitial}</span>';">
-                                ${video.verified ? '<div class="verified-channel"><i class="fas fa-check"></i></div>' : ''}
-                            </div>
-                            <div class="video-details">
-                                <h3>${video.title.length > 60 ? video.title.substring(0, 60) + '...' : video.title}</h3>
-                                <p class="channel-name">
-                                    ${video.channel}
-                                    ${video.verified ? '<i class="fas fa-check verified-badge"></i>' : ''}
-                                </p>
-                                <p>${formatCount(video.views)} vues • ${timeAgo}</p>
-                            </div>
-                        </div>
-                    `;
-                    
-                    videoCard.addEventListener('click', () => {
-                        if (!isOnline) {
-                            alert('Vous avez besoin d\'une connexion Internet pour regarder des vidéos.');
-                            return;
-                        }
-                        const videoObj = videos.find(v => v.id === video.id);
-                        if (videoObj) {
-                            showVideoDetailDirect(video.id);
-                        }
-                    });
-                    
-                    DOM.videoGrid.appendChild(videoCard);
-                });
-            }
-
-            function filterVideosByCategory(category) {
-                if (category === 'all') {
-                    renderVideoGrid(videos);
-                    return;
-                }
-                
-                const filteredVideos = videos.filter(video => {
-                    if (video.categories && Array.isArray(video.categories)) {
-                        return video.categories.includes(category);
-                    }
-                    
-                    return video.tags && video.tags.some(tag => 
-                        tag.toLowerCase() === category.toLowerCase() || 
-                        tag.toLowerCase().includes(category.toLowerCase())
-                    );
-                });
-                
-                renderVideoGrid(filteredVideos);
-            }
-
-            function initSliders() {
-                DOM.multiTagSliderContent.innerHTML = '';
-                const multiTagVideos = videos.slice(0, 1);
-                
-                multiTagVideos.forEach(video => {
-                    const slide = document.createElement('div');
-                    slide.className = 'swiper-slide';
-                    slide.setAttribute('data-id', video.id);
-                    
-                    const timeAgo = getTimeAgo(video.uploadDate);
-                    
-                    slide.innerHTML = `
-                        <img src="${video.thumbnail}" alt="${video.title}" class="slider-thumbnail"
-                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80';">
-                        <div class="slider-overlay">
-                            <div class="slider-title">${video.title}</div>
-                            <div class="slider-channel">
-                                ${video.channel}
-                                ${video.verified ? '<i class="fas fa-check verified-badge"></i>' : ''}
-                                • ${timeAgo}
-                            </div>
-                        </div>
-                    `;
-                    
-                    slide.addEventListener('click', () => {
-                        const videoObj = videos.find(v => v.id === video.id);
-                        if (videoObj) {
-                            showVideoDetailDirect(video.id);
-                        }
-                    });
-                    
-                    DOM.multiTagSliderContent.appendChild(slide);
-                });
-                
-                if (multiTagSwiper) multiTagSwiper.destroy();
-                multiTagSwiper = new Swiper('.multitag-slider', {
-                    slidesPerView: 1.2,
-                    spaceBetween: 10,
-                    navigation: {
-                        nextEl: '#multiTagSlider .swiper-button-next',
-                        prevEl: '#multiTagSlider .swiper-button-prev',
-                    },
-                    breakpoints: {
-                        640: { slidesPerView: 2.2, spaceBetween: 15 },
-                        1024: { slidesPerView: 3.2, spaceBetween: 20 }
-                    }
-                });
-            }
-
-            function showVideoDetailDirect(videoId) {
-                const video = videos.find(v => v.id === videoId);
-                if (!video) return;
-                
-                currentVideoId = videoId;
-                currentVideoData = video;
-                
-                // Mettre à jour le player Plyr
-                const playerElement = document.getElementById('player');
-                const sourceElement = playerElement.querySelector('source');
-                sourceElement.src = video.videoUrl;
-                sourceElement.type = 'video/mp4';
-                
-                // Mettre à jour le poster
-                playerElement.poster = video.thumbnail;
-                
-                // Recharger le player
-                playerElement.load();
-                
-                // Réinitialiser le player Plyr
-                initPlyrPlayer();
-                
-                DOM.detailVideoTitle.textContent = video.title;
-                DOM.channelNameText.textContent = video.channel;
-                
-                if (video.verified) {
-                    DOM.channelVerifiedBadge.style.display = 'inline';
-                    document.querySelector('.verified-channel').style.display = 'flex';
-                } else {
-                    DOM.channelVerifiedBadge.style.display = 'none';
-                    document.querySelector('.verified-channel').style.display = 'none';
-                }
-                
-                loadVideoRealtimeData(videoId);
-                loadCommentsFromFirebase(videoId);
-                loadRatingData(videoId);
-                checkUserInteractions(videoId);
-                
-                DOM.homePage.style.display = 'none';
-                DOM.detailPage.style.display = 'block';
-                window.scrollTo(0, 0);
-                
-                // Démarrer la lecture après un délai
-                setTimeout(() => {
-                    plyrPlayer.play();
-                    
-                    // Sauvegarder dans l'historique
-                    saveViewingHistory(videoId, Date.now(), video.duration);
-                }, 500);
-            }
-
-            async function loadVideoRealtimeData(videoId) {
-                const videoRef = fbFunctions.ref(db, `videos/${videoId}`);
-                
-                fbFunctions.onValue(videoRef, async (snapshot) => {
-                    if (snapshot.exists()) {
-                        const videoData = snapshot.val();
-                        
-                        DOM.detailViews.textContent = `${formatCount(videoData.views || 0)} vues`;
-                        DOM.likeCount.textContent = formatCount(videoData.likes || 0);
-                        DOM.dislikeCount.textContent = formatCount(videoData.dislikes || 0);
-                        DOM.commentCount.textContent = `Commentaires • ${formatCount(videoData.commentCount || 0)}`;
-                        
-                        if (videoData.uploadDate) {
-                            DOM.detailDate.textContent = getTimeAgo(videoData.uploadDate);
-                        }
-                        
-                        DOM.detailDescription.textContent = videoData.description || '';
-                        
-                        const channelRef = fbFunctions.ref(db, `channels/${currentVideoData.channelId}`);
-                        const channelSnapshot = await fbFunctions.get(channelRef);
-                        if (channelSnapshot.exists()) {
-                            const channelData = channelSnapshot.val();
-                            const subscriberCount = channelData.subscribers || 0;
-                            DOM.detailSubscribers.textContent = `${formatCount(subscriberCount)} abonnés`;
-                            DOM.subscriptionCount.textContent = formatCount(subscriberCount);
-                        }
-                    }
-                });
-            }
-
-            async function loadRatingData(videoId) {
-                if (!isOnline || !currentUser) return;
-                
-                const ratingsRef = fbFunctions.ref(db, `videos/${videoId}/ratings`);
-                const userRatingRef = fbFunctions.ref(db, `videos/${videoId}/ratings/${currentUser.uid}`);
-                
-                // Charger la note de l'utilisateur
-                const userSnapshot = await fbFunctions.get(userRatingRef);
-                if (userSnapshot.exists()) {
-                    const userRatingData = userSnapshot.val();
-                    userRating = userRatingData.rating;
-                    
-                    // Mettre à jour l'interface
-                    const stars = DOM.ratingStars.querySelectorAll('.star');
-                    stars.forEach((star, index) => {
-                        const starValue = index + 1;
-                        if (starValue <= userRating) {
-                            star.innerHTML = '<i class="fas fa-star"></i>';
-                            star.classList.add('active');
-                        } else {
-                            star.innerHTML = '<i class="far fa-star"></i>';
-                            star.classList.remove('active');
-                        }
-                    });
-                }
-                
-                // Charger la note moyenne
-                fbFunctions.onValue(ratingsRef, (snapshot) => {
-                    if (snapshot.exists()) {
-                        const ratings = snapshot.val();
-                        const ratingsArray = Object.values(ratings);
-                        const average = ratingsArray.reduce((sum, r) => sum + r.rating, 0) / ratingsArray.length;
-                        DOM.averageRating.textContent = `Note moyenne: ${average.toFixed(1)}/5 (${ratingsArray.length} votes)`;
-                    } else {
-                        DOM.averageRating.textContent = 'Aucune note pour l\'instant';
-                    }
-                });
-            }
-
-            async function checkUserInteractions(videoId) {
-                if (!currentUser) return;
-                
-                const userRef = fbFunctions.ref(db, `users/${currentUser.uid}`);
-                
-                try {
-                    const userSnapshot = await fbFunctions.get(userRef);
-                    if (userSnapshot.exists()) {
-                        const userData = userSnapshot.val();
-                        
-                        if (userData.likedVideos && userData.likedVideos.includes(videoId)) {
-                            isLiked = true;
-                            DOM.likeBtn.classList.add('active');
-                        }
-                        
-                        if (userData.dislikedVideos && userData.dislikedVideos.includes(videoId)) {
-                            isDisliked = true;
-                            DOM.dislikeBtn.classList.add('active');
-                        }
-                        
-                        if (userData.savedVideos && userData.savedVideos.includes(videoId)) {
-                            DOM.saveBtn.innerHTML = '<i class="fas fa-check"></i> Sauvegardée';
-                        }
-                        
-                        if (userData.subscribedChannels && userData.subscribedChannels.includes(currentVideoData.channelId)) {
-                            isSubscribed = true;
-                            DOM.subscribeBtn.textContent = 'ABONNÉ';
-                            DOM.subscribeBtn.classList.add('subscribed');
-                        }
-                    }
-                } catch (error) {
-                    console.error('Check user interactions error:', error);
-                }
-            }
-
-            function showHomePage() {
-                if (plyrPlayer) {
-                    plyrPlayer.pause();
-                }
-                
-                DOM.homePage.style.display = 'block';
-                DOM.detailPage.style.display = 'none';
-                
-                if (!isOnline) {
-                    showOfflineContent();
-                }
-                
-                window.scrollTo(0, 0);
-            }
-
-            function shareVideo(videoData) {
-                const shareUrl = window.location.href.split('?')[0] + `?v=${videoData.id}`;
-                const shareText = `Regardez "${videoData.title}" sur Streamflix`;
-                
-                if (navigator.share) {
-                    navigator.share({
-                        title: videoData.title,
-                        text: shareText,
-                        url: shareUrl
-                    });
-                } else {
-                    navigator.clipboard.writeText(shareUrl).then(() => {
-                        alert('Lien copié dans le presse-papier !');
-                    });
-                }
-            }
-
-            function showSmartSearchSuggestions(query) {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    const suggestionsContainer = DOM.searchSuggestionsEl;
-                    suggestionsContainer.innerHTML = '';
-                    
-                    if (query.trim() === '') {
-                        showRecentSearches();
-                        return;
-                    }
-                    
-                    const queryLower = query.toLowerCase().trim();
-                    const matchingRecent = recentSearches.filter(search => 
-                        search.toLowerCase().includes(queryLower)
-                    ).slice(0, 3);
-                    
-                    if (matchingRecent.length > 0) {
-                        const recentHeader = document.createElement('div');
-                        recentHeader.className = 'recent-searches';
-                        recentHeader.innerHTML = '<span>Recherches récentes</span>';
-                        suggestionsContainer.appendChild(recentHeader);
-                        
-                        matchingRecent.forEach(search => {
-                            const item = document.createElement('a');
-                            item.className = 'suggestion-item';
-                            item.href = '#';
-                            item.innerHTML = `
-                                <i class="fas fa-history"></i>
-                                <span>${search}</span>
-                            `;
-                            item.addEventListener('click', (e) => {
-                                e.preventDefault();
-                                DOM.searchBox.value = search;
-                                performSearch(search);
-                            });
-                            suggestionsContainer.appendChild(item);
-                        });
-                    }
-                    
-                    const suggestions = generateEnhancedSuggestions(queryLower);
-                    
-                    if (suggestions.length > 0) {
-                        const suggestionsHeader = document.createElement('div');
-                        suggestionsHeader.className = 'recent-searches';
-                        suggestionsHeader.innerHTML = '<span>Suggestions</span>';
-                        suggestionsContainer.appendChild(suggestionsHeader);
-                        
-                        suggestions.forEach(suggestion => {
-                            const item = document.createElement('a');
-                            item.className = 'suggestion-item';
-                            item.href = '#';
-                            item.innerHTML = `
-                                <i class="fas fa-search"></i>
-                                <span>${suggestion}</span>
-                            `;
-                            item.addEventListener('click', (e) => {
-                                e.preventDefault();
-                                DOM.searchBox.value = suggestion;
-                                performSearch(suggestion);
-                            });
-                            suggestionsContainer.appendChild(item);
-                        });
-                    }
-                    
-                    suggestionsContainer.style.display = 'block';
-                }, 300);
-            }
-
-            function showMobileSmartSearchSuggestions(query) {
-                const suggestionsContainer = DOM.mobileSearchSuggestions;
-                suggestionsContainer.innerHTML = '';
-                
-                if (query.trim() === '') {
-                    showMobileRecentSearches();
-                    return;
-                }
-    
-                const queryLower = query.toLowerCase().trim();
-                const suggestions = generateEnhancedSuggestions(queryLower);
-                
-                if (suggestions.length > 0) {
-                    suggestions.forEach(suggestion => {
-                        const item = document.createElement('a');
-                        item.className = 'suggestion-item';
-                        item.href = '#';
-                        item.innerHTML = `
-                            <i class="fas fa-search"></i>
-                            <span>${suggestion}</span>
-                        `;
-                        item.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            DOM.mobileSearchInput.value = suggestion;
-                            performSearch(suggestion);
-                            hideMobileSearch();
-                        });
-                        suggestionsContainer.appendChild(item);
-                    });
-                }
-                
-                suggestionsContainer.style.display = 'block';
-            }
-
-            function generateEnhancedSuggestions(query) {
-                const suggestions = new Set();
-                
-                videos.forEach(video => {
-                    const titleLower = video.title.toLowerCase();
-                    if (titleLower.includes(query)) {
-                        suggestions.add(video.title);
-                        
-                        const words = video.title.split(' ');
-                        let partial = '';
-                        for (let i = 0; i < Math.min(4, words.length); i++) {
-                            partial += (i > 0 ? ' ' : '') + words[i];
-                            if (partial.toLowerCase().includes(query)) {
-                                suggestions.add(partial + (i < words.length - 1 ? '...' : ''));
-                            }
-                        }
-                    }
-                });
-                
-                const commonQueries = [
-                    'À Bout film',
-                    'Film français',
-                    'Drame psychologique',
-                    'Thriller français',
-                    'Film complet',
-                    'Mère célibataire',
-                    'Drame social',
-                    'Film intense'
-                ];
-                
-                commonQueries.forEach(commonQuery => {
-                    if (commonQuery.toLowerCase().includes(query)) {
-                        suggestions.add(commonQuery);
-                    }
-                });
-                
-                return Array.from(suggestions).slice(0, 8);
-            }
-
-            function showRecentSearches() {
-                const suggestionsContainer = DOM.searchSuggestionsEl;
-                suggestionsContainer.innerHTML = '';
-                
-                if (recentSearches.length === 0) {
-                    const noRecent = document.createElement('div');
-                    noRecent.className = 'recent-searches';
-                    noRecent.innerHTML = '<span>Aucune recherche récente</span>';
-                    suggestionsContainer.appendChild(noRecent);
-                } else {
-                    const recentHeader = document.createElement('div');
-                    recentHeader.className = 'recent-searches';
-                    recentHeader.innerHTML = `
-                        <span>Recherches récentes</span>
-                        <span class="clear-recent" id="clearRecent">Tout effacer</span>
-                    `;
-                    suggestionsContainer.appendChild(recentHeader);
-                    
-                    recentHeader.querySelector('.clear-recent').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        clearRecentSearches();
-                    });
-                    
-                    recentSearches.slice(0, 8).forEach(search => {
-                        const item = document.createElement('a');
-                        item.className = 'suggestion-item';
-                        item.href = '#';
-                        item.innerHTML = `
-                            <i class="fas fa-history"></i>
-                            <span>${search}</span>
-                        `;
-                        item.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            DOM.searchBox.value = search;
-                            performSearch(search);
-                        });
-                        suggestionsContainer.appendChild(item);
-                    });
-                }
-                
-                suggestionsContainer.style.display = 'block';
-            }
-
-            function showMobileRecentSearches() {
-                const suggestionsContainer = DOM.mobileSearchSuggestions;
-                suggestionsContainer.innerHTML = '';
-                
-                if (recentSearches.length === 0) {
-                    const noRecent = document.createElement('div');
-                    noRecent.className = 'recent-searches';
-                    noRecent.innerHTML = '<span>Aucune recherche récente</span>';
-                    suggestionsContainer.appendChild(noRecent);
-                } else {
-                    const recentHeader = document.createElement('div');
-                    recentHeader.className = 'recent-searches';
-                    recentHeader.innerHTML = `
-                        <span>Recherches récentes</span>
-                        <span class="clear-recent" id="mobileClearRecent">Tout effacer</span>
-                    `;
-                    suggestionsContainer.appendChild(recentHeader);
-                    
-                    recentHeader.querySelector('.clear-recent').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        clearRecentSearches();
-                        showMobileRecentSearches();
-                    });
-                    
-                    recentSearches.slice(0, 8).forEach(search => {
-                        const item = document.createElement('a');
-                        item.className = 'suggestion-item';
-                        item.href = '#';
-                        item.innerHTML = `
-                            <i class="fas fa-history"></i>
-                            <span>${search}</span>
-                        `;
-                        item.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            DOM.mobileSearchInput.value = search;
-                            performSearch(search);
-                            hideMobileSearch();
-                        });
-                        suggestionsContainer.appendChild(item);
-                    });
-                }
-                
-                suggestionsContainer.style.display = 'block';
-            }
-
-            function hideSearchSuggestions() {
-                DOM.searchSuggestionsEl.style.display = 'none';
-            }
-
-            function performSearch(query) {
-                if (!isOnline) {
-                    alert('Vous devez être en ligne pour effectuer une recherche.');
-                    return;
-                }
-                
-                const searchTerm = query.trim();
-                if (!searchTerm) return;
-                
-                addToRecentSearches(searchTerm);
-                const searchLower = searchTerm.toLowerCase();
-                
-                const filteredVideos = videos.filter(video => {
-                    if (video.title.toLowerCase().includes(searchLower)) return true;
-                    if (video.channel.toLowerCase().includes(searchLower)) return true;
-                    if (video.tags.some(tag => tag.toLowerCase().includes(searchLower))) return true;
-                    if (video.description.toLowerCase().includes(searchLower)) return true;
-                    if (video.categories && video.categories.some(cat => cat.toLowerCase().includes(searchLower))) return true;
-                    return false;
-                });
-                
-                const sortedResults = filteredVideos.sort((a, b) => {
-                    const aTitleMatch = a.title.toLowerCase().includes(searchLower);
-                    const bTitleMatch = b.title.toLowerCase().includes(searchLower);
-                    
-                    if (aTitleMatch && !bTitleMatch) return -1;
-                    if (!aTitleMatch && bTitleMatch) return 1;
-                    
-                    return b.views - a.views;
-                });
-                
-                renderSearchResults(sortedResults, searchTerm);
-                showHomePage();
-                hideSearchSuggestions();
-                
-                if (DOM.mobileSearchOverlay.style.display === 'flex') {
-                    hideMobileSearch();
-                }
-            }
-
-            function renderSearchResults(results, searchTerm) {
-                if (results.length === 0) {
-                    DOM.videoGrid.innerHTML = `
-                        <div class="no-results">
-                            <i class="fas fa-search" style="font-size: 50px; margin-bottom: 20px; color: #666;"></i>
-                            <h3>Aucun résultat pour "${searchTerm}"</h3>
-                            <p>Essayez d'autres mots-clés ou vérifiez l'orthographe</p>
-                    `;
-                } else {
-                    renderVideoGrid(results);
-                }
-            }
-
-            function addToRecentSearches(searchTerm) {
-                recentSearches = recentSearches.filter(s => s.toLowerCase() !== searchTerm.toLowerCase());
-                recentSearches.unshift(searchTerm);
-                if (recentSearches.length > 10) {
-                    recentSearches.pop();
-                }
-                localStorage.setItem('streamflix_recent_searches', JSON.stringify(recentSearches));
-            }
-
-            function clearRecentSearches() {
-                recentSearches = [];
-                localStorage.setItem('streamflix_recent_searches', JSON.stringify(recentSearches));
-                showRecentSearches();
-                
-                if (DOM.mobileSearchOverlay.style.display === 'flex') {
-                    showMobileRecentSearches();
-                }
-            }
-
-            function initiateVoiceSearch() {
-                alert('Recherche vocale activée. Dites votre requête de recherche. (Note : Ceci est une simulation)');
-                
-                setTimeout(() => {
-                    const demoQueries = ['À Bout', 'film français', 'drame', 'thriller'];
-                    const randomQuery = demoQueries[Math.floor(Math.random() * demoQueries.length)];
-                    
-                    DOM.searchBox.value = randomQuery;
-                    performSearch(randomQuery);
-                    
-                    DOM.voiceSearchBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
-                    DOM.voiceSearchBtn.style.color = '#ff0000';
-                    
-                    setTimeout(() => {
-                        DOM.voiceSearchBtn.innerHTML = '<i class="fas fa-microphone"></i>';
-                        DOM.voiceSearchBtn.style.color = '#f1f1f1';
-                    }, 2000);
-                }, 1500);
-            }
-
-            function updateRecentSearchesUI() {}
 
             function formatCount(num) {
                 if (num >= 1000000) {
@@ -3778,6 +3796,112 @@
                 return `il y a ${years} an${years !== 1 ? 's' : ''}`;
             }
 
+            function showNotification(message) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background-color: #ff0000;
+                    color: white;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    z-index: 2000;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                    animation: slideIn 0.3s ease;
+                    max-width: 300px;
+                    word-wrap: break-word;
+                `;
+                
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+
+            // Add CSS for animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Search Functions
+            function performSearch(query) {
+                const searchTerm = query.trim();
+                if (!searchTerm) return;
+                
+                const searchLower = searchTerm.toLowerCase();
+                const filteredVideos = videos.filter(video => {
+                    if (video.title.toLowerCase().includes(searchLower)) return true;
+                    if (video.channel.toLowerCase().includes(searchLower)) return true;
+                    if (video.tags.some(tag => tag.toLowerCase().includes(searchLower))) return true;
+                    if (video.description.toLowerCase().includes(searchLower)) return true;
+                    return false;
+                });
+                
+                renderVideoGrid(filteredVideos);
+                showHomePage();
+            }
+
+            function clearRecentSearches() {
+                // Implement if needed
+            }
+
+            function showMobileSearch() {
+                DOM.mobileSearchOverlay.style.display = 'flex';
+                DOM.mobileSearchInput.focus();
+            }
+
+            function hideMobileSearch() {
+                DOM.mobileSearchOverlay.style.display = 'none';
+                DOM.mobileSearchInput.value = '';
+            }
+
+            function filterVideosByCategory(category) {
+                if (category === 'all') {
+                    renderVideoGrid(videos);
+                    return;
+                }
+                
+                if (category === 'continue') {
+                    const continueVideos = continueWatching.map(item => {
+                        return videos.find(v => v.id === item.videoId);
+                    }).filter(v => v);
+                    renderVideoGrid(continueVideos);
+                    return;
+                }
+                
+                if (category === 'recommended') {
+                    renderVideoGrid(userRecommendations);
+                    return;
+                }
+                
+                const filteredVideos = videos.filter(video => {
+                    if (video.categories && Array.isArray(video.categories)) {
+                        return video.categories.includes(category);
+                    }
+                    return video.tags && video.tags.some(tag => 
+                        tag.toLowerCase() === category.toLowerCase()
+                    );
+                });
+                
+                renderVideoGrid(filteredVideos);
+            }
+
+            // Initialize the app
             init();
         }
     </script>
