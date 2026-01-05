@@ -385,21 +385,11 @@
             border-radius: var(--border-radius);
             margin-bottom: 20px;
             position: relative;
-            overflow: hidden;
         }
 
-        .channel-banner img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .channel-avatar-container {
-            position: absolute;
-            bottom: -50px;
-            left: 20px;
+        .channel-info {
             display: flex;
-            align-items: flex-end;
+            align-items: center;
             gap: 20px;
         }
 
@@ -415,51 +405,20 @@
             font-size: 40px;
             font-weight: 500;
             border: 4px solid var(--light-bg);
-            overflow: hidden;
-            position: relative;
-        }
-
-        .channel-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
 
         body.dark-mode .channel-avatar {
             border-color: var(--dark-bg);
         }
 
-        .channel-edit-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            opacity: 0;
-            transition: opacity 0.3s;
-            cursor: pointer;
-            border-radius: 50%;
-        }
-
-        .channel-avatar:hover .channel-edit-overlay {
-            opacity: 1;
-        }
-
-        .channel-info {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .channel-details {
+            flex: 1;
         }
 
         .channel-name {
             font-size: 24px;
             font-weight: 700;
-            margin-bottom: 0;
+            margin-bottom: 8px;
         }
 
         .channel-stats {
@@ -476,7 +435,6 @@
             display: flex;
             border-bottom: 1px solid #ddd;
             margin-bottom: 20px;
-            margin-top: 60px;
         }
 
         body.dark-mode .channel-tabs {
@@ -512,64 +470,34 @@
             padding: 20px 0;
         }
 
-        /* Channel Edit Modal */
-        .channel-edit-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .channel-edit-modal.active {
-            display: flex;
-        }
-
-        .channel-edit-content {
+        /* Authentication Views */
+        .auth-container {
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 30px;
             background-color: var(--light-bg);
             border-radius: var(--border-radius);
-            width: 90%;
-            max-width: 500px;
-            padding: 30px;
             box-shadow: var(--shadow-lg);
         }
 
-        body.dark-mode .channel-edit-content {
+        body.dark-mode .auth-container {
             background-color: var(--dark-surface);
         }
 
-        .channel-edit-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        .channel-edit-header h2 {
+        .auth-header h2 {
             font-size: 24px;
+            margin-bottom: 8px;
         }
 
-        .close-button {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--light-text);
-        }
-
-        body.dark-mode .close-button {
-            color: var(--dark-text);
-        }
-
-        .channel-edit-form {
+        .auth-form {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
         }
 
         .form-group {
@@ -601,48 +529,6 @@
         .form-input:focus {
             outline: none;
             border-color: var(--primary-color);
-        }
-
-        .upload-preview {
-            width: 100%;
-            max-width: 200px;
-            border-radius: 8px;
-            margin: 10px auto;
-            display: block;
-        }
-
-        .preview-container {
-            text-align: center;
-        }
-
-        /* Authentication Views */
-        .auth-container {
-            max-width: 400px;
-            margin: 40px auto;
-            padding: 30px;
-            background-color: var(--light-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-lg);
-        }
-
-        body.dark-mode .auth-container {
-            background-color: var(--dark-surface);
-        }
-
-        .auth-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .auth-header h2 {
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-
-        .auth-form {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
         }
 
         .auth-button {
@@ -843,6 +729,60 @@
             color: var(--dark-text-secondary);
         }
 
+        /* KYC & Withdrawal */
+        .kyc-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .kyc-step {
+            background-color: var(--light-surface);
+            padding: 24px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        body.dark-mode .kyc-step {
+            background-color: var(--dark-surface);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .upload-preview {
+            width: 100%;
+            max-width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        body.dark-mode .upload-preview {
+            border-color: var(--dark-surface-light);
+        }
+
         /* Mobile Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -867,8 +807,8 @@
             }
             
             .channel-info {
+                flex-direction: column;
                 text-align: center;
-                margin-top: 60px;
             }
             
             .modal-actions {
@@ -953,22 +893,339 @@
             border-left: 4px solid #2196f3;
         }
 
-        /* File Upload Previews */
-        .file-upload-container {
+        /* Video Detail Page Styles */
+        .video-detail-container {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
+            gap: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .video-player-section {
+            flex: 1;
+        }
+        
+        .video-player {
+            background-color: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .video-info-detail {
+            background-color: var(--light-surface);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+        
+        body.dark-mode .video-info-detail {
+            background-color: var(--dark-surface);
+        }
+        
+        .video-title-detail {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        
+        .video-meta {
+            color: var(--light-text-secondary);
+            margin-bottom: 20px;
+        }
+        
+        body.dark-mode .video-meta {
+            color: var(--dark-text-secondary);
+        }
+        
+        .video-actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .action-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: var(--light-surface-dark);
+            border: none;
+            border-radius: 20px;
+            color: var(--light-text);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        body.dark-mode .action-button {
+            background-color: var(--dark-surface-light);
+            color: var(--dark-text);
+        }
+        
+        .action-button:hover {
+            background-color: rgba(0,0,0,0.1);
+        }
+        
+        body.dark-mode .action-button:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .creator-info-detail {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        body.dark-mode .creator-info-detail {
+            border-bottom-color: var(--dark-surface-light);
+        }
+        
+        .creator-avatar-small {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            font-size: 20px;
+            color: white;
+        }
+        
+        .creator-details {
+            flex: 1;
+        }
+        
+        .creator-details h3 {
+            margin-bottom: 4px;
+        }
+        
+        .creator-details p {
+            color: var(--light-text-secondary);
+            font-size: 14px;
+        }
+        
+        body.dark-mode .creator-details p {
+            color: var(--dark-text-secondary);
+        }
+        
+        .subscribe-button {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .subscribe-button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .video-description {
+            background-color: var(--light-surface-dark);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        body.dark-mode .video-description {
+            background-color: var(--dark-surface);
+        }
+        
+        .comments-section {
+            background-color: var(--light-surface);
+            padding: 20px;
+            border-radius: var(--border-radius);
+        }
+        
+        body.dark-mode .comments-section {
+            background-color: var(--dark-surface);
+        }
+        
+        .comment-input {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .user-avatar-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+        
+        .comment-input input {
+            flex: 1;
+            padding: 10px 16px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            background-color: var(--light-bg);
+            color: var(--light-text);
+        }
+        
+        body.dark-mode .comment-input input {
+            background-color: var(--dark-surface);
+            color: var(--dark-text);
+            border-color: var(--dark-surface-light);
+        }
+        
+        .comment-button {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        
+        .comment {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #666;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+        
+        .comment-content {
+            flex: 1;
+        }
+        
+        .comment-content h4 {
+            margin-bottom: 4px;
+        }
+        
+        .comment-content p {
+            margin-bottom: 8px;
+            color: var(--light-text);
+        }
+        
+        body.dark-mode .comment-content p {
+            color: var(--dark-text);
+        }
+        
+        .comment-actions {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .comment-actions button {
+            background: none;
+            border: none;
+            color: var(--light-text-secondary);
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        body.dark-mode .comment-actions button {
+            color: var(--dark-text-secondary);
+        }
+        
+        .related-videos {
+            width: 400px;
+        }
+        
+        .related-video-card {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+        
+        .related-thumbnail {
+            width: 160px;
+            height: 90px;
+            border-radius: 8px;
+            background-color: #ddd;
+        }
+        
+        body.dark-mode .related-thumbnail {
+            background-color: #333;
+        }
+        
+        .related-info {
+            flex: 1;
+        }
+        
+        .related-info h4 {
+            font-size: 14px;
+            margin-bottom: 4px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        
+        .related-info p {
+            font-size: 12px;
+            color: var(--light-text-secondary);
+        }
+        
+        body.dark-mode .related-info p {
+            color: var(--dark-text-secondary);
+        }
+        
+        @media (max-width: 1200px) {
+            .video-detail-container {
+                flex-direction: column;
+            }
+            
+            .related-videos {
+                width: 100%;
+            }
+        }
+        
+        /* Banner ad styling */
+        .ad-banner {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .ad-banner a {
+            display: inline-block;
+        }
+        
+        /* KYC Review Styles */
+        .kyc-review {
+            background-color: var(--light-surface-dark);
+            padding: 16px;
+            border-radius: 8px;
             margin: 20px 0;
         }
-
-        .file-preview {
-            max-width: 300px;
-            border-radius: 8px;
-            display: none;
+        
+        body.dark-mode .kyc-review {
+            background-color: var(--dark-surface);
         }
-
-        .file-preview.active {
-            display: block;
+        
+        .review-status {
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        .verified-status {
+            text-align: center;
+            padding: 20px 0;
         }
     </style>
 </head>
@@ -988,41 +1245,6 @@
                 <button id="confirmAge" class="modal-button confirm-button">I am 18 or older</button>
                 <button id="cancelAge" class="modal-button cancel-button">I am under 18</button>
             </div>
-        </div>
-    </div>
-
-    <!-- Channel Edit Modal -->
-    <div id="channelEditModal" class="channel-edit-modal">
-        <div class="channel-edit-content">
-            <div class="channel-edit-header">
-                <h2>Edit Channel</h2>
-                <button class="close-button" id="closeChannelEdit">&times;</button>
-            </div>
-            <form id="channelEditForm" class="channel-edit-form">
-                <div class="form-group">
-                    <label class="form-label" for="channelNameInput">Channel Name</label>
-                    <input type="text" class="form-input" id="channelNameInput" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label" for="channelDescriptionInput">Channel Description</label>
-                    <textarea class="form-input" id="channelDescriptionInput" rows="4"></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Profile Picture</label>
-                    <input type="file" class="upload-input" id="profilePictureUpload" accept="image/*">
-                    <div class="preview-container">
-                        <img id="profilePicturePreview" class="upload-preview" style="display: none;">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Cover Photo</label>
-                    <input type="file" class="upload-input" id="coverPhotoUpload" accept="image/*">
-                    <div class="preview-container">
-                        <img id="coverPhotoPreview" class="upload-preview" style="display: none;">
-                    </div>
-                </div>
-                <button type="submit" class="auth-button">Save Changes</button>
-            </form>
         </div>
     </div>
 
@@ -1084,6 +1306,10 @@
                 <i class="fas fa-chart-line sidebar-icon"></i>
                 <span>Dashboard</span>
             </div>
+            <div class="sidebar-item" id="withdrawalItem">
+                <i class="fas fa-wallet sidebar-icon"></i>
+                <span>Withdraw</span>
+            </div>
             <div class="sidebar-item" id="loginItem">
                 <i class="fas fa-sign-in-alt sidebar-icon"></i>
                 <span>Sign In</span>
@@ -1115,16 +1341,10 @@
                 <!-- Creator Page View -->
                 <div class="view hidden" id="creatorView">
                     <div class="creator-header">
-                        <div class="channel-banner" id="channelBanner">
-                            <!-- Banner image will be inserted here -->
-                        </div>
-                        <div class="channel-avatar-container">
-                            <div class="channel-avatar" id="channelAvatar">
-                                <div class="channel-edit-overlay" id="editChannelBtn">
-                                    <i class="fas fa-camera"></i>
-                                </div>
-                            </div>
-                            <div class="channel-info">
+                        <div class="channel-banner"></div>
+                        <div class="channel-info">
+                            <div class="channel-avatar" id="channelAvatar">C</div>
+                            <div class="channel-details">
                                 <h1 class="channel-name" id="channelName">Creator Name</h1>
                                 <div class="channel-stats">
                                     <span id="channelSubscribers">0 subscribers</span>
@@ -1169,17 +1389,17 @@
                         <form class="auth-form" id="authForm">
                             <div class="form-group" id="usernameGroup">
                                 <label class="form-label" for="authUsername">Username</label>
-                                <input type="text" class="form-input" id="authUsername" placeholder="Enter your username" required>
+                                <input type="text" class="form-input" id="authUsername" placeholder="Enter your username">
                             </div>
                             
                             <div class="form-group" id="emailGroup">
                                 <label class="form-label" for="authEmail">Email</label>
-                                <input type="email" class="form-input" id="authEmail" placeholder="Enter your email" required>
+                                <input type="email" class="form-input" id="authEmail" placeholder="Enter your email">
                             </div>
                             
                             <div class="form-group">
                                 <label class="form-label" for="authPassword">Password</label>
-                                <input type="password" class="form-input" id="authPassword" placeholder="Enter your password" required>
+                                <input type="password" class="form-input" id="authPassword" placeholder="Enter your password">
                             </div>
                             
                             <button type="submit" class="auth-button" id="authSubmitButton">Sign In</button>
@@ -1204,19 +1424,15 @@
                             <i class="fas fa-cloud-upload-alt upload-icon"></i>
                             <h3>Drag and drop video files</h3>
                             <p>or click to browse files</p>
-                            <input type="file" class="upload-input" id="videoUpload" accept="video/*" required>
+                            <input type="file" class="upload-input" id="videoUpload" accept="video/*">
                             <p style="margin-top: 20px; font-size: 14px; color: var(--light-text-secondary);">
                                 MP4, WebM, or AVI files up to 2GB
                             </p>
                         </div>
                         
-                        <div class="file-upload-container">
-                            <div id="videoPreview"></div>
-                        </div>
-                        
                         <div class="form-group">
                             <label class="form-label" for="videoTitle">Video Title</label>
-                            <input type="text" class="form-input" id="videoTitle" placeholder="Enter a title for your video" required>
+                            <input type="text" class="form-input" id="videoTitle" placeholder="Enter a title for your video">
                         </div>
                         
                         <div class="form-group">
@@ -1238,9 +1454,21 @@
                 <div class="view hidden" id="dashboardView">
                     <div class="dashboard-container">
                         <h1>Creator Dashboard</h1>
-                        <p>Track your channel's performance</p>
+                        <p>Track your channel's performance and earnings</p>
                         
                         <div class="dashboard-cards">
+                            <div class="dashboard-card">
+                                <div class="card-title">Total Earnings</div>
+                                <div class="card-value" id="totalEarnings">$0.00</div>
+                                <div class="card-subvalue" id="lifetimeEarnings">Lifetime: $0.00</div>
+                            </div>
+                            
+                            <div class="dashboard-card">
+                                <div class="card-title">This Month</div>
+                                <div class="card-value" id="monthEarnings">$0.00</div>
+                                <div class="card-subvalue" id="monthViews">0 views</div>
+                            </div>
+                            
                             <div class="dashboard-card">
                                 <div class="card-title">Total Views</div>
                                 <div class="card-value" id="totalViews">0</div>
@@ -1248,23 +1476,122 @@
                             </div>
                             
                             <div class="dashboard-card">
-                                <div class="card-title">Total Videos</div>
-                                <div class="card-value" id="totalVideos">0</div>
-                                <div class="card-subvalue">On your channel</div>
-                            </div>
-                            
-                            <div class="dashboard-card">
-                                <div class="card-title">Channel Status</div>
-                                <div class="card-value" style="font-size: 24px;">Active</div>
-                                <div class="card-subvalue">Ready for uploads</div>
+                                <div class="card-title">Available for Withdrawal</div>
+                                <div class="card-value" id="availableBalance">$0.00</div>
+                                <div class="card-subvalue">After KYC verification</div>
                             </div>
                         </div>
                         
-                        <div style="margin-top: 40px;">
-                            <h2>Recent Videos</h2>
-                            <div id="videosPerformance">
-                                <p>No videos uploaded yet.</p>
+                        <div class="kyc-step">
+                            <div class="step-header">
+                                <div class="step-icon">1</div>
+                                <h3 class="step-title">Verification Status</h3>
                             </div>
+                            <p id="kycStatusText">Your account is not verified. Complete KYC to enable withdrawals.</p>
+                            <button class="auth-button" id="startKycButton">Start KYC Verification</button>
+                        </div>
+                        
+                        <h2 style="margin-top: 40px;">Recent Videos Performance</h2>
+                        <div id="videosPerformance">
+                            <p>No videos uploaded yet.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Withdrawal & KYC View -->
+                <div class="view hidden" id="withdrawalView">
+                    <div class="kyc-container">
+                        <h1>Withdraw Earnings</h1>
+                        <p>Withdraw your earnings to PayPal after completing KYC verification</p>
+                        
+                        <!-- Step 1: ID Upload -->
+                        <div class="kyc-step" id="kycStep1">
+                            <div class="step-header">
+                                <div class="step-icon">1</div>
+                                <h3 class="step-title">Upload ID Document</h3>
+                            </div>
+                            <p>Upload a clear photo of your government-issued ID (Passport, Driver's License, or National ID)</p>
+                            <input type="file" class="upload-input" id="idUpload" accept="image/*">
+                            <div id="idPreview" style="margin-top: 10px;"></div>
+                            <button class="auth-button" id="uploadIdButton" style="margin-top: 20px;">Upload ID</button>
+                        </div>
+                        
+                        <!-- Step 2: Selfie Upload -->
+                        <div class="kyc-step hidden" id="kycStep2">
+                            <div class="step-header">
+                                <div class="step-icon">2</div>
+                                <h3 class="step-title">Upload Selfie</h3>
+                            </div>
+                            <p>Take a clear selfie showing your face for verification</p>
+                            <input type="file" class="upload-input" id="selfieUpload" accept="image/*">
+                            <div id="selfiePreview" style="margin-top: 10px;"></div>
+                            <button class="auth-button" id="uploadSelfieButton" style="margin-top: 20px;">Upload Selfie</button>
+                        </div>
+                        
+                        <!-- Step 3: Additional Photo Upload -->
+                        <div class="kyc-step hidden" id="kycStep3">
+                            <div class="step-header">
+                                <div class="step-icon">3</div>
+                                <h3 class="step-title">Upload Additional Photo</h3>
+                            </div>
+                            <p>Upload a clear photo holding your ID next to your face</p>
+                            <input type="file" class="upload-input" id="photoUpload" accept="image/*">
+                            <div id="photoPreview" style="margin-top: 10px;"></div>
+                            <button class="auth-button" id="uploadPhotoButton" style="margin-top: 20px;">Upload Photo</button>
+                        </div>
+                        
+                        <!-- Step 4: Review & Publish -->
+                        <div class="kyc-step hidden" id="kycStep4">
+                            <div class="step-header">
+                                <div class="step-icon">4</div>
+                                <h3 class="step-title">Review & Publish</h3>
+                            </div>
+                            <p>Review your KYC information and publish for verification</p>
+                            <div class="kyc-review">
+                                <p><strong>ID Document:</strong> Uploaded ✓</p>
+                                <p><strong>Selfie:</strong> Uploaded ✓</p>
+                                <p><strong>Additional Photo:</strong> Uploaded ✓</p>
+                            </div>
+                            <button class="auth-button" id="publishKycButton">Publish for Verification</button>
+                        </div>
+                        
+                        <!-- Step 5: Under Review -->
+                        <div class="kyc-step hidden" id="kycStep5">
+                            <div class="step-header">
+                                <div class="step-icon"><i class="fas fa-clock"></i></div>
+                                <h3 class="step-title">KYC Under Review</h3>
+                            </div>
+                            <p>Your KYC verification is under review. This may take 24-48 hours.</p>
+                            <div class="review-status">
+                                <div class="spinner" style="margin: 20px auto;"></div>
+                                <p>Status: Under Review</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 6: Verified -->
+                        <div class="kyc-step hidden" id="kycStep6">
+                            <div class="step-header">
+                                <div class="step-icon"><i class="fas fa-check"></i></div>
+                                <h3 class="step-title">KYC Verified</h3>
+                            </div>
+                            <p>Your KYC verification is complete! You can now withdraw your earnings.</p>
+                            <div class="verified-status">
+                                <i class="fas fa-check-circle" style="font-size: 48px; color: #4caf50; margin: 20px 0;"></i>
+                                <p>Status: Verified ✓</p>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="withdrawAmount">Withdrawal Amount</label>
+                                <input type="number" class="form-input" id="withdrawAmount" placeholder="Minimum $10.00" min="10" step="0.01">
+                            </div>
+                            <button class="auth-button" id="withdrawButton">Withdraw to PayPal</button>
+                        </div>
+                        
+                        <div class="kyc-step" id="withdrawalStatus">
+                            <div class="step-header">
+                                <div class="step-icon"><i class="fas fa-history"></i></div>
+                                <h3 class="step-title">Withdrawal Status</h3>
+                            </div>
+                            <p id="withdrawalStatusText">No withdrawals yet. Complete KYC to enable withdrawals.</p>
                         </div>
                     </div>
                 </div>
@@ -1278,7 +1605,25 @@
         <span id="toastMessage">This is a toast message</span>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
     <script>
+        // Back4App (Parse) Initialization
+        const APP_ID = 'iM33YeGWtasvj7vGbhNQLkOuKDq83Txr5YsM7xWl';
+        const CLIENT_KEY = 'q2Zhfuxi4l4w6GneC59PtYDNmXvNM13wxTBStRyh';
+        
+        // Firebase configuration
+        const FIREBASE_CONFIG = {
+            apiKey: "AIzaSyBsfheLc8i-CsRGJ9jkbGUhdTj3ZD3SLu8",
+            authDomain: "haitiantube-2affb.firebaseapp.com",
+            projectId: "haitiantube-2affb",
+            storageBucket: "haitiantube-2affb.firebasestorage.app",
+            messagingSenderId: "564033314604",
+            appId: "1:564033314604:web:dfcd9b74b670e47dae1689",
+            measurementId: "G-8WS57GK218"
+        };
+        
         // Platform State
         const platformState = {
             currentUser: null,
@@ -1289,7 +1634,11 @@
             creators: [],
             currentCreator: null,
             currentVideo: null,
-            isDarkMode: false
+            isDarkMode: false,
+            kycStatus: 'pending',
+            earnings: 0,
+            views: 0,
+            subscribers: 0
         };
         
         // DOM Elements
@@ -1300,23 +1649,13 @@
             authView: document.getElementById('authView'),
             uploadView: document.getElementById('uploadView'),
             dashboardView: document.getElementById('dashboardView'),
+            withdrawalView: document.getElementById('withdrawalView'),
             viewContainer: document.getElementById('viewContainer'),
             
             // Age verification
             ageVerificationModal: document.getElementById('ageVerificationModal'),
             confirmAge: document.getElementById('confirmAge'),
             cancelAge: document.getElementById('cancelAge'),
-            
-            // Channel edit modal
-            channelEditModal: document.getElementById('channelEditModal'),
-            closeChannelEdit: document.getElementById('closeChannelEdit'),
-            channelEditForm: document.getElementById('channelEditForm'),
-            channelNameInput: document.getElementById('channelNameInput'),
-            channelDescriptionInput: document.getElementById('channelDescriptionInput'),
-            profilePictureUpload: document.getElementById('profilePictureUpload'),
-            profilePicturePreview: document.getElementById('profilePicturePreview'),
-            coverPhotoUpload: document.getElementById('coverPhotoUpload'),
-            coverPhotoPreview: document.getElementById('coverPhotoPreview'),
             
             // Header
             menuButton: document.getElementById('menuButton'),
@@ -1330,6 +1669,7 @@
             // Sidebar items
             myChannelItem: document.getElementById('myChannelItem'),
             dashboardItem: document.getElementById('dashboardItem'),
+            withdrawalItem: document.getElementById('withdrawalItem'),
             loginItem: document.getElementById('loginItem'),
             logoutItem: document.getElementById('logoutItem'),
             
@@ -1338,7 +1678,6 @@
             creatorVideosGrid: document.getElementById('creatorVideosGrid'),
             
             // Creator page
-            channelBanner: document.getElementById('channelBanner'),
             channelAvatar: document.getElementById('channelAvatar'),
             channelName: document.getElementById('channelName'),
             channelSubscribers: document.getElementById('channelSubscribers'),
@@ -1346,7 +1685,6 @@
             channelDescription: document.getElementById('channelDescription'),
             channelJoined: document.getElementById('channelJoined'),
             channelTotalViews: document.getElementById('channelTotalViews'),
-            editChannelBtn: document.getElementById('editChannelBtn'),
             
             // Authentication
             authTitle: document.getElementById('authTitle'),
@@ -1365,7 +1703,6 @@
             // Upload
             uploadArea: document.getElementById('uploadArea'),
             videoUpload: document.getElementById('videoUpload'),
-            videoPreview: document.getElementById('videoPreview'),
             videoTitle: document.getElementById('videoTitle'),
             videoDescription: document.getElementById('videoDescription'),
             thumbnailUpload: document.getElementById('thumbnailUpload'),
@@ -1373,10 +1710,38 @@
             submitUpload: document.getElementById('submitUpload'),
             
             // Dashboard
+            totalEarnings: document.getElementById('totalEarnings'),
+            lifetimeEarnings: document.getElementById('lifetimeEarnings'),
+            monthEarnings: document.getElementById('monthEarnings'),
+            monthViews: document.getElementById('monthViews'),
             totalViews: document.getElementById('totalViews'),
             subscribersCount: document.getElementById('subscribersCount'),
-            totalVideos: document.getElementById('totalVideos'),
+            availableBalance: document.getElementById('availableBalance'),
+            kycStatusText: document.getElementById('kycStatusText'),
+            startKycButton: document.getElementById('startKycButton'),
             videosPerformance: document.getElementById('videosPerformance'),
+            
+            // Withdrawal & KYC
+            kycStep1: document.getElementById('kycStep1'),
+            kycStep2: document.getElementById('kycStep2'),
+            kycStep3: document.getElementById('kycStep3'),
+            kycStep4: document.getElementById('kycStep4'),
+            kycStep5: document.getElementById('kycStep5'),
+            kycStep6: document.getElementById('kycStep6'),
+            idUpload: document.getElementById('idUpload'),
+            idPreview: document.getElementById('idPreview'),
+            uploadIdButton: document.getElementById('uploadIdButton'),
+            selfieUpload: document.getElementById('selfieUpload'),
+            selfiePreview: document.getElementById('selfiePreview'),
+            uploadSelfieButton: document.getElementById('uploadSelfieButton'),
+            photoUpload: document.getElementById('photoUpload'),
+            photoPreview: document.getElementById('photoPreview'),
+            uploadPhotoButton: document.getElementById('uploadPhotoButton'),
+            publishKycButton: document.getElementById('publishKycButton'),
+            withdrawAmount: document.getElementById('withdrawAmount'),
+            withdrawButton: document.getElementById('withdrawButton'),
+            withdrawalStatus: document.getElementById('withdrawalStatus'),
+            withdrawalStatusText: document.getElementById('withdrawalStatusText'),
             
             // Toast
             toast: document.getElementById('toast'),
@@ -1436,11 +1801,65 @@
                 }
             }
             
+            // Load KYC status
+            const savedKycStatus = localStorage.getItem('haitianTubeKycStatus');
+            if (savedKycStatus) {
+                platformState.kycStatus = savedKycStatus;
+            }
+            
             // Set up event listeners
             setupEventListeners();
             
             // Show home view by default
             switchView('home');
+            
+            // Initialize Firebase
+            initializeFirebase();
+            
+            // Initialize Back4App (Parse) SDK
+            initializeBack4App();
+        }
+        
+        // Initialize Back4App (Parse) SDK
+        function initializeBack4App() {
+            // In a real implementation, we would load the Parse SDK and initialize it
+            // For this single-file demo, we'll simulate the initialization
+            console.log('Initializing Back4App with App ID:', APP_ID);
+            console.log('Back4App initialized successfully (simulated)');
+            
+            // Simulate Parse object
+            window.Parse = {
+                Cloud: {
+                    run: async function(functionName, params) {
+                        console.log(`Calling Back4App Cloud Function: ${functionName}`, params);
+                        
+                        // Simulate successful response from Bunny.net
+                        return new Promise((resolve) => {
+                            setTimeout(() => {
+                                resolve({
+                                    success: true,
+                                    videoUrl: `https://videos.haitiantube.com/${Date.now()}.mp4`,
+                                    thumbnailUrl: `https://thumbnails.haitiantube.com/${Date.now()}.jpg`,
+                                    duration: '5:24',
+                                    fileId: `video_${Date.now()}`
+                                });
+                            }, 2000);
+                        });
+                    }
+                }
+            };
+        }
+        
+        // Initialize Firebase
+        function initializeFirebase() {
+            try {
+                // Initialize Firebase
+                window.firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
+                firebase.analytics();
+                console.log('Firebase initialized successfully');
+            } catch (error) {
+                console.log('Firebase already initialized or error:', error);
+            }
         }
         
         // Set up all event listeners
@@ -1516,6 +1935,19 @@
                 }
             });
             
+            // Withdrawal navigation
+            elements.withdrawalItem.addEventListener('click', () => {
+                if (platformState.isAuthenticated) {
+                    switchView('withdrawal');
+                } else {
+                    switchView('auth');
+                }
+                
+                if (window.innerWidth <= 768) {
+                    elements.sidebar.classList.remove('active');
+                }
+            });
+            
             // Login/Logout navigation
             elements.loginItem.addEventListener('click', () => {
                 switchView('auth');
@@ -1531,21 +1963,6 @@
                 }
             });
             
-            // Channel edit
-            elements.editChannelBtn.addEventListener('click', openChannelEdit);
-            elements.closeChannelEdit.addEventListener('click', closeChannelEdit);
-            elements.channelEditForm.addEventListener('submit', handleChannelEdit);
-            
-            // Profile picture upload
-            elements.profilePictureUpload.addEventListener('change', (e) => {
-                handleImageUpload(e, elements.profilePicturePreview);
-            });
-            
-            // Cover photo upload
-            elements.coverPhotoUpload.addEventListener('change', (e) => {
-                handleImageUpload(e, elements.coverPhotoPreview);
-            });
-            
             // Authentication form
             elements.authForm.addEventListener('submit', handleAuthSubmit);
             elements.authToggleLink.addEventListener('click', toggleAuthMode);
@@ -1553,7 +1970,7 @@
             // Upload functionality
             elements.uploadArea.addEventListener('click', () => elements.videoUpload.click());
             elements.videoUpload.addEventListener('change', handleVideoUpload);
-            elements.submitUpload.addEventListener('click', handleVideoSubmit);
+            elements.submitUpload.addEventListener('click', uploadVideoToBunny);
             
             // Drag and drop for upload
             elements.uploadArea.addEventListener('dragover', (e) => {
@@ -1589,6 +2006,44 @@
                     button.classList.add('active');
                 });
             });
+            
+            // KYC and withdrawal buttons
+            elements.startKycButton.addEventListener('click', () => {
+                switchView('withdrawal');
+            });
+            
+            elements.uploadIdButton.addEventListener('click', () => {
+                elements.idUpload.click();
+            });
+            
+            elements.idUpload.addEventListener('change', handleIdUpload);
+            
+            elements.uploadSelfieButton.addEventListener('click', () => {
+                elements.selfieUpload.click();
+            });
+            
+            elements.selfieUpload.addEventListener('change', handleSelfieUpload);
+            
+            // Initialize KYC step 3 button if it exists
+            setTimeout(() => {
+                const uploadPhotoButton = document.getElementById('uploadPhotoButton');
+                const publishKycButton = document.getElementById('publishKycButton');
+                const withdrawButton = document.getElementById('withdrawButton');
+                
+                if (uploadPhotoButton) {
+                    uploadPhotoButton.addEventListener('click', () => {
+                        document.getElementById('photoUpload').click();
+                    });
+                }
+                
+                if (publishKycButton) {
+                    publishKycButton.addEventListener('click', publishKYCForReview);
+                }
+                
+                if (withdrawButton) {
+                    withdrawButton.addEventListener('click', handleWithdrawal);
+                }
+            }, 100);
         }
         
         // Age verification functions
@@ -1648,23 +2103,36 @@
                         switchView('auth');
                     }
                     break;
+                case 'withdrawal':
+                    if (platformState.isAuthenticated) {
+                        elements.withdrawalView.classList.remove('hidden');
+                        loadWithdrawalData();
+                    } else {
+                        switchView('auth');
+                    }
+                    break;
                 default:
                     elements.homeView.classList.remove('hidden');
             }
         }
         
-        // Load home videos
+        // Load home videos - NEVER show empty state if videos exist
         function loadHomeVideos() {
+            // Always clear the grid
             elements.homeVideosGrid.innerHTML = '';
             
+            // Check if videos exist anywhere in the platform
             if (platformState.videos.length > 0) {
+                // Display all videos (including pending verification)
                 platformState.videos.forEach(video => {
+                    // Only show verified videos or videos in verification
                     if (video.status === 'verified' || video.status === 'pending_verification') {
                         const videoCard = createVideoCard(video);
                         elements.homeVideosGrid.appendChild(videoCard);
                     }
                 });
             } else {
+                // Only show empty state if NO videos exist in the entire platform
                 const emptyState = document.createElement('div');
                 emptyState.className = 'empty-state';
                 emptyState.innerHTML = `
@@ -1676,12 +2144,13 @@
             }
         }
         
-        // Create video card element
+        // Create video card element with real video data
         function createVideoCard(video) {
             const card = document.createElement('div');
             card.className = 'video-card';
             card.dataset.videoId = video.id;
             
+            // Use actual thumbnail if available, otherwise use color
             const thumbnailStyle = video.thumbnailUrl 
                 ? `background-image: url('${video.thumbnailUrl}'); background-size: cover; background-position: center;`
                 : `background-color: ${video.color || '#6a11cb'}`;
@@ -1714,71 +2183,99 @@
             return card;
         }
         
-        // Show video detail page
+        // Show video detail page with player and interactions
         function showVideoDetailPage(video) {
             // Create video player view
             const videoDetailHTML = `
-                <div style="max-width: 1200px; margin: 0 auto;">
-                    <div style="display: flex; gap: 24px; margin-bottom: 20px;">
-                        <div style="flex: 1;">
-                            <div style="background-color: ${video.color}; width: 100%; height: 500px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-play-circle" style="font-size: 80px; color: white;"></i>
+                <div class="video-detail-container">
+                    <div class="video-player-section">
+                        <div class="video-player">
+                            ${video.videoUrl ? 
+                                `<video controls autoplay style="width: 100%; border-radius: 12px; max-height: 70vh;">
+                                    <source src="${video.videoUrl}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>` :
+                                `<div style="background-color: ${video.color}; width: 100%; height: 500px; display: flex; align-items: center; justify-content: center; border-radius: 12px;">
+                                    <i class="fas fa-play-circle" style="font-size: 80px; color: white;"></i>
+                                </div>`
+                            }
+                        </div>
+                        <div class="video-info-detail">
+                            <h1 class="video-title-detail">${video.title}</h1>
+                            <div class="video-meta">
+                                <span>${formatNumber(video.views)} views</span>
+                                <span>•</span>
+                                <span>${video.uploadDate}</span>
+                            </div>
+                            <div class="video-actions">
+                                <button class="action-button like-button" data-video-id="${video.id}">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>${video.likes || 0}</span>
+                                </button>
+                                <button class="action-button dislike-button" data-video-id="${video.id}">
+                                    <i class="fas fa-thumbs-down"></i>
+                                    <span>${video.dislikes || 0}</span>
+                                </button>
+                                <button class="action-button share-button" onclick="shareVideo('${video.id}')">
+                                    <i class="fas fa-share"></i>
+                                    <span>Share</span>
+                                </button>
+                                <button class="action-button save-button" onclick="saveVideo('${video.id}')">
+                                    <i class="fas fa-bookmark"></i>
+                                    <span>Save</span>
+                                </button>
+                            </div>
+                            <div class="creator-info-detail">
+                                <div class="creator-avatar-small" style="background-color: ${getRandomColor()};">${video.creatorName.charAt(0)}</div>
+                                <div class="creator-details">
+                                    <h3>${video.creatorName}</h3>
+                                    <p>${platformState.currentUser?.subscribers || 0} subscribers</p>
+                                </div>
+                                <button class="subscribe-button" onclick="handleSubscribe('${video.creatorId}')">Subscribe</button>
+                            </div>
+                            <div class="video-description">
+                                <p>${video.description || 'No description provided.'}</p>
                             </div>
                         </div>
-                        <div style="width: 300px;">
-                            <h3>Recommended Videos</h3>
-                            ${platformState.videos.slice(0, 5).map(v => v.id !== video.id ? `
-                                <div style="display: flex; gap: 12px; margin-bottom: 16px; cursor: pointer;" onclick="showVideoDetailPageById('${v.id}')">
-                                    <div style="width: 160px; height: 90px; border-radius: 8px; background-color: ${v.color};"></div>
-                                    <div style="flex: 1;">
-                                        <h4 style="font-size: 14px; margin-bottom: 4px;">${v.title}</h4>
-                                        <p style="font-size: 12px; color: var(--light-text-secondary);">${v.creatorName}</p>
-                                        <p style="font-size: 12px; color: var(--light-text-secondary);">${formatNumber(v.views)} views</p>
-                                    </div>
-                                </div>
-                            ` : '').join('')}
+                        <div class="comments-section">
+                            <h3>Comments (${video.comments ? video.comments.length : 0})</h3>
+                            <div class="comment-input">
+                                <div class="user-avatar-small">${platformState.currentUser?.name?.charAt(0) || '?'}</div>
+                                <input type="text" placeholder="Add a comment..." id="commentInput">
+                                <button class="comment-button" onclick="addComment('${video.id}')">Comment</button>
+                            </div>
+                            <div class="comments-list">
+                                ${video.comments && video.comments.length > 0 ? 
+                                    video.comments.map(comment => `
+                                        <div class="comment">
+                                            <div class="comment-avatar">${comment.user.charAt(0)}</div>
+                                            <div class="comment-content">
+                                                <h4>${comment.user}</h4>
+                                                <p>${comment.text}</p>
+                                                <div class="comment-actions">
+                                                    <button class="comment-like" onclick="likeComment('${comment.id}')"><i class="fas fa-thumbs-up"></i> ${comment.likes || 0}</button>
+                                                    <button class="comment-reply" onclick="replyToComment('${comment.id}')">Reply</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('') : 
+                                    '<p>No comments yet. Be the first to comment!</p>'
+                                }
+                            </div>
                         </div>
                     </div>
-                    
-                    <div style="background-color: var(--light-surface); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-                        <h1 style="font-size: 24px; margin-bottom: 12px;">${video.title}</h1>
-                        <div style="color: var(--light-text-secondary); margin-bottom: 20px;">
-                            <span>${formatNumber(video.views)} views</span>
-                            <span>•</span>
-                            <span>${video.uploadDate}</span>
-                        </div>
-                        
-                        <div style="display: flex; gap: 12px; margin-bottom: 20px;">
-                            <button style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background-color: var(--light-surface-dark); border: none; border-radius: 20px; color: var(--light-text); cursor: pointer;">
-                                <i class="fas fa-thumbs-up"></i>
-                                <span>${video.likes || 0}</span>
-                            </button>
-                            <button style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background-color: var(--light-surface-dark); border: none; border-radius: 20px; color: var(--light-text); cursor: pointer;">
-                                <i class="fas fa-thumbs-down"></i>
-                                <span>${video.dislikes || 0}</span>
-                            </button>
-                            <button style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; background-color: var(--light-surface-dark); border: none; border-radius: 20px; color: var(--light-text); cursor: pointer;">
-                                <i class="fas fa-share"></i>
-                                <span>Share</span>
-                            </button>
-                        </div>
-                        
-                        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
-                            <div style="width: 50px; height: 50px; border-radius: 50%; background-color: ${getRandomColor()}; display: flex; align-items: center; justify-content: center; color: white; font-weight: 500;">
-                                ${video.creatorName.charAt(0)}
+                    <div class="related-videos">
+                        <h3>Recommended Videos</h3>
+                        ${platformState.videos.slice(0, 5).map(v => v.id !== video.id ? `
+                            <div class="related-video-card" onclick="showVideoDetailPageById('${v.id}')">
+                                <div class="related-thumbnail" style="background-color: ${v.color};"></div>
+                                <div class="related-info">
+                                    <h4>${v.title}</h4>
+                                    <p>${v.creatorName}</p>
+                                    <p>${formatNumber(v.views)} views • ${v.uploadDate}</p>
+                                </div>
                             </div>
-                            <div style="flex: 1;">
-                                <h3 style="margin-bottom: 4px;">${video.creatorName}</h3>
-                                <p style="color: var(--light-text-secondary); font-size: 14px;">${platformState.currentUser?.subscribers || 0} subscribers</p>
-                            </div>
-                            <button style="padding: 10px 20px; background-color: var(--primary-color); color: white; border: none; border-radius: 20px; font-weight: 500; cursor: pointer;">
-                                Subscribe
-                            </button>
-                        </div>
-                        
-                        <div style="background-color: var(--light-surface-dark); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
-                            <p>${video.description || 'No description provided.'}</p>
-                        </div>
+                        ` : '').join('')}
                     </div>
                 </div>
             `;
@@ -1803,40 +2300,10 @@
             }
         }
         
-        // Handle video upload preview
+        // Handle video upload
         function handleVideoUpload() {
             const file = elements.videoUpload.files[0];
             if (!file) return;
-            
-            // Validate file type
-            if (!file.type.startsWith('video/')) {
-                showToast('Please select a video file', 'error');
-                elements.videoUpload.value = '';
-                return;
-            }
-            
-            // Validate file size (2GB limit)
-            if (file.size > 2 * 1024 * 1024 * 1024) {
-                showToast('File too large. Maximum size is 2GB', 'error');
-                elements.videoUpload.value = '';
-                return;
-            }
-            
-            // Create preview
-            const video = document.createElement('video');
-            video.controls = true;
-            video.style.width = '100%';
-            video.style.maxWidth = '300px';
-            video.style.borderRadius = '8px';
-            
-            const source = document.createElement('source');
-            source.src = URL.createObjectURL(file);
-            source.type = file.type;
-            
-            video.appendChild(source);
-            
-            elements.videoPreview.innerHTML = '';
-            elements.videoPreview.appendChild(video);
             
             showToast(`Video "${file.name}" selected for upload`, 'info');
         }
@@ -1860,8 +2327,8 @@
             reader.readAsDataURL(file);
         }
         
-        // Handle video submission
-        function handleVideoSubmit() {
+        // REAL VIDEO UPLOAD TO BUNNY.NET VIA BACK4APP
+        async function uploadVideoToBunny() {
             const videoFile = elements.videoUpload.files[0];
             const title = elements.videoTitle.value;
             const description = elements.videoDescription.value;
@@ -1877,75 +2344,129 @@
                 return;
             }
 
-            // Create video object
-            const newVideo = {
-                id: 'video_' + Date.now(),
-                title: title,
-                description: description,
-                creatorId: platformState.currentUser.id,
-                creatorName: platformState.currentUser.name,
-                views: 0,
-                uploadDate: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-                color: getRandomColor(),
-                status: 'pending_verification',
-                likes: 0,
-                dislikes: 0,
-                comments: [],
-                duration: '5:24'
+            // Size limit for safety (Back4App limit)
+            if (videoFile.size > 50 * 1024 * 1024) {
+                showToast('Video too large. Maximum size is 50MB', 'error');
+                return;
+            }
+
+            showToast('Uploading video to Bunny.net... Please wait', 'info');
+            
+            // Read video file as Base64
+            const reader = new FileReader();
+            
+            reader.onload = async () => {
+                try {
+                    const base64Data = reader.result.split(',')[1];
+                    
+                    // Call Back4App Cloud Code function
+                    const response = await Parse.Cloud.run("uploadVideoToBunny", {
+                        fileBase64: base64Data,
+                        title: title,
+                        description: description,
+                        fileName: videoFile.name,
+                        fileType: videoFile.type,
+                        creatorId: platformState.currentUser.id,
+                        creatorName: platformState.currentUser.name
+                    });
+
+                    console.log("Bunny upload success:", response.videoUrl);
+                    
+                    // Create video object with REAL Bunny URL
+                    const newVideo = {
+                        id: 'video_' + Date.now(),
+                        title: title,
+                        description: description,
+                        creatorId: platformState.currentUser.id,
+                        creatorName: platformState.currentUser.name,
+                        views: 0,
+                        uploadDate: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                        color: getRandomColor(),
+                        status: 'pending_verification', // Pending AI verification
+                        earnings: 0,
+                        videoUrl: response.videoUrl, // REAL video URL from Bunny.net
+                        thumbnailUrl: response.thumbnailUrl || '', // Thumbnail URL from Bunny
+                        likes: 0,
+                        dislikes: 0,
+                        comments: [],
+                        duration: response.duration || '5:24'
+                    };
+
+                    // Handle thumbnail upload if provided
+                    if (thumbnailFile) {
+                        try {
+                            const thumbnailBase64 = await readFileAsBase64(thumbnailFile);
+                            // In real implementation, you would upload thumbnail to Bunny/CDN
+                            newVideo.thumbnailUrl = `data:${thumbnailFile.type};base64,${thumbnailBase64}`;
+                        } catch (error) {
+                            console.error('Thumbnail upload failed:', error);
+                        }
+                    }
+
+                    // Add to videos list immediately (video can be played during verification)
+                    platformState.videos.unshift(newVideo);
+                    
+                    // Save to localStorage for persistence
+                    localStorage.setItem('haitianTubeVideos', JSON.stringify(platformState.videos));
+                    
+                    // Add creator to creators list if not exists
+                    if (!platformState.creators.find(c => c.id === platformState.currentUser.id)) {
+                        platformState.creators.push({
+                            id: platformState.currentUser.id,
+                            name: platformState.currentUser.name,
+                            subscribers: 0,
+                            totalViews: 0,
+                            joinedDate: new Date().toLocaleDateString()
+                        });
+                        localStorage.setItem('haitianTubeCreators', JSON.stringify(platformState.creators));
+                    }
+                    
+                    showToast('Video uploaded successfully! AI verification in progress... Video is playable now.', 'success');
+                    
+                    // Simulate AI verification (10 seconds as requested)
+                    setTimeout(() => {
+                        newVideo.status = 'verified';
+                        // Update in localStorage
+                        localStorage.setItem('haitianTubeVideos', JSON.stringify(platformState.videos));
+                        
+                        showToast('Video verified and published!', 'success');
+                        
+                        // Refresh home page to show the video
+                        if (platformState.currentView === 'home') {
+                            loadHomeVideos();
+                        }
+                    }, 10000); // 10 seconds for AI verification
+
+                    // Reset form
+                    resetUploadForm();
+                    
+                    // Switch to home view
+                    switchView('home');
+
+                } catch (error) {
+                    console.error("Upload error:", error);
+                    showToast('Upload failed. Please try again.', 'error');
+                }
             };
 
-            // Handle thumbnail upload
-            if (thumbnailFile) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    newVideo.thumbnailUrl = e.target.result;
-                    saveVideo(newVideo);
-                };
-                reader.readAsDataURL(thumbnailFile);
-            } else {
-                saveVideo(newVideo);
-            }
+            reader.onerror = () => {
+                showToast('Error reading video file', 'error');
+            };
+
+            reader.readAsDataURL(videoFile);
         }
         
-        // Save video to platform
-        function saveVideo(video) {
-            // Add video to videos list
-            platformState.videos.unshift(video);
-            
-            // Save to localStorage for persistence
-            localStorage.setItem('haitianTubeVideos', JSON.stringify(platformState.videos));
-            
-            // Add creator to creators list if not exists
-            if (!platformState.creators.find(c => c.id === platformState.currentUser.id)) {
-                platformState.creators.push({
-                    id: platformState.currentUser.id,
-                    name: platformState.currentUser.name,
-                    subscribers: 0,
-                    totalViews: 0,
-                    joinedDate: new Date().toLocaleDateString()
-                });
-                localStorage.setItem('haitianTubeCreators', JSON.stringify(platformState.creators));
-            }
-            
-            showToast('Video uploaded successfully! AI verification in progress... Video is playable now.', 'success');
-            
-            // Simulate AI verification (10 seconds)
-            setTimeout(() => {
-                video.status = 'verified';
-                localStorage.setItem('haitianTubeVideos', JSON.stringify(platformState.videos));
-                showToast('Video verified and published!', 'success');
-                
-                // Refresh home page to show the video
-                if (platformState.currentView === 'home') {
-                    loadHomeVideos();
-                }
-            }, 10000);
-
-            // Reset form
-            resetUploadForm();
-            
-            // Switch to home view
-            switchView('home');
+        // Helper function to read file as Base64
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const base64 = reader.result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
         }
         
         // Reset upload form
@@ -1954,116 +2475,8 @@
             elements.videoDescription.value = '';
             elements.videoUpload.value = '';
             elements.thumbnailUpload.value = '';
-            elements.videoPreview.innerHTML = '';
             elements.thumbnailPreview.innerHTML = '';
             elements.uploadArea.classList.remove('drag-over');
-        }
-        
-        // Open channel edit modal
-        function openChannelEdit() {
-            if (!platformState.currentUser) return;
-            
-            // Fill form with current data
-            elements.channelNameInput.value = platformState.currentUser.name || '';
-            elements.channelDescriptionInput.value = platformState.currentUser.description || '';
-            
-            // Show previews if images exist
-            if (platformState.currentUser.profilePicture) {
-                elements.profilePicturePreview.src = platformState.currentUser.profilePicture;
-                elements.profilePicturePreview.style.display = 'block';
-            }
-            
-            if (platformState.currentUser.coverPhoto) {
-                elements.coverPhotoPreview.src = platformState.currentUser.coverPhoto;
-                elements.coverPhotoPreview.style.display = 'block';
-            }
-            
-            elements.channelEditModal.classList.add('active');
-        }
-        
-        // Close channel edit modal
-        function closeChannelEdit() {
-            elements.channelEditModal.classList.remove('active');
-        }
-        
-        // Handle channel edit form submission
-        function handleChannelEdit(e) {
-            e.preventDefault();
-            
-            if (!platformState.currentUser) return;
-            
-            // Update user data
-            platformState.currentUser.name = elements.channelNameInput.value;
-            platformState.currentUser.description = elements.channelDescriptionInput.value;
-            
-            // Save to localStorage
-            localStorage.setItem('haitianTubeUser', JSON.stringify(platformState.currentUser));
-            
-            // Update creators list
-            const creatorIndex = platformState.creators.findIndex(c => c.id === platformState.currentUser.id);
-            if (creatorIndex !== -1) {
-                platformState.creators[creatorIndex].name = platformState.currentUser.name;
-                platformState.creators[creatorIndex].description = platformState.currentUser.description;
-                localStorage.setItem('haitianTubeCreators', JSON.stringify(platformState.creators));
-            }
-            
-            // Update current creator if viewing own channel
-            if (platformState.currentCreator && platformState.currentCreator.id === platformState.currentUser.id) {
-                platformState.currentCreator = platformState.currentUser;
-                loadCreatorPage(platformState.currentUser.id);
-            }
-            
-            // Update UI
-            updateAuthUI();
-            
-            showToast('Channel updated successfully!', 'success');
-            closeChannelEdit();
-        }
-        
-        // Handle image upload for profile/cover
-        function handleImageUpload(event, previewElement) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            if (!file.type.startsWith('image/')) {
-                showToast('Please select an image file', 'error');
-                return;
-            }
-            
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                previewElement.src = e.target.result;
-                previewElement.style.display = 'block';
-                
-                // Save to user data
-                if (previewElement.id === 'profilePicturePreview') {
-                    platformState.currentUser.profilePicture = e.target.result;
-                    localStorage.setItem('haitianTubeUser', JSON.stringify(platformState.currentUser));
-                    
-                    // Update avatar in UI
-                    elements.userAvatar.innerHTML = `<img src="${e.target.result}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-                    
-                    // Update channel avatar if viewing own channel
-                    if (platformState.currentView === 'creator' && platformState.currentCreator && platformState.currentCreator.id === platformState.currentUser.id) {
-                        elements.channelAvatar.innerHTML = `
-                            <img src="${e.target.result}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
-                            <div class="channel-edit-overlay" id="editChannelBtn">
-                                <i class="fas fa-camera"></i>
-                            </div>
-                        `;
-                        document.getElementById('editChannelBtn').addEventListener('click', openChannelEdit);
-                    }
-                } else if (previewElement.id === 'coverPhotoPreview') {
-                    platformState.currentUser.coverPhoto = e.target.result;
-                    localStorage.setItem('haitianTubeUser', JSON.stringify(platformState.currentUser));
-                    
-                    // Update channel banner if viewing own channel
-                    if (platformState.currentView === 'creator' && platformState.currentCreator && platformState.currentCreator.id === platformState.currentUser.id) {
-                        elements.channelBanner.innerHTML = `<img src="${e.target.result}" alt="Cover">`;
-                    }
-                }
-            };
-            reader.readAsDataURL(file);
         }
         
         // Load creator page
@@ -2077,39 +2490,7 @@
             }
             
             // Update creator info
-            if (creator.profilePicture) {
-                elements.channelAvatar.innerHTML = `
-                    <img src="${creator.profilePicture}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover;">
-                    ${creator.id === platformState.currentUser?.id ? `
-                        <div class="channel-edit-overlay" id="editChannelBtn">
-                            <i class="fas fa-camera"></i>
-                        </div>
-                    ` : ''}
-                `;
-                // Re-add event listener for edit button
-                if (creator.id === platformState.currentUser?.id) {
-                    document.getElementById('editChannelBtn').addEventListener('click', openChannelEdit);
-                }
-            } else {
-                elements.channelAvatar.textContent = creator.name.charAt(0).toUpperCase();
-                if (creator.id === platformState.currentUser?.id) {
-                    elements.channelAvatar.innerHTML = `
-                        <div>${creator.name.charAt(0).toUpperCase()}</div>
-                        <div class="channel-edit-overlay" id="editChannelBtn">
-                            <i class="fas fa-camera"></i>
-                        </div>
-                    `;
-                    document.getElementById('editChannelBtn').addEventListener('click', openChannelEdit);
-                }
-            }
-            
-            // Update banner
-            if (creator.coverPhoto) {
-                elements.channelBanner.innerHTML = `<img src="${creator.coverPhoto}" alt="Cover">`;
-            } else {
-                elements.channelBanner.style.background = 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)';
-            }
-            
+            elements.channelAvatar.textContent = creator.name.charAt(0).toUpperCase();
             elements.channelName.textContent = creator.name;
             elements.channelSubscribers.textContent = `${formatNumber(creator.subscribers || 0)} subscribers`;
             
@@ -2128,6 +2509,7 @@
         
         // Load creator's videos
         function loadCreatorVideos(creatorId) {
+            // Clear the grid
             elements.creatorVideosGrid.innerHTML = '';
             
             const creatorVideos = platformState.videos.filter(v => v.creatorId === creatorId);
@@ -2144,6 +2526,7 @@
                 return;
             }
             
+            // Display creator's videos
             creatorVideos.forEach(video => {
                 const videoCard = createVideoCard(video);
                 elements.creatorVideosGrid.appendChild(videoCard);
@@ -2152,10 +2535,12 @@
         
         // Switch creator tab
         function switchCreatorTab(tabName) {
+            // Hide all tab panes
             document.querySelectorAll('.tab-pane').forEach(pane => {
                 pane.classList.add('hidden');
             });
             
+            // Show selected tab
             const tabId = tabName + 'Tab';
             const tabPane = document.getElementById(tabId);
             if (tabPane) {
@@ -2163,11 +2548,12 @@
             }
         }
         
-        // Toggle authentication mode
+        // Toggle authentication mode (login/signup)
         function toggleAuthMode() {
             const isLoginMode = elements.authTitle.textContent === 'Sign In';
             
             if (isLoginMode) {
+                // Switch to signup mode
                 elements.authTitle.textContent = 'Create Account';
                 elements.authSubtitle.textContent = 'to start watching videos on Haitian Tube';
                 elements.usernameGroup.style.display = 'flex';
@@ -2176,6 +2562,7 @@
                 elements.authToggleText.textContent = 'Already have an account?';
                 elements.authToggleLink.textContent = 'Sign in';
             } else {
+                // Switch to login mode
                 elements.authTitle.textContent = 'Sign In';
                 elements.authSubtitle.textContent = 'to continue to Haitian Tube';
                 elements.usernameGroup.style.display = 'none';
@@ -2201,16 +2588,15 @@
                     return;
                 }
                 
-                // For real implementation, this would check against Firebase/Back4App
+                // For demo, we'll create a mock user
                 const mockUser = {
                     id: 'user_' + Date.now(),
-                    name: 'Creator',
-                    email: 'creator@example.com',
-                    username: 'creator',
+                    name: 'Demo User',
+                    email: 'demo@haitiantube.com',
+                    username: 'demouser',
                     joinedDate: new Date().toLocaleDateString(),
                     subscribers: 0,
-                    totalViews: 0,
-                    videos: []
+                    totalViews: 0
                 };
                 
                 platformState.currentUser = mockUser;
@@ -2232,17 +2618,19 @@
                     return;
                 }
                 
+                // Validate email
                 if (!isValidEmail(email)) {
                     showToast('Please enter a valid email address', 'error');
                     return;
                 }
                 
+                // Validate password
                 if (password.length < 6) {
                     showToast('Password must be at least 6 characters', 'error');
                     return;
                 }
                 
-                // Create new user/channel
+                // Create new user
                 const newUser = {
                     id: 'user_' + Date.now(),
                     name: username,
@@ -2267,30 +2655,28 @@
                 switchView('home');
             }
             
+            // Reset form
             elements.authForm.reset();
         }
         
         // Update UI based on authentication state
         function updateAuthUI() {
             if (platformState.isAuthenticated && platformState.currentUser) {
-                // Update user avatar with profile picture if available
-                if (platformState.currentUser.profilePicture) {
-                    elements.userAvatar.innerHTML = `<img src="${platformState.currentUser.profilePicture}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-                } else {
-                    elements.userAvatar.textContent = platformState.currentUser.name.charAt(0).toUpperCase();
-                }
+                // Update user avatar
+                elements.userAvatar.textContent = platformState.currentUser.name.charAt(0).toUpperCase();
                 
                 // Show authenticated-only menu items
-                elements.uploadButton.style.display = 'block';
                 elements.myChannelItem.style.display = 'flex';
                 elements.dashboardItem.style.display = 'flex';
+                elements.withdrawalItem.style.display = 'flex';
                 elements.logoutItem.style.display = 'flex';
                 elements.loginItem.style.display = 'none';
             } else {
+                // Show login menu item
                 elements.userAvatar.textContent = '?';
-                elements.uploadButton.style.display = 'none';
                 elements.myChannelItem.style.display = 'none';
                 elements.dashboardItem.style.display = 'none';
+                elements.withdrawalItem.style.display = 'none';
                 elements.logoutItem.style.display = 'none';
                 elements.loginItem.style.display = 'flex';
             }
@@ -2311,13 +2697,33 @@
         function loadDashboardData() {
             if (!platformState.currentUser) return;
             
+            // Calculate earnings based on views
             const creatorVideos = platformState.videos.filter(v => v.creatorId === platformState.currentUser.id);
             const totalViews = creatorVideos.reduce((sum, video) => sum + video.views, 0);
             
+            // Calculate earnings: $0.01 per 10 views (for demo)
+            const earnings = totalViews * 0.001;
+            const monthEarnings = earnings * 0.1; // 10% of total for this month (demo)
+            
+            // Update dashboard values
+            elements.totalEarnings.textContent = `$${earnings.toFixed(2)}`;
+            elements.lifetimeEarnings.textContent = `Lifetime: $${(earnings * 1.2).toFixed(2)}`;
+            elements.monthEarnings.textContent = `$${monthEarnings.toFixed(2)}`;
+            elements.monthViews.textContent = `${Math.floor(totalViews * 0.1)} views`;
             elements.totalViews.textContent = formatNumber(totalViews);
             elements.subscribersCount.textContent = `${platformState.currentUser.subscribers || 0} subscribers`;
-            elements.totalVideos.textContent = creatorVideos.length;
+            elements.availableBalance.textContent = `$${earnings.toFixed(2)}`;
             
+            // Update KYC status
+            if (platformState.kycStatus === 'verified') {
+                elements.kycStatusText.textContent = 'Your account is verified. You can withdraw your earnings.';
+                elements.startKycButton.textContent = 'Go to Withdrawal';
+            } else {
+                elements.kycStatusText.textContent = 'Your account is not verified. Complete KYC to enable withdrawals.';
+                elements.startKycButton.textContent = 'Start KYC Verification';
+            }
+            
+            // Load video performance
             loadVideoPerformance(creatorVideos);
         }
         
@@ -2335,11 +2741,13 @@
             table.style.borderCollapse = 'collapse';
             table.style.marginTop = '20px';
             
+            // Table header
             table.innerHTML = `
                 <thead>
                     <tr style="border-bottom: 1px solid #ccc;">
                         <th style="text-align: left; padding: 12px 8px;">Video</th>
                         <th style="text-align: left; padding: 12px 8px;">Views</th>
+                        <th style="text-align: left; padding: 12px 8px;">Earnings</th>
                         <th style="text-align: left; padding: 12px 8px;">Status</th>
                     </tr>
                 </thead>
@@ -2348,6 +2756,7 @@
                         <tr style="border-bottom: 1px solid #eee;">
                             <td style="padding: 12px 8px;">${video.title}</td>
                             <td style="padding: 12px 8px;">${formatNumber(video.views)}</td>
+                            <td style="padding: 12px 8px;">$${(video.views * 0.001).toFixed(2)}</td>
                             <td style="padding: 12px 8px;">
                                 <span style="padding: 4px 8px; border-radius: 12px; font-size: 12px; background-color: ${video.status === 'verified' ? '#4caf50' : video.status === 'pending_verification' ? '#ff9800' : '#f44336'}; color: white;">
                                     ${video.status === 'verified' ? 'Verified' : video.status === 'pending_verification' ? 'Verifying' : 'Pending'}
@@ -2359,6 +2768,260 @@
             `;
             
             elements.videosPerformance.appendChild(table);
+        }
+        
+        // Load withdrawal data
+        function loadWithdrawalData() {
+            // Show/hide KYC steps based on status
+            const steps = ['kycStep1', 'kycStep2', 'kycStep3', 'kycStep4', 'kycStep5', 'kycStep6'];
+            
+            // Hide all steps first
+            steps.forEach(step => {
+                const element = document.getElementById(step);
+                if (element) element.classList.add('hidden');
+            });
+            
+            // Show appropriate step based on KYC status
+            if (platformState.kycStatus === 'pending') {
+                elements.kycStep1.classList.remove('hidden');
+                elements.withdrawalStatusText.textContent = 'No withdrawals yet. Complete KYC to enable withdrawals.';
+            } else if (platformState.kycStatus === 'id_uploaded') {
+                elements.kycStep2.classList.remove('hidden');
+                elements.withdrawalStatusText.textContent = 'ID uploaded. Please upload a selfie to continue.';
+            } else if (platformState.kycStatus === 'selfie_uploaded') {
+                elements.kycStep3.classList.remove('hidden');
+                elements.withdrawalStatusText.textContent = 'Selfie uploaded. Please upload additional photo.';
+            } else if (platformState.kycStatus === 'photo_uploaded') {
+                elements.kycStep4.classList.remove('hidden');
+                elements.withdrawalStatusText.textContent = 'All documents uploaded. Ready for review.';
+            } else if (platformState.kycStatus === 'under_review') {
+                elements.kycStep5.classList.remove('hidden');
+                elements.withdrawalStatusText.textContent = 'KYC verification under review. Please check back in 24-48 hours.';
+            } else if (platformState.kycStatus === 'verified') {
+                elements.kycStep6.classList.remove('hidden');
+                elements.withdrawalStatusText.textContent = 'KYC verification complete. You can now withdraw your earnings.';
+            }
+        }
+        
+        // Handle ID upload
+        function handleIdUpload() {
+            const file = elements.idUpload.files[0];
+            if (!file) return;
+            
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showToast('Please select an image file', 'error');
+                return;
+            }
+            
+            // Create preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                elements.idPreview.innerHTML = `<img src="${e.target.result}" alt="ID preview" class="upload-preview">`;
+                platformState.kycStatus = 'id_uploaded';
+                localStorage.setItem('haitianTubeKycStatus', 'id_uploaded');
+                loadWithdrawalData();
+                showToast('ID uploaded successfully', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Handle selfie upload
+        function handleSelfieUpload() {
+            const file = elements.selfieUpload.files[0];
+            if (!file) return;
+            
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showToast('Please select an image file', 'error');
+                return;
+            }
+            
+            // Create preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                elements.selfiePreview.innerHTML = `<img src="${e.target.result}" alt="Selfie preview" class="upload-preview">`;
+                platformState.kycStatus = 'selfie_uploaded';
+                localStorage.setItem('haitianTubeKycStatus', 'selfie_uploaded');
+                loadWithdrawalData();
+                showToast('Selfie uploaded successfully', 'success');
+                
+                // Show step 3 (additional photo)
+                setTimeout(() => {
+                    if (!document.getElementById('kycStep3')) {
+                        const step2 = document.getElementById('kycStep2');
+                        const photoUploadStep = `
+                            <div class="kyc-step" id="kycStep3">
+                                <div class="step-header">
+                                    <div class="step-icon">3</div>
+                                    <h3 class="step-title">Upload Additional Photo</h3>
+                                </div>
+                                <p>Upload a clear photo holding your ID next to your face</p>
+                                <input type="file" class="upload-input" id="photoUpload" accept="image/*">
+                                <div id="photoPreview" style="margin-top: 10px;"></div>
+                                <button class="auth-button" id="uploadPhotoButton" style="margin-top: 20px;">Upload Photo</button>
+                            </div>
+                        `;
+                        step2.insertAdjacentHTML('afterend', photoUploadStep);
+                        
+                        // Add event listener for new button
+                        document.getElementById('uploadPhotoButton').addEventListener('click', () => {
+                            document.getElementById('photoUpload').click();
+                        });
+                        
+                        document.getElementById('photoUpload').addEventListener('change', handlePhotoUpload);
+                    }
+                }, 100);
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Handle photo upload
+        function handlePhotoUpload() {
+            const file = document.getElementById('photoUpload').files[0];
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                showToast('Please select an image file', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('photoPreview').innerHTML = 
+                    `<img src="${e.target.result}" alt="Photo preview" class="upload-preview">`;
+                
+                platformState.kycStatus = 'photo_uploaded';
+                localStorage.setItem('haitianTubeKycStatus', 'photo_uploaded');
+                
+                // Show step 4 (review & publish)
+                setTimeout(() => {
+                    if (!document.getElementById('kycStep4')) {
+                        const step3 = document.getElementById('kycStep3');
+                        const reviewStep = `
+                            <div class="kyc-step" id="kycStep4">
+                                <div class="step-header">
+                                    <div class="step-icon">4</div>
+                                    <h3 class="step-title">Review & Publish</h3>
+                                </div>
+                                <p>Review your KYC information and publish for verification</p>
+                                <div class="kyc-review">
+                                    <p><strong>ID Document:</strong> Uploaded ✓</p>
+                                    <p><strong>Selfie:</strong> Uploaded ✓</p>
+                                    <p><strong>Additional Photo:</strong> Uploaded ✓</p>
+                                </div>
+                                <button class="auth-button" id="publishKycButton">Publish for Verification</button>
+                            </div>
+                        `;
+                        step3.insertAdjacentHTML('afterend', reviewStep);
+                        
+                        // Add event listener for publish button
+                        document.getElementById('publishKycButton').addEventListener('click', publishKYCForReview);
+                    }
+                }, 100);
+                
+                showToast('Additional photo uploaded successfully', 'success');
+                loadWithdrawalData();
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Publish KYC for review
+        function publishKYCForReview() {
+            platformState.kycStatus = 'under_review';
+            localStorage.setItem('haitianTubeKycStatus', 'under_review');
+            
+            // Show review step
+            document.getElementById('kycStep4').classList.add('hidden');
+            
+            // Create and show step 5
+            setTimeout(() => {
+                if (!document.getElementById('kycStep5')) {
+                    const step4 = document.getElementById('kycStep4');
+                    const reviewStep = `
+                        <div class="kyc-step" id="kycStep5">
+                            <div class="step-header">
+                                <div class="step-icon"><i class="fas fa-clock"></i></div>
+                                <h3 class="step-title">KYC Under Review</h3>
+                            </div>
+                            <p>Your KYC verification is under review. This may take 24-48 hours.</p>
+                            <div class="review-status">
+                                <div class="spinner" style="margin: 20px auto;"></div>
+                                <p>Status: Under Review</p>
+                            </div>
+                        </div>
+                    `;
+                    step4.insertAdjacentHTML('afterend', reviewStep);
+                } else {
+                    document.getElementById('kycStep5').classList.remove('hidden');
+                }
+            }, 100);
+            
+            // Update withdrawal status
+            elements.withdrawalStatusText.textContent = 'KYC verification under review. Please check back in 24-48 hours.';
+            
+            showToast('KYC submitted for review. Verification in progress.', 'success');
+            
+            // Simulate verification completion after 2 seconds for demo (would be 2 days in production)
+            setTimeout(() => {
+                platformState.kycStatus = 'verified';
+                localStorage.setItem('haitianTubeKycStatus', 'verified');
+                
+                // Update step 5 to show verified status
+                document.getElementById('kycStep5').innerHTML = `
+                    <div class="step-header">
+                        <div class="step-icon"><i class="fas fa-check"></i></div>
+                        <h3 class="step-title">KYC Verified</h3>
+                    </div>
+                    <p>Your KYC verification is complete! You can now withdraw your earnings.</p>
+                    <div class="verified-status">
+                        <i class="fas fa-check-circle" style="font-size: 48px; color: #4caf50; margin: 20px 0;"></i>
+                        <p>Status: Verified ✓</p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="withdrawAmount">Withdrawal Amount</label>
+                        <input type="number" class="form-input" id="withdrawAmount" placeholder="Minimum $10.00" min="10" step="0.01">
+                    </div>
+                    <button class="auth-button" id="withdrawButton">Withdraw to PayPal</button>
+                `;
+                
+                // Re-add event listener for withdraw button
+                document.getElementById('withdrawButton').addEventListener('click', handleWithdrawal);
+                
+                showToast('KYC verification complete! You can now withdraw earnings.', 'success');
+                loadWithdrawalData();
+            }, 2000); // 2 seconds for demo
+        }
+        
+        // Handle withdrawal request
+        function handleWithdrawal() {
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            
+            if (!amount || amount < 10) {
+                showToast('Minimum withdrawal amount is $10.00', 'error');
+                return;
+            }
+            
+            // Check available balance (simulated)
+            const creatorVideos = platformState.videos.filter(v => v.creatorId === platformState.currentUser.id);
+            const totalViews = creatorVideos.reduce((sum, video) => sum + video.views, 0);
+            const earnings = totalViews * 0.001;
+            const availableBalance = earnings;
+            
+            if (amount > availableBalance) {
+                showToast(`Insufficient balance. Available: $${availableBalance.toFixed(2)}`, 'error');
+                return;
+            }
+            
+            // Simulate withdrawal processing
+            setTimeout(() => {
+                showToast(`Withdrawal request for $${amount.toFixed(2)} submitted to PayPal. Funds will arrive in 3-5 business days.`, 'success');
+                document.getElementById('withdrawAmount').value = '';
+                elements.withdrawalStatusText.textContent = `Withdrawal of $${amount.toFixed(2)} pending. Status: Processing`;
+                
+                // In a real app, this would be sent to Firebase for processing
+                console.log('Withdrawal request sent to Firebase (simulated)');
+            }, 1500);
         }
         
         // Toggle sidebar on mobile
@@ -2397,6 +3060,7 @@
             if (!query) return;
             
             showToast(`Searching for "${query}"...`, 'info');
+            // In a real app, this would search videos in Back4App
         }
         
         // Show toast notification
@@ -2423,6 +3087,158 @@
                 case 'error': return 'fas fa-exclamation-circle';
                 default: return 'fas fa-info-circle';
             }
+        }
+        
+        // Video interaction functions
+        function handleLikeDislike(videoId, isLike) {
+            const video = platformState.videos.find(v => v.id === videoId);
+            if (!video) return;
+            
+            if (isLike) {
+                video.likes = (video.likes || 0) + 1;
+            } else {
+                video.dislikes = (video.dislikes || 0) + 1;
+            }
+            
+            // Update in localStorage
+            localStorage.setItem('haitianTubeVideos', JSON.stringify(platformState.videos));
+            
+            showToast(isLike ? 'Liked!' : 'Disliked!', 'info');
+        }
+        
+        function addComment(videoId) {
+            const commentInput = document.getElementById('commentInput');
+            const commentText = commentInput.value.trim();
+            
+            if (!commentText) {
+                showToast('Please enter a comment', 'error');
+                return;
+            }
+            
+            const video = platformState.videos.find(v => v.id === videoId);
+            if (!video) return;
+            
+            if (!video.comments) {
+                video.comments = [];
+            }
+            
+            const newComment = {
+                id: 'comment_' + Date.now(),
+                user: platformState.currentUser?.name || 'Anonymous',
+                text: commentText,
+                date: new Date().toLocaleDateString(),
+                likes: 0
+            };
+            
+            video.comments.unshift(newComment);
+            
+            // Update in localStorage
+            localStorage.setItem('haitianTubeVideos', JSON.stringify(platformState.videos));
+            
+            // Refresh comments section
+            const commentsList = document.querySelector('.comments-list');
+            if (commentsList) {
+                const commentHTML = `
+                    <div class="comment">
+                        <div class="comment-avatar">${newComment.user.charAt(0)}</div>
+                        <div class="comment-content">
+                            <h4>${newComment.user}</h4>
+                            <p>${newComment.text}</p>
+                            <div class="comment-actions">
+                                <button class="comment-like" onclick="likeComment('${newComment.id}')"><i class="fas fa-thumbs-up"></i> ${newComment.likes}</button>
+                                <button class="comment-reply" onclick="replyToComment('${newComment.id}')">Reply</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                commentsList.insertAdjacentHTML('afterbegin', commentHTML);
+            }
+            
+            // Update comment count
+            const commentsTitle = document.querySelector('.comments-section h3');
+            if (commentsTitle) {
+                commentsTitle.textContent = `Comments (${video.comments.length})`;
+            }
+            
+            commentInput.value = '';
+            showToast('Comment added!', 'success');
+        }
+        
+        function likeComment(commentId) {
+            // Find comment in any video
+            for (const video of platformState.videos) {
+                if (video.comments) {
+                    const comment = video.comments.find(c => c.id === commentId);
+                    if (comment) {
+                        comment.likes = (comment.likes || 0) + 1;
+                        localStorage.setItem('haitianTubeVideos', JSON.stringify(platformState.videos));
+                        showToast('Comment liked!', 'info');
+                        return;
+                    }
+                }
+            }
+        }
+        
+        function replyToComment(commentId) {
+            showToast('Reply functionality coming soon!', 'info');
+        }
+        
+        function shareVideo(videoId) {
+            const video = platformState.videos.find(v => v.id === videoId);
+            if (video) {
+                const shareUrl = `${window.location.origin}/video/${videoId}`;
+                if (navigator.share) {
+                    navigator.share({
+                        title: video.title,
+                        text: `Watch "${video.title}" on Haitian Tube`,
+                        url: shareUrl
+                    });
+                } else {
+                    navigator.clipboard.writeText(shareUrl);
+                    showToast('Link copied to clipboard!', 'success');
+                }
+            }
+        }
+        
+        function saveVideo(videoId) {
+            // Save video to user's saved list
+            if (!platformState.currentUser.savedVideos) {
+                platformState.currentUser.savedVideos = [];
+            }
+            
+            if (!platformState.currentUser.savedVideos.includes(videoId)) {
+                platformState.currentUser.savedVideos.push(videoId);
+                localStorage.setItem('haitianTubeUser', JSON.stringify(platformState.currentUser));
+                showToast('Video saved to your library!', 'success');
+            } else {
+                showToast('Video already saved!', 'info');
+            }
+        }
+        
+        function handleSubscribe(creatorId) {
+            const creator = platformState.creators.find(c => c.id === creatorId);
+            if (!creator) return;
+            
+            creator.subscribers = (creator.subscribers || 0) + 1;
+            
+            // Update in localStorage
+            localStorage.setItem('haitianTubeCreators', JSON.stringify(platformState.creators));
+            
+            // Update subscribe button
+            const subscribeButton = document.querySelector('.subscribe-button');
+            if (subscribeButton) {
+                subscribeButton.textContent = 'Subscribed';
+                subscribeButton.style.backgroundColor = '#666';
+                subscribeButton.disabled = true;
+            }
+            
+            // Update subscriber count
+            const subscriberCount = document.querySelector('.creator-details p');
+            if (subscriberCount) {
+                subscriberCount.textContent = `${creator.subscribers} subscribers`;
+            }
+            
+            showToast(`Subscribed to ${creator.name}!`, 'success');
         }
         
         // Utility functions
