@@ -1260,7 +1260,8 @@
             hasVideosLoaded: false,
             userLikes: new Set(), // Track liked videos for current user
             isDarkMode: localStorage.getItem('haitianTubeDarkMode') === 'true',
-            currentVideo: null
+            currentVideo: null,
+            isUploading: false
         };
         
         // ============================
@@ -2022,16 +2023,22 @@
         // VIDEO UPLOAD TO CLOUDINARY
         // ============================
         async function uploadVideo() {
+            if (platformState.isUploading) {
+                return; // Prevent multiple uploads
+            }
+            
             if (!platformState.isAuthenticated) {
                 showToast('Please login to upload videos', 'error');
                 switchView('auth');
                 return;
             }
             
-            const videoFile = elements.videoUpload.files[0];
+            // Get file ONLY from file input
+            const videoFile = document.getElementById("videoUpload").files[0];
             const title = elements.videoTitle.value.trim();
             const description = elements.videoDescription.value.trim();
             
+            // Validate ONLY the file input
             if (!videoFile) {
                 showToast('Please select a video file', 'error');
                 return;
@@ -2048,11 +2055,15 @@
                 return;
             }
             
+            // Set uploading state
+            platformState.isUploading = true;
+            
             // Show progress
             elements.uploadProgressContainer.style.display = 'block';
             elements.uploadProgressBar.style.width = '0%';
             elements.progressText.textContent = '0% uploaded';
             elements.submitUpload.disabled = true;
+            elements.submitUpload.textContent = 'Uploading...';
             
             try {
                 // Upload to Cloudinary
@@ -2075,17 +2086,20 @@
                 
                 const cloudinaryData = await response.json();
                 
+                // Get secure_url from Cloudinary response
+                const videoUrl = cloudinaryData.secure_url;
+                
                 // Generate thumbnail URL (frame at 1 second)
                 const thumbnailUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/video/upload/so_1/${cloudinaryData.public_id}.jpg`;
                 
                 // Format duration
                 const duration = formatDuration(cloudinaryData.duration);
                 
-                // Save to Back4App
+                // Save to Back4App with metadata
                 const videoData = {
                     title: title,
                     description: description,
-                    videoUrl: cloudinaryData.secure_url,
+                    videoUrl: videoUrl, // From Cloudinary response
                     thumbnailUrl: thumbnailUrl,
                     duration: duration
                 };
@@ -2097,12 +2111,21 @@
                 elements.uploadSuccess.style.display = 'block';
                 elements.submitUpload.style.display = 'none';
                 
+                // Reset form
+                elements.videoUpload.value = '';
+                elements.videoTitle.value = '';
+                elements.videoDescription.value = '';
+                
+                platformState.isUploading = false;
+                
                 showToast('Video uploaded successfully!', 'success');
                 
             } catch (error) {
                 console.error('Upload error:', error);
                 elements.uploadProgressContainer.style.display = 'none';
                 elements.submitUpload.disabled = false;
+                elements.submitUpload.textContent = 'Upload Video';
+                platformState.isUploading = false;
                 showToast('Upload failed: ' + error.message, 'error');
             }
         }
@@ -2218,10 +2241,22 @@
                 case 'upload':
                     if (platformState.isAuthenticated) {
                         elements.uploadView.classList.remove('hidden');
+                        // Reset upload form
+                        elements.uploadSuccess.style.display = 'none';
+                        elements.submitUpload.style.display = 'block';
+                        elements.submitUpload.disabled = false;
+                        elements.submitUpload.textContent = 'Upload Video';
+                        elements.uploadProgressContainer.style.display = 'none';
+                        platformState.isUploading = false;
                     } else {
                         switchView('auth');
                     }
                     break;
+            }
+            
+            // Close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                elements.sidebar.classList.remove('active');
             }
         }
         
@@ -2246,6 +2281,14 @@
             // Sidebar navigation
             document.querySelectorAll('.sidebar-item').forEach(item => {
                 item.addEventListener('click', () => {
+                    // Remove active class from all items
+                    document.querySelectorAll('.sidebar-item').forEach(i => {
+                        i.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked item
+                    item.classList.add('active');
+                    
                     const view = item.dataset.view;
                     if (view) {
                         switchView(view);
@@ -2299,7 +2342,12 @@
             // Upload functionality
             elements.uploadArea.addEventListener('click', () => elements.videoUpload.click());
             elements.videoUpload.addEventListener('change', handleVideoSelect);
-            elements.submitUpload.addEventListener('click', uploadVideo);
+            
+            // Handle upload button click with preventDefault
+            elements.submitUpload.addEventListener('click', (e) => {
+                e.preventDefault();
+                uploadVideo();
+            });
             
             // Drag and drop for upload
             elements.uploadArea.addEventListener('dragover', (e) => {
@@ -2323,9 +2371,14 @@
         }
         
         function handleVideoSelect() {
-            const file = elements.videoUpload.files[0];
+            const file = document.getElementById("videoUpload").files[0];
             if (file) {
                 showToast(`Selected: ${file.name}`, 'info');
+                // Pre-fill title with filename (without extension) if empty
+                if (!elements.videoTitle.value.trim()) {
+                    const fileName = file.name.replace(/\.[^/.]+$/, ""); // Remove extension
+                    elements.videoTitle.value = fileName;
+                }
             }
         }
         
