@@ -4,13 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Haitian Tube - Video Sharing Platform</title>
+    <!-- Fluid Player -->
+    <link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css">
+    <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- Firebase SDKs -->
+    <!-- Firebase Auth -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-analytics-compat.js"></script>
+    <!-- Back4App/Parse -->
+    <script src="https://npmcdn.com/parse/dist/parse.min.js"></script>
     <style>
         /* CSS Reset & Base Styles */
         * {
@@ -344,135 +350,30 @@
             color: var(--dark-text-secondary);
         }
 
-        .empty-state {
+        /* Loading State */
+        .loading-state {
             text-align: center;
             padding: 60px 20px;
             color: var(--light-text-secondary);
+            display: none;
         }
 
-        body.dark-mode .empty-state {
+        body.dark-mode .loading-state {
             color: var(--dark-text-secondary);
         }
 
-        .empty-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-            color: #ccc;
-        }
-
-        .empty-state h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .empty-state p {
-            font-size: 16px;
-            max-width: 500px;
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0,0,0,0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
             margin: 0 auto 20px;
         }
 
-        /* Creator Page */
-        .creator-header {
-            background-color: var(--light-surface);
-            padding: 20px;
-            border-radius: var(--border-radius);
-            margin-bottom: 20px;
-        }
-
-        body.dark-mode .creator-header {
-            background-color: var(--dark-surface);
-        }
-
-        .channel-banner {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            border-radius: var(--border-radius);
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .channel-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .channel-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background-color: var(--secondary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            font-weight: 500;
-            border: 4px solid var(--light-bg);
-        }
-
-        body.dark-mode .channel-avatar {
-            border-color: var(--dark-bg);
-        }
-
-        .channel-details {
-            flex: 1;
-        }
-
-        .channel-name {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .channel-stats {
-            display: flex;
-            gap: 20px;
-            color: var(--light-text-secondary);
-        }
-
-        body.dark-mode .channel-stats {
-            color: var(--dark-text-secondary);
-        }
-
-        .channel-tabs {
-            display: flex;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 20px;
-        }
-
-        body.dark-mode .channel-tabs {
-            border-bottom-color: var(--dark-surface-light);
-        }
-
-        .tab-button {
-            padding: 12px 24px;
-            background: none;
-            border: none;
-            font-size: 16px;
-            font-weight: 500;
-            color: var(--light-text-secondary);
-            cursor: pointer;
-            transition: var(--transition);
-            border-bottom: 3px solid transparent;
-        }
-
-        body.dark-mode .tab-button {
-            color: var(--dark-text-secondary);
-        }
-
-        .tab-button.active {
-            color: var(--light-text);
-            border-bottom-color: var(--primary-color);
-        }
-
-        body.dark-mode .tab-button.active {
-            color: var(--dark-text);
-        }
-
-        .tab-content {
-            padding: 20px 0;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Authentication Views */
@@ -686,6 +587,403 @@
             display: none;
         }
 
+        /* Video Player */
+        .video-player-container {
+            background-color: #000;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .fluid-player-container {
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        /* Video Detail */
+        .video-detail-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .video-info-detail {
+            background-color: var(--light-surface);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+        }
+
+        body.dark-mode .video-info-detail {
+            background-color: var(--dark-surface);
+        }
+
+        .video-title-detail {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .video-meta {
+            color: var(--light-text-secondary);
+            margin-bottom: 20px;
+        }
+
+        body.dark-mode .video-meta {
+            color: var(--dark-text-secondary);
+        }
+
+        .video-actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .action-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background-color: var(--light-surface-dark);
+            border: none;
+            border-radius: 20px;
+            color: var(--light-text);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        body.dark-mode .action-button {
+            background-color: var(--dark-surface-light);
+            color: var(--dark-text);
+        }
+
+        .action-button:hover {
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode .action-button:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .action-button.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .creator-info-detail {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        body.dark-mode .creator-info-detail {
+            border-bottom-color: var(--dark-surface-light);
+        }
+
+        .creator-avatar-small {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            font-size: 20px;
+            color: white;
+            background-color: var(--secondary-color);
+        }
+
+        .creator-details {
+            flex: 1;
+        }
+
+        .creator-details h3 {
+            margin-bottom: 4px;
+        }
+
+        .creator-details p {
+            color: var(--light-text-secondary);
+            font-size: 14px;
+        }
+
+        body.dark-mode .creator-details p {
+            color: var(--dark-text-secondary);
+        }
+
+        .subscribe-button {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .subscribe-button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .video-description {
+            background-color: var(--light-surface-dark);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        body.dark-mode .video-description {
+            background-color: var(--dark-surface);
+        }
+
+        /* Comments */
+        .comments-section {
+            background-color: var(--light-surface);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+        }
+
+        body.dark-mode .comments-section {
+            background-color: var(--dark-surface);
+        }
+
+        .comment-input {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .user-avatar-small {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+
+        .comment-input input {
+            flex: 1;
+            padding: 10px 16px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            background-color: var(--light-bg);
+            color: var(--light-text);
+        }
+
+        body.dark-mode .comment-input input {
+            background-color: var(--dark-surface);
+            color: var(--dark-text);
+            border-color: var(--dark-surface-light);
+        }
+
+        .comment-button {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .comment {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #666;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-content h4 {
+            margin-bottom: 4px;
+        }
+
+        .comment-content p {
+            margin-bottom: 8px;
+            color: var(--light-text);
+        }
+
+        body.dark-mode .comment-content p {
+            color: var(--dark-text);
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .comment-actions button {
+            background: none;
+            border: none;
+            color: var(--light-text-secondary);
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        body.dark-mode .comment-actions button {
+            color: var(--dark-text-secondary);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .search-container {
+                margin: 0 10px;
+            }
+            
+            .videos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+            
+            .modal-actions {
+                flex-direction: column;
+            }
+            
+            .video-actions {
+                justify-content: center;
+            }
+        }
+
+        /* Mobile Menu Button */
+        .menu-button {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--light-text);
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        body.dark-mode .menu-button {
+            color: var(--dark-text);
+        }
+
+        @media (max-width: 768px) {
+            .menu-button {
+                display: block;
+            }
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            background-color: var(--light-surface);
+            color: var(--light-text);
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        body.dark-mode .toast {
+            background-color: var(--dark-surface);
+            color: var(--dark-text);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-success {
+            border-left: 4px solid #4caf50;
+        }
+
+        .toast-error {
+            border-left: 4px solid #f44336;
+        }
+
+        .toast-info {
+            border-left: 4px solid #2196f3;
+        }
+
+        /* Related Videos */
+        .related-videos {
+            margin-top: 30px;
+        }
+
+        .related-video-card {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+
+        .related-thumbnail {
+            width: 160px;
+            height: 90px;
+            border-radius: 8px;
+            background-color: #ddd;
+            position: relative;
+        }
+
+        body.dark-mode .related-thumbnail {
+            background-color: #333;
+        }
+
+        .related-info {
+            flex: 1;
+        }
+
+        .related-info h4 {
+            font-size: 14px;
+            margin-bottom: 4px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .related-info p {
+            font-size: 12px;
+            color: var(--light-text-secondary);
+        }
+
+        body.dark-mode .related-info p {
+            color: var(--dark-text-secondary);
+        }
+
         /* Upload Progress */
         .upload-progress-container {
             margin-top: 20px;
@@ -732,579 +1030,10 @@
             background-color: #155724;
             color: white;
         }
-
-        /* Dashboard & Earnings */
-        .dashboard-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .dashboard-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .dashboard-card {
-            background-color: var(--light-surface);
-            padding: 24px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
-
-        body.dark-mode .dashboard-card {
-            background-color: var(--dark-surface);
-        }
-
-        .card-title {
-            font-size: 14px;
-            color: var(--light-text-secondary);
-            margin-bottom: 8px;
-        }
-
-        body.dark-mode .card-title {
-            color: var(--dark-text-secondary);
-        }
-
-        .card-value {
-            font-size: 32px;
-            font-weight: 700;
-        }
-
-        .card-subvalue {
-            font-size: 14px;
-            color: var(--light-text-secondary);
-        }
-
-        body.dark-mode .card-subvalue {
-            color: var(--dark-text-secondary);
-        }
-
-        /* KYC & Withdrawal */
-        .kyc-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .kyc-step {
-            background-color: var(--light-surface);
-            padding: 24px;
-            border-radius: var(--border-radius);
-            margin-bottom: 20px;
-        }
-
-        body.dark-mode .kyc-step {
-            background-color: var(--dark-surface);
-        }
-
-        .step-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .step-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-        }
-
-        .step-title {
-            font-size: 20px;
-            font-weight: 500;
-        }
-
-        .upload-preview {
-            width: 100%;
-            max-width: 300px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            margin: 20px auto;
-            display: block;
-        }
-
-        body.dark-mode .upload-preview {
-            border-color: var(--dark-surface-light);
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                width: 280px;
-            }
-            
-            .sidebar.active {
-                transform: translateX(0);
-            }
-            
-            .main-content {
-                margin-left: 0;
-            }
-            
-            .search-container {
-                margin: 0 10px;
-            }
-            
-            .videos-grid {
-                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            }
-            
-            .channel-info {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .modal-actions {
-                flex-direction: column;
-            }
-        }
-
-        /* Mobile Menu Button */
-        .menu-button {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: var(--light-text);
-            cursor: pointer;
-            padding: 8px;
-        }
-
-        body.dark-mode .menu-button {
-            color: var(--dark-text);
-        }
-
-        @media (max-width: 768px) {
-            .menu-button {
-                display: block;
-            }
-        }
-
-        /* Loading Spinner */
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(0,0,0,0.1);
-            border-radius: 50%;
-            border-top-color: var(--primary-color);
-            animation: spin 1s ease-in-out infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Toast Notifications */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 16px 24px;
-            background-color: var(--light-surface);
-            color: var(--light-text);
-            border-radius: 8px;
-            box-shadow: var(--shadow-lg);
-            z-index: 3000;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        body.dark-mode .toast {
-            background-color: var(--dark-surface);
-            color: var(--dark-text);
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast-success {
-            border-left: 4px solid #4caf50;
-        }
-
-        .toast-error {
-            border-left: 4px solid #f44336;
-        }
-
-        .toast-info {
-            border-left: 4px solid #2196f3;
-        }
-
-        /* Video Detail Page Styles */
-        .video-detail-container {
-            display: flex;
-            gap: 24px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .video-player-section {
-            flex: 1;
-        }
-        
-        .video-player {
-            background-color: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-        
-        .video-info-detail {
-            background-color: var(--light-surface);
-            padding: 20px;
-            border-radius: var(--border-radius);
-            margin-bottom: 20px;
-        }
-        
-        body.dark-mode .video-info-detail {
-            background-color: var(--dark-surface);
-        }
-        
-        .video-title-detail {
-            font-size: 20px;
-            margin-bottom: 12px;
-        }
-        
-        .video-meta {
-            color: var(--light-text-secondary);
-            margin-bottom: 20px;
-        }
-        
-        body.dark-mode .video-meta {
-            color: var(--dark-text-secondary);
-        }
-        
-        .video-actions {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .action-button {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background-color: var(--light-surface-dark);
-            border: none;
-            border-radius: 20px;
-            color: var(--light-text);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        body.dark-mode .action-button {
-            background-color: var(--dark-surface-light);
-            color: var(--dark-text);
-        }
-        
-        .action-button:hover {
-            background-color: rgba(0,0,0,0.1);
-        }
-        
-        body.dark-mode .action-button:hover {
-            background-color: rgba(255,255,255,0.1);
-        }
-        
-        .creator-info-detail {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        body.dark-mode .creator-info-detail {
-            border-bottom-color: var(--dark-surface-light);
-        }
-        
-        .creator-avatar-small {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 500;
-            font-size: 20px;
-            color: white;
-        }
-        
-        .creator-details {
-            flex: 1;
-        }
-        
-        .creator-details h3 {
-            margin-bottom: 4px;
-        }
-        
-        .creator-details p {
-            color: var(--light-text-secondary);
-            font-size: 14px;
-        }
-        
-        body.dark-mode .creator-details p {
-            color: var(--dark-text-secondary);
-        }
-        
-        .subscribe-button {
-            padding: 10px 20px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .subscribe-button:hover {
-            background-color: var(--primary-dark);
-        }
-        
-        .video-description {
-            background-color: var(--light-surface-dark);
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        body.dark-mode .video-description {
-            background-color: var(--dark-surface);
-        }
-        
-        .comments-section {
-            background-color: var(--light-surface);
-            padding: 20px;
-            border-radius: var(--border-radius);
-        }
-        
-        body.dark-mode .comments-section {
-            background-color: var(--dark-surface);
-        }
-        
-        .comment-input {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-        
-        .user-avatar-small {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--secondary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 500;
-        }
-        
-        .comment-input input {
-            flex: 1;
-            padding: 10px 16px;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            background-color: var(--light-bg);
-            color: var(--light-text);
-        }
-        
-        body.dark-mode .comment-input input {
-            background-color: var(--dark-surface);
-            color: var(--dark-text);
-            border-color: var(--dark-surface-light);
-        }
-        
-        .comment-button {
-            padding: 10px 20px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-        
-        .comment {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        
-        .comment-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #666;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 500;
-        }
-        
-        .comment-content {
-            flex: 1;
-        }
-        
-        .comment-content h4 {
-            margin-bottom: 4px;
-        }
-        
-        .comment-content p {
-            margin-bottom: 8px;
-            color: var(--light-text);
-        }
-        
-        body.dark-mode .comment-content p {
-            color: var(--dark-text);
-        }
-        
-        .comment-actions {
-            display: flex;
-            gap: 16px;
-        }
-        
-        .comment-actions button {
-            background: none;
-            border: none;
-            color: var(--light-text-secondary);
-            cursor: pointer;
-            font-size: 14px;
-        }
-        
-        body.dark-mode .comment-actions button {
-            color: var(--dark-text-secondary);
-        }
-        
-        .related-videos {
-            width: 400px;
-        }
-        
-        .related-video-card {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
-            cursor: pointer;
-        }
-        
-        .related-thumbnail {
-            width: 160px;
-            height: 90px;
-            border-radius: 8px;
-            background-color: #ddd;
-        }
-        
-        body.dark-mode .related-thumbnail {
-            background-color: #333;
-        }
-        
-        .related-info {
-            flex: 1;
-        }
-        
-        .related-info h4 {
-            font-size: 14px;
-            margin-bottom: 4px;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-        
-        .related-info p {
-            font-size: 12px;
-            color: var(--light-text-secondary);
-        }
-        
-        body.dark-mode .related-info p {
-            color: var(--dark-text-secondary);
-        }
-        
-        @media (max-width: 1200px) {
-            .video-detail-container {
-                flex-direction: column;
-            }
-            
-            .related-videos {
-                width: 100%;
-            }
-        }
-        
-        /* Banner ad styling */
-        .ad-banner {
-            margin: 20px 0;
-            text-align: center;
-        }
-        
-        .ad-banner a {
-            display: inline-block;
-        }
-        
-        /* KYC Review Styles */
-        .kyc-review {
-            background-color: var(--light-surface-dark);
-            padding: 16px;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-        
-        body.dark-mode .kyc-review {
-            background-color: var(--dark-surface);
-        }
-        
-        .review-status {
-            text-align: center;
-            padding: 20px 0;
-        }
-        
-        .verified-status {
-            text-align: center;
-            padding: 20px 0;
-        }
-        
-        /* Share Button Animation */
-        .share-button-animation {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--primary-color);
-            color: white;
-            padding: 20px 30px;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            z-index: 4000;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-        
-        .share-button-animation.show {
-            opacity: 1;
-        }
     </style>
 </head>
 <body>
-    <!-- Age Verification Modal -->
+    <!-- Age Verification Modal (Shows on every visit) -->
     <div id="ageVerificationModal" class="modal-overlay">
         <div class="modal">
             <div class="modal-header">
@@ -1313,7 +1042,7 @@
             </div>
             <div class="modal-content">
                 <p>Haitian Tube is committed to providing a safe environment for all users. By confirming your age, you agree that you are at least 18 years old and can access all content on the platform.</p>
-                <p>Your age confirmation will be stored securely and used only for content restriction purposes.</p>
+                <p>Your age confirmation will be stored for this session only.</p>
             </div>
             <div class="modal-actions">
                 <button id="confirmAge" class="modal-button confirm-button">I am 18 or older</button>
@@ -1356,39 +1085,11 @@
                 <i class="fas fa-home sidebar-icon"></i>
                 <span>Home</span>
             </div>
-            <div class="sidebar-item" data-view="trending">
-                <i class="fas fa-fire sidebar-icon"></i>
-                <span>Trending</span>
-            </div>
-            <div class="sidebar-item" data-view="subscriptions">
-                <i class="fas fa-newspaper sidebar-icon"></i>
-                <span>Subscriptions</span>
-            </div>
-            <div class="sidebar-item" data-view="library">
-                <i class="fas fa-photo-video sidebar-icon"></i>
-                <span>Library</span>
-            </div>
-            <div class="sidebar-item" data-view="history">
-                <i class="fas fa-history sidebar-icon"></i>
-                <span>History</span>
-            </div>
-            <div class="sidebar-item" id="myChannelItem">
-                <i class="fas fa-user-circle sidebar-icon"></i>
-                <span>My Channel</span>
-            </div>
-            <div class="sidebar-item" id="dashboardItem">
-                <i class="fas fa-chart-line sidebar-icon"></i>
-                <span>Dashboard</span>
-            </div>
-            <div class="sidebar-item" id="withdrawalItem">
-                <i class="fas fa-wallet sidebar-icon"></i>
-                <span>Withdraw</span>
-            </div>
             <div class="sidebar-item" id="loginItem">
                 <i class="fas fa-sign-in-alt sidebar-icon"></i>
                 <span>Sign In</span>
             </div>
-            <div class="sidebar-item" id="logoutItem">
+            <div class="sidebar-item" id="logoutItem" style="display: none;">
                 <i class="fas fa-sign-out-alt sidebar-icon"></i>
                 <span>Log Out</span>
             </div>
@@ -1399,59 +1100,25 @@
             <div class="view-container" id="viewContainer">
                 <!-- Home View (Default) -->
                 <div class="view" id="homeView">
-                    <!-- Ad Banner -->
-                    <div class="ad-banner">
-                        <a href="https://t.ajrkm1.com/387067/8780/0?bo=2779,2778,2777,2776,2775&file_id=600151&po=6533&aff_sub5=SF_006OG000004lmDN" target="_blank">
-                            <img src="https://www.imglnkx.com/8780/PMKT-1157_DESIGN-16618_BannersWebinar_HBD_300100.gif" alt="CrackRevenue Banner" width="300" height="100">
-                        </a>
+                    <!-- Loading State (Only shows during initial fetch) -->
+                    <div class="loading-state" id="loadingState">
+                        <div class="spinner"></div>
+                        <h2>Loading videos...</h2>
+                        <p>Please wait while we load the latest videos</p>
                     </div>
                     
-                    <h1>Recommended Videos</h1>
-                    <div class="videos-grid" id="homeVideosGrid">
-                        <!-- Videos will be loaded from Firebase -->
+                    <!-- Videos Grid -->
+                    <div class="videos-grid" id="videosGrid">
+                        <!-- Videos loaded from Back4App -->
                     </div>
                 </div>
 
-                <!-- Creator Page View -->
-                <div class="view hidden" id="creatorView">
-                    <div class="creator-header">
-                        <div class="channel-banner"></div>
-                        <div class="channel-info">
-                            <div class="channel-avatar" id="channelAvatar">C</div>
-                            <div class="channel-details">
-                                <h1 class="channel-name" id="channelName">Creator Name</h1>
-                                <div class="channel-stats">
-                                    <span id="channelSubscribers">0 subscribers</span>
-                                    <span id="channelVideos">0 videos</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="channel-tabs">
-                        <button class="tab-button active" data-tab="videos">Videos</button>
-                        <button class="tab-button" data-tab="about">About</button>
-                    </div>
-                    
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="videosTab">
-                            <div class="videos-grid" id="creatorVideosGrid">
-                                <!-- Creator's videos will be loaded from Firebase -->
-                            </div>
-                        </div>
-                        <div class="tab-pane hidden" id="aboutTab">
-                            <div class="about-content">
-                                <h3>About</h3>
-                                <p id="channelDescription">No description available.</p>
-                                <h4>Channel Details</h4>
-                                <p><strong>Joined:</strong> <span id="channelJoined">Not available</span></p>
-                                <p><strong>Total Views:</strong> <span id="channelTotalViews">0</span></p>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Video Detail View -->
+                <div class="view hidden" id="videoDetailView">
+                    <!-- Video will be loaded here -->
                 </div>
 
-                <!-- Authentication Views -->
+                <!-- Authentication View -->
                 <div class="view hidden" id="authView">
                     <div class="auth-container">
                         <div class="auth-header">
@@ -1461,12 +1128,7 @@
                         </div>
                         
                         <form class="auth-form" id="authForm">
-                            <div class="form-group" id="usernameGroup">
-                                <label class="form-label" for="authUsername">Username</label>
-                                <input type="text" class="form-input" id="authUsername" placeholder="Enter your username">
-                            </div>
-                            
-                            <div class="form-group" id="emailGroup">
+                            <div class="form-group">
                                 <label class="form-label" for="authEmail">Email</label>
                                 <input type="email" class="form-input" id="authEmail" placeholder="Enter your email">
                             </div>
@@ -1480,10 +1142,26 @@
                         </form>
                         
                         <div class="auth-footer">
-                            <p id="authFooterText">
-                                <span id="authToggleText">Don't have an account?</span>
-                                <a class="auth-link" id="authToggleLink">Sign up now</a>
-                            </p>
+                            <p>Don't have an account? <a class="auth-link" id="showSignup">Sign up</a></p>
+                        </div>
+                        
+                        <div class="auth-form hidden" id="signupForm">
+                            <div class="form-group">
+                                <label class="form-label" for="signupUsername">Username</label>
+                                <input type="text" class="form-input" id="signupUsername" placeholder="Choose a username">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="signupEmail">Email</label>
+                                <input type="email" class="form-input" id="signupEmail" placeholder="Enter your email">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="signupPassword">Password</label>
+                                <input type="password" class="form-input" id="signupPassword" placeholder="At least 6 characters">
+                            </div>
+                            
+                            <button type="button" class="auth-button" id="signupButton">Create Account</button>
                         </div>
                     </div>
                 </div>
@@ -1531,155 +1209,6 @@
                         </div>
                         
                         <button class="auth-button" id="submitUpload">Upload Video</button>
-                        <button class="auth-button" id="shareButton" style="margin-top: 10px; display: none; background-color: #4caf50;">
-                            <i class="fas fa-share"></i> Share Video
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Dashboard View -->
-                <div class="view hidden" id="dashboardView">
-                    <div class="dashboard-container">
-                        <h1>Creator Dashboard</h1>
-                        <p>Track your channel's performance and earnings</p>
-                        
-                        <div class="dashboard-cards">
-                            <div class="dashboard-card">
-                                <div class="card-title">Total Earnings</div>
-                                <div class="card-value" id="totalEarnings">$0.00</div>
-                                <div class="card-subvalue" id="lifetimeEarnings">Lifetime: $0.00</div>
-                            </div>
-                            
-                            <div class="dashboard-card">
-                                <div class="card-title">This Month</div>
-                                <div class="card-value" id="monthEarnings">$0.00</div>
-                                <div class="card-subvalue" id="monthViews">0 views</div>
-                            </div>
-                            
-                            <div class="dashboard-card">
-                                <div class="card-title">Total Views</div>
-                                <div class="card-value" id="totalViews">0</div>
-                                <div class="card-subvalue" id="subscribersCount">0 subscribers</div>
-                            </div>
-                            
-                            <div class="dashboard-card">
-                                <div class="card-title">Available for Withdrawal</div>
-                                <div class="card-value" id="availableBalance">$0.00</div>
-                                <div class="card-subvalue">After KYC verification</div>
-                            </div>
-                        </div>
-                        
-                        <div class="kyc-step">
-                            <div class="step-header">
-                                <div class="step-icon">1</div>
-                                <h3 class="step-title">Verification Status</h3>
-                            </div>
-                            <p id="kycStatusText">Your account is not verified. Complete KYC to enable withdrawals.</p>
-                            <button class="auth-button" id="startKycButton">Start KYC Verification</button>
-                        </div>
-                        
-                        <h2 style="margin-top: 40px;">Recent Videos Performance</h2>
-                        <div id="videosPerformance">
-                            <p>No videos uploaded yet.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Withdrawal & KYC View -->
-                <div class="view hidden" id="withdrawalView">
-                    <div class="kyc-container">
-                        <h1>Withdraw Earnings</h1>
-                        <p>Withdraw your earnings to PayPal after completing KYC verification</p>
-                        
-                        <!-- Step 1: ID Upload -->
-                        <div class="kyc-step" id="kycStep1">
-                            <div class="step-header">
-                                <div class="step-icon">1</div>
-                                <h3 class="step-title">Upload ID Document</h3>
-                            </div>
-                            <p>Upload a clear photo of your government-issued ID (Passport, Driver's License, or National ID)</p>
-                            <input type="file" class="upload-input" id="idUpload" accept="image/*">
-                            <div id="idPreview" style="margin-top: 10px;"></div>
-                            <button class="auth-button" id="uploadIdButton" style="margin-top: 20px;">Upload ID</button>
-                        </div>
-                        
-                        <!-- Step 2: Selfie Upload -->
-                        <div class="kyc-step hidden" id="kycStep2">
-                            <div class="step-header">
-                                <div class="step-icon">2</div>
-                                <h3 class="step-title">Upload Selfie</h3>
-                            </div>
-                            <p>Take a clear selfie showing your face for verification</p>
-                            <input type="file" class="upload-input" id="selfieUpload" accept="image/*">
-                            <div id="selfiePreview" style="margin-top: 10px;"></div>
-                            <button class="auth-button" id="uploadSelfieButton" style="margin-top: 20px;">Upload Selfie</button>
-                        </div>
-                        
-                        <!-- Step 3: Additional Photo Upload -->
-                        <div class="kyc-step hidden" id="kycStep3">
-                            <div class="step-header">
-                                <div class="step-icon">3</div>
-                                <h3 class="step-title">Upload Additional Photo</h3>
-                            </div>
-                            <p>Upload a clear photo holding your ID next to your face</p>
-                            <input type="file" class="upload-input" id="photoUpload" accept="image/*">
-                            <div id="photoPreview" style="margin-top: 10px;"></div>
-                            <button class="auth-button" id="uploadPhotoButton" style="margin-top: 20px;">Upload Photo</button>
-                        </div>
-                        
-                        <!-- Step 4: Review & Publish -->
-                        <div class="kyc-step hidden" id="kycStep4">
-                            <div class="step-header">
-                                <div class="step-icon">4</div>
-                                <h3 class="step-title">Review & Publish</h3>
-                            </div>
-                            <p>Review your KYC information and publish for verification</p>
-                            <div class="kyc-review">
-                                <p><strong>ID Document:</strong> Uploaded ✓</p>
-                                <p><strong>Selfie:</strong> Uploaded ✓</p>
-                                <p><strong>Additional Photo:</strong> Uploaded ✓</p>
-                            </div>
-                            <button class="auth-button" id="publishKycButton">Publish for Verification</button>
-                        </div>
-                        
-                        <!-- Step 5: Under Review -->
-                        <div class="kyc-step hidden" id="kycStep5">
-                            <div class="step-header">
-                                <div class="step-icon"><i class="fas fa-clock"></i></div>
-                                <h3 class="step-title">KYC Under Review</h3>
-                            </div>
-                            <p>Your KYC verification is under review. This may take 24-48 hours.</p>
-                            <div class="review-status">
-                                <div class="spinner" style="margin: 20px auto;"></div>
-                                <p>Status: Under Review</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Step 6: Verified -->
-                        <div class="kyc-step hidden" id="kycStep6">
-                            <div class="step-header">
-                                <div class="step-icon"><i class="fas fa-check"></i></div>
-                                <h3 class="step-title">KYC Verified</h3>
-                            </div>
-                            <p>Your KYC verification is complete! You can now withdraw your earnings.</p>
-                            <div class="verified-status">
-                                <i class="fas fa-check-circle" style="font-size: 48px; color: #4caf50; margin: 20px 0;"></i>
-                                <p>Status: Verified ✓</p>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="withdrawAmount">Withdrawal Amount</label>
-                                <input type="number" class="form-input" id="withdrawAmount" placeholder="Minimum $10.00" min="10" step="0.01">
-                            </div>
-                            <button class="auth-button" id="withdrawButton">Withdraw to PayPal</button>
-                        </div>
-                        
-                        <div class="kyc-step" id="withdrawalStatus">
-                            <div class="step-header">
-                                <div class="step-icon"><i class="fas fa-history"></i></div>
-                                <h3 class="step-title">Withdrawal Status</h3>
-                            </div>
-                            <p id="withdrawalStatusText">No withdrawals yet. Complete KYC to enable withdrawals.</p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -1692,13 +1221,12 @@
         <span id="toastMessage">This is a toast message</span>
     </div>
 
-    <!-- Share Button Animation -->
-    <div class="share-button-animation hidden" id="shareAnimation">
-        <i class="fas fa-share"></i> Sharing Video...
-    </div>
-
     <script>
-        // Firebase configuration
+        // ============================
+        // CONFIGURATION
+        // ============================
+        
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBsfheLc8i-CsRGJ9jkbGUhdTj3ZD3SLu8",
             authDomain: "haitiantube-2affb.firebaseapp.com",
@@ -1709,45 +1237,37 @@
             measurementId: "G-8WS57GK218"
         };
         
+        // Back4App/Parse Configuration
+        Parse.initialize("KO17FZ9yhp8XzNQnrlYzj7GaXaTr9hcekpY7u667", "lTMvuwBNvXgAXfHnNHiqkdjj7vQHk5LcEocQY8Ya");
+        Parse.serverURL = 'https://parseapi.back4app.com/';
+        
         // Cloudinary Configuration
         const CLOUDINARY_CLOUD_NAME = "dqx9c4kc6";
         const CLOUDINARY_UPLOAD_PRESET = "xp4psfnn";
         
-        // Firebase App
-        let firebaseApp;
-        let auth;
-        let db;
-        let analytics;
+        // VAST Ads URL
+        const VAST_AD_URL = "https://s.magsrv.com/v1/vast.php?idzone=5796930&ex_av=name";
         
-        // Platform State
+        // ============================
+        // PLATFORM STATE
+        // ============================
         const platformState = {
             currentUser: null,
-            currentView: 'home',
             isAuthenticated: false,
-            ageVerified: false,
-            videos: [], // Temporary cache
-            creators: [], // Temporary cache
-            currentCreator: null,
-            currentVideo: null,
-            isDarkMode: false,
-            kycStatus: 'pending',
-            earnings: 0,
-            views: 0,
-            subscribers: 0
+            currentView: 'home',
+            videos: [], // Cache for videos
+            loadingVideos: false,
+            hasVideosLoaded: false,
+            userLikes: new Set(), // Track liked videos for current user
+            isDarkMode: localStorage.getItem('haitianTubeDarkMode') === 'true',
+            currentVideo: null
         };
         
-        // DOM Elements
+        // ============================
+        // DOM ELEMENTS
+        // ============================
         const elements = {
-            // Views
-            homeView: document.getElementById('homeView'),
-            creatorView: document.getElementById('creatorView'),
-            authView: document.getElementById('authView'),
-            uploadView: document.getElementById('uploadView'),
-            dashboardView: document.getElementById('dashboardView'),
-            withdrawalView: document.getElementById('withdrawalView'),
-            viewContainer: document.getElementById('viewContainer'),
-            
-            // Age verification
+            // Age Verification
             ageVerificationModal: document.getElementById('ageVerificationModal'),
             confirmAge: document.getElementById('confirmAge'),
             cancelAge: document.getElementById('cancelAge'),
@@ -1761,39 +1281,32 @@
             searchInput: document.getElementById('searchInput'),
             searchButton: document.getElementById('searchButton'),
             
-            // Sidebar items
-            myChannelItem: document.getElementById('myChannelItem'),
-            dashboardItem: document.getElementById('dashboardItem'),
-            withdrawalItem: document.getElementById('withdrawalItem'),
+            // Sidebar
             loginItem: document.getElementById('loginItem'),
             logoutItem: document.getElementById('logoutItem'),
             
-            // Video grids
-            homeVideosGrid: document.getElementById('homeVideosGrid'),
-            creatorVideosGrid: document.getElementById('creatorVideosGrid'),
+            // Views
+            viewContainer: document.getElementById('viewContainer'),
+            homeView: document.getElementById('homeView'),
+            videoDetailView: document.getElementById('videoDetailView'),
+            authView: document.getElementById('authView'),
+            uploadView: document.getElementById('uploadView'),
             
-            // Creator page
-            channelAvatar: document.getElementById('channelAvatar'),
-            channelName: document.getElementById('channelName'),
-            channelSubscribers: document.getElementById('channelSubscribers'),
-            channelVideos: document.getElementById('channelVideos'),
-            channelDescription: document.getElementById('channelDescription'),
-            channelJoined: document.getElementById('channelJoined'),
-            channelTotalViews: document.getElementById('channelTotalViews'),
+            // Video Grid
+            loadingState: document.getElementById('loadingState'),
+            videosGrid: document.getElementById('videosGrid'),
             
             // Authentication
-            authTitle: document.getElementById('authTitle'),
-            authSubtitle: document.getElementById('authSubtitle'),
             authForm: document.getElementById('authForm'),
-            authUsername: document.getElementById('authUsername'),
             authEmail: document.getElementById('authEmail'),
-            usernameGroup: document.getElementById('usernameGroup'),
-            emailGroup: document.getElementById('emailGroup'),
             authPassword: document.getElementById('authPassword'),
             authSubmitButton: document.getElementById('authSubmitButton'),
-            authFooterText: document.getElementById('authFooterText'),
-            authToggleText: document.getElementById('authToggleText'),
-            authToggleLink: document.getElementById('authToggleLink'),
+            showSignup: document.getElementById('showSignup'),
+            signupForm: document.getElementById('signupForm'),
+            signupUsername: document.getElementById('signupUsername'),
+            signupEmail: document.getElementById('signupEmail'),
+            signupPassword: document.getElementById('signupPassword'),
+            signupButton: document.getElementById('signupButton'),
             
             // Upload
             uploadArea: document.getElementById('uploadArea'),
@@ -1805,141 +1318,19 @@
             uploadProgressBar: document.getElementById('uploadProgressBar'),
             progressText: document.getElementById('progressText'),
             uploadSuccess: document.getElementById('uploadSuccess'),
-            shareButton: document.getElementById('shareButton'),
-            
-            // Dashboard
-            totalEarnings: document.getElementById('totalEarnings'),
-            lifetimeEarnings: document.getElementById('lifetimeEarnings'),
-            monthEarnings: document.getElementById('monthEarnings'),
-            monthViews: document.getElementById('monthViews'),
-            totalViews: document.getElementById('totalViews'),
-            subscribersCount: document.getElementById('subscribersCount'),
-            availableBalance: document.getElementById('availableBalance'),
-            kycStatusText: document.getElementById('kycStatusText'),
-            startKycButton: document.getElementById('startKycButton'),
-            videosPerformance: document.getElementById('videosPerformance'),
-            
-            // Withdrawal & KYC
-            kycStep1: document.getElementById('kycStep1'),
-            kycStep2: document.getElementById('kycStep2'),
-            kycStep3: document.getElementById('kycStep3'),
-            kycStep4: document.getElementById('kycStep4'),
-            kycStep5: document.getElementById('kycStep5'),
-            kycStep6: document.getElementById('kycStep6'),
-            idUpload: document.getElementById('idUpload'),
-            idPreview: document.getElementById('idPreview'),
-            uploadIdButton: document.getElementById('uploadIdButton'),
-            selfieUpload: document.getElementById('selfieUpload'),
-            selfiePreview: document.getElementById('selfiePreview'),
-            uploadSelfieButton: document.getElementById('uploadSelfieButton'),
-            photoUpload: document.getElementById('photoUpload'),
-            photoPreview: document.getElementById('photoPreview'),
-            uploadPhotoButton: document.getElementById('uploadPhotoButton'),
-            publishKycButton: document.getElementById('publishKycButton'),
-            withdrawAmount: document.getElementById('withdrawAmount'),
-            withdrawButton: document.getElementById('withdrawButton'),
-            withdrawalStatus: document.getElementById('withdrawalStatus'),
-            withdrawalStatusText: document.getElementById('withdrawalStatusText'),
             
             // Toast
             toast: document.getElementById('toast'),
             toastIcon: document.getElementById('toastIcon'),
-            toastMessage: document.getElementById('toastMessage'),
-            
-            // Animation
-            shareAnimation: document.getElementById('shareAnimation'),
-            
-            // Tab buttons
-            tabButtons: document.querySelectorAll('.tab-button')
+            toastMessage: document.getElementById('toastMessage')
         };
         
-        // Initialize Firebase
-        function initializeFirebase() {
-            try {
-                firebaseApp = firebase.initializeApp(firebaseConfig);
-                auth = firebase.auth();
-                db = firebase.firestore();
-                analytics = firebase.analytics();
-                console.log('Firebase initialized successfully');
-                
-                // Set up auth state listener
-                auth.onAuthStateChanged((user) => {
-                    if (user) {
-                        // User is signed in
-                        platformState.currentUser = {
-                            id: user.uid,
-                            name: user.displayName || user.email.split('@')[0],
-                            email: user.email,
-                            username: user.displayName || user.email.split('@')[0],
-                            photoURL: user.photoURL,
-                            joinedDate: new Date(user.metadata.creationTime).toLocaleDateString()
-                        };
-                        platformState.isAuthenticated = true;
-                        
-                        // Load user profile from Firestore
-                        loadUserProfile(user.uid);
-                        
-                        showToast('Welcome back!', 'success');
-                    } else {
-                        // User is signed out
-                        platformState.currentUser = null;
-                        platformState.isAuthenticated = false;
-                    }
-                    updateAuthUI();
-                });
-                
-            } catch (error) {
-                console.error('Firebase initialization error:', error);
-            }
-        }
-        
-        // Load user profile from Firestore
-        async function loadUserProfile(userId) {
-            try {
-                const userDoc = await db.collection('users').doc(userId).get();
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    platformState.currentUser = {
-                        ...platformState.currentUser,
-                        ...userData,
-                        subscribers: userData.subscribers || 0,
-                        totalViews: userData.totalViews || 0,
-                        earnings: userData.earnings || 0
-                    };
-                } else {
-                    // Create user profile if it doesn't exist
-                    await db.collection('users').doc(userId).set({
-                        username: platformState.currentUser.username,
-                        email: platformState.currentUser.email,
-                        displayName: platformState.currentUser.name,
-                        subscribers: 0,
-                        totalViews: 0,
-                        earnings: 0,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                }
-            } catch (error) {
-                console.error('Error loading user profile:', error);
-            }
-        }
-        
-        // Initialize the platform
-        function initPlatform() {
-            // Check if age is verified in localStorage
-            const ageVerified = localStorage.getItem('haitianTubeAgeVerified');
-            if (ageVerified === 'true') {
-                platformState.ageVerified = true;
-                elements.ageVerificationModal.style.display = 'none';
-            } else {
-                elements.ageVerificationModal.style.display = 'flex';
-            }
-            
-            // Check for dark mode preference
-            const darkModePreference = localStorage.getItem('haitianTubeDarkMode');
-            if (darkModePreference === 'true') {
-                enableDarkMode();
-            }
+        // ============================
+        // INITIALIZATION
+        // ============================
+        async function initPlatform() {
+            // Show age verification on EVERY visit/refresh
+            showAgeVerification();
             
             // Initialize Firebase
             initializeFirebase();
@@ -1947,583 +1338,285 @@
             // Set up event listeners
             setupEventListeners();
             
-            // Show home view by default
-            switchView('home');
+            // Load videos from Back4App
+            loadVideos();
             
-            // Load videos from Firebase
-            loadVideosFromFirebase();
+            // Apply dark mode if enabled
+            if (platformState.isDarkMode) {
+                enableDarkMode();
+            }
         }
         
-        // Load videos from Firebase Firestore
-        function loadVideosFromFirebase() {
+        // ============================
+        // AGE VERIFICATION
+        // ============================
+        function showAgeVerification() {
+            // Show on every visit (no localStorage/cookies)
+            elements.ageVerificationModal.style.display = 'flex';
+            
+            elements.confirmAge.addEventListener('click', () => {
+                elements.ageVerificationModal.style.display = 'none';
+                showToast('Welcome to Haitian Tube!', 'success');
+            });
+            
+            elements.cancelAge.addEventListener('click', () => {
+                window.location.href = 'https://www.google.com';
+            });
+        }
+        
+        // ============================
+        // FIREBASE AUTHENTICATION
+        // ============================
+        function initializeFirebase() {
             try {
-                // Listen for videos in real-time
-                db.collection('videos')
-                    .where('status', 'in', ['verified', 'pending_verification'])
-                    .orderBy('createdAt', 'desc')
-                    .limit(50)
-                    .onSnapshot((snapshot) => {
-                        platformState.videos = [];
-                        snapshot.forEach((doc) => {
-                            const video = {
-                                id: doc.id,
-                                ...doc.data(),
-                                uploadDate: formatFirestoreTimestamp(doc.data().createdAt)
-                            };
-                            platformState.videos.push(video);
-                        });
+                const firebaseApp = firebase.initializeApp(firebaseConfig);
+                const auth = firebase.auth();
+                
+                // Listen for auth state changes
+                auth.onAuthStateChanged(async (user) => {
+                    if (user) {
+                        platformState.currentUser = {
+                            uid: user.uid,
+                            email: user.email,
+                            displayName: user.displayName || user.email.split('@')[0]
+                        };
+                        platformState.isAuthenticated = true;
                         
-                        // Update UI if on home view
-                        if (platformState.currentView === 'home') {
-                            loadHomeVideos();
-                        }
-                    }, (error) => {
-                        console.error('Error loading videos:', error);
-                        showToast('Error loading videos', 'error');
-                    });
-                    
+                        // Load user's liked videos
+                        await loadUserLikes(user.uid);
+                        
+                        // Update UI
+                        updateAuthUI();
+                        
+                        showToast(`Welcome back, ${platformState.currentUser.displayName}!`, 'success');
+                    } else {
+                        platformState.currentUser = null;
+                        platformState.isAuthenticated = false;
+                        platformState.userLikes.clear();
+                        updateAuthUI();
+                    }
+                });
+                
+                // Google Auth Provider
+                window.googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+                
             } catch (error) {
-                console.error('Error setting up videos listener:', error);
+                console.error('Firebase initialization error:', error);
+                showToast('Authentication service unavailable', 'error');
             }
         }
         
-        // Format Firestore timestamp
-        function formatFirestoreTimestamp(timestamp) {
-            if (!timestamp) return 'Recently';
+        // ============================
+        // BACK4APP VIDEO MANAGEMENT
+        // ============================
+        async function loadVideos(searchQuery = '') {
+            // Only show loading on initial load when no videos cached
+            if (!platformState.hasVideosLoaded && !platformState.videos.length) {
+                elements.loadingState.style.display = 'block';
+                elements.videosGrid.innerHTML = '';
+            }
+            
+            platformState.loadingVideos = true;
             
             try {
-                const date = timestamp.toDate();
-                const now = new Date();
-                const diffMs = now - date;
-                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                const Video = Parse.Object.extend('Video');
+                const query = new Parse.Query(Video);
                 
-                if (diffDays === 0) {
-                    return 'Today';
-                } else if (diffDays === 1) {
-                    return 'Yesterday';
-                } else if (diffDays < 7) {
-                    return `${diffDays} days ago`;
-                } else if (diffDays < 30) {
-                    const weeks = Math.floor(diffDays / 7);
-                    return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
-                } else {
-                    return date.toLocaleDateString();
+                // Filter by search query if provided
+                if (searchQuery) {
+                    query.matches('title', searchQuery, 'i');
                 }
+                
+                // Sort by creation date (newest first)
+                query.descending('createdAt');
+                
+                // Limit to 50 videos
+                query.limit(50);
+                
+                const results = await query.find();
+                
+                // Clear existing videos
+                platformState.videos = [];
+                
+                // Process results
+                results.forEach((videoObj) => {
+                    const video = {
+                        id: videoObj.id,
+                        title: videoObj.get('title') || 'Untitled Video',
+                        description: videoObj.get('description') || '',
+                        videoUrl: videoObj.get('videoUrl'),
+                        thumbnailUrl: videoObj.get('thumbnailUrl'),
+                        creatorId: videoObj.get('creatorId'),
+                        creatorName: videoObj.get('creatorName') || 'Unknown Creator',
+                        views: videoObj.get('views') || 0,
+                        likes: videoObj.get('likes') || 0,
+                        dislikes: videoObj.get('dislikes') || 0,
+                        commentsCount: videoObj.get('commentsCount') || 0,
+                        createdAt: videoObj.get('createdAt'),
+                        duration: videoObj.get('duration') || '0:00'
+                    };
+                    
+                    platformState.videos.push(video);
+                });
+                
+                // Hide loading state
+                elements.loadingState.style.display = 'none';
+                platformState.loadingVideos = false;
+                platformState.hasVideosLoaded = true;
+                
+                // Display videos
+                displayVideos();
+                
             } catch (error) {
-                return 'Recently';
+                console.error('Error loading videos:', error);
+                elements.loadingState.style.display = 'none';
+                platformState.loadingVideos = false;
+                
+                // Only show error if we have no videos at all
+                if (!platformState.videos.length) {
+                    showToast('Error loading videos', 'error');
+                }
             }
         }
         
-        // Set up all event listeners
-        function setupEventListeners() {
-            // Age verification
-            elements.confirmAge.addEventListener('click', confirmAgeVerification);
-            elements.cancelAge.addEventListener('click', cancelAgeVerification);
+        function displayVideos() {
+            // Clear grid
+            elements.videosGrid.innerHTML = '';
             
-            // Header actions
-            elements.menuButton.addEventListener('click', toggleSidebar);
-            elements.darkModeToggle.addEventListener('click', toggleDarkMode);
-            elements.uploadButton.addEventListener('click', () => {
-                if (platformState.isAuthenticated) {
-                    switchView('upload');
-                } else {
-                    switchView('auth');
-                }
-            });
-            elements.userAvatar.addEventListener('click', () => {
-                if (platformState.isAuthenticated) {
-                    switchView('dashboard');
-                } else {
-                    switchView('auth');
-                }
-            });
-            elements.searchButton.addEventListener('click', handleSearch);
-            elements.searchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') handleSearch();
-            });
-            
-            // Sidebar navigation
-            document.querySelectorAll('.sidebar-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const view = item.dataset.view;
-                    if (view) {
-                        switchView(view);
-                        if (window.innerWidth <= 768) {
-                            elements.sidebar.classList.remove('active');
-                        }
-                    }
-                    
-                    // Update active state in sidebar
-                    document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-                    item.classList.add('active');
-                });
-            });
-            
-            // My Channel navigation
-            elements.myChannelItem.addEventListener('click', () => {
-                if (platformState.isAuthenticated) {
-                    platformState.currentCreator = platformState.currentUser;
-                    loadCreatorPage(platformState.currentUser.id);
-                    switchView('creator');
-                } else {
-                    switchView('auth');
-                }
-                
-                if (window.innerWidth <= 768) {
-                    elements.sidebar.classList.remove('active');
-                }
-            });
-            
-            // Dashboard navigation
-            elements.dashboardItem.addEventListener('click', () => {
-                if (platformState.isAuthenticated) {
-                    switchView('dashboard');
-                } else {
-                    switchView('auth');
-                }
-                
-                if (window.innerWidth <= 768) {
-                    elements.sidebar.classList.remove('active');
-                }
-            });
-            
-            // Withdrawal navigation
-            elements.withdrawalItem.addEventListener('click', () => {
-                if (platformState.isAuthenticated) {
-                    switchView('withdrawal');
-                } else {
-                    switchView('auth');
-                }
-                
-                if (window.innerWidth <= 768) {
-                    elements.sidebar.classList.remove('active');
-                }
-            });
-            
-            // Login/Logout navigation
-            elements.loginItem.addEventListener('click', () => {
-                switchView('auth');
-                if (window.innerWidth <= 768) {
-                    elements.sidebar.classList.remove('active');
-                }
-            });
-            
-            elements.logoutItem.addEventListener('click', () => {
-                logout();
-                if (window.innerWidth <= 768) {
-                    elements.sidebar.classList.remove('active');
-                }
-            });
-            
-            // Authentication form
-            elements.authForm.addEventListener('submit', handleAuthSubmit);
-            elements.authToggleLink.addEventListener('click', toggleAuthMode);
-            
-            // Upload functionality
-            elements.uploadArea.addEventListener('click', () => elements.videoUpload.click());
-            elements.videoUpload.addEventListener('change', handleVideoUpload);
-            elements.submitUpload.addEventListener('click', uploadVideoToCloudinary);
-            
-            // Share button
-            elements.shareButton.addEventListener('click', shareUploadedVideo);
-            
-            // Drag and drop for upload
-            elements.uploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                elements.uploadArea.classList.add('drag-over');
-            });
-            
-            elements.uploadArea.addEventListener('dragleave', () => {
-                elements.uploadArea.classList.remove('drag-over');
-            });
-            
-            elements.uploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                elements.uploadArea.classList.remove('drag-over');
-                
-                if (e.dataTransfer.files.length) {
-                    elements.videoUpload.files = e.dataTransfer.files;
-                    handleVideoUpload();
-                }
-            });
-            
-            // Creator page tabs
-            elements.tabButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const tab = button.dataset.tab;
-                    switchCreatorTab(tab);
-                    
-                    // Update active tab button
-                    elements.tabButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-                });
-            });
-            
-            // KYC and withdrawal buttons
-            elements.startKycButton.addEventListener('click', () => {
-                switchView('withdrawal');
-            });
-            
-            elements.uploadIdButton.addEventListener('click', () => {
-                elements.idUpload.click();
-            });
-            
-            elements.idUpload.addEventListener('change', handleIdUpload);
-            
-            elements.uploadSelfieButton.addEventListener('click', () => {
-                elements.selfieUpload.click();
-            });
-            
-            elements.selfieUpload.addEventListener('change', handleSelfieUpload);
-            
-            // Initialize KYC step 3 button if it exists
-            setTimeout(() => {
-                const uploadPhotoButton = document.getElementById('uploadPhotoButton');
-                const publishKycButton = document.getElementById('publishKycButton');
-                const withdrawButton = document.getElementById('withdrawButton');
-                
-                if (uploadPhotoButton) {
-                    uploadPhotoButton.addEventListener('click', () => {
-                        document.getElementById('photoUpload').click();
-                    });
-                }
-                
-                if (publishKycButton) {
-                    publishKycButton.addEventListener('click', publishKYCForReview);
-                }
-                
-                if (withdrawButton) {
-                    withdrawButton.addEventListener('click', handleWithdrawal);
-                }
-            }, 100);
-        }
-        
-        // Age verification functions
-        function confirmAgeVerification() {
-            platformState.ageVerified = true;
-            localStorage.setItem('haitianTubeAgeVerified', 'true');
-            elements.ageVerificationModal.style.display = 'none';
-            showToast('Age verification confirmed. Welcome to Haitian Tube!', 'success');
-        }
-        
-        function cancelAgeVerification() {
-            showToast('You must be 18 or older to use Haitian Tube.', 'error');
-        }
-        
-        // View switching
-        function switchView(viewName) {
-            // Hide all views
-            document.querySelectorAll('.view').forEach(view => {
-                view.classList.add('hidden');
-            });
-            
-            // Update sidebar active state
-            document.querySelectorAll('.sidebar-item').forEach(item => {
-                item.classList.remove('active');
-                if (item.dataset.view === viewName) {
-                    item.classList.add('active');
-                }
-            });
-            
-            // Show the requested view
-            platformState.currentView = viewName;
-            
-            switch(viewName) {
-                case 'home':
-                    elements.homeView.classList.remove('hidden');
-                    loadHomeVideos();
-                    break;
-                case 'creator':
-                    elements.creatorView.classList.remove('hidden');
-                    break;
-                case 'auth':
-                    elements.authView.classList.remove('hidden');
-                    break;
-                case 'upload':
-                    if (platformState.isAuthenticated) {
-                        elements.uploadView.classList.remove('hidden');
-                        resetUploadForm();
-                    } else {
-                        switchView('auth');
-                    }
-                    break;
-                case 'dashboard':
-                    if (platformState.isAuthenticated) {
-                        elements.dashboardView.classList.remove('hidden');
-                        loadDashboardData();
-                    } else {
-                        switchView('auth');
-                    }
-                    break;
-                case 'withdrawal':
-                    if (platformState.isAuthenticated) {
-                        elements.withdrawalView.classList.remove('hidden');
-                        loadWithdrawalData();
-                    } else {
-                        switchView('auth');
-                    }
-                    break;
-                default:
-                    elements.homeView.classList.remove('hidden');
+            // If no videos, show empty container (no messages)
+            if (platformState.videos.length === 0) {
+                return;
             }
-        }
-        
-        // Load home videos from Firebase
-        function loadHomeVideos() {
-            // Always clear the grid
-            elements.homeVideosGrid.innerHTML = '';
             
-            // Check if videos exist
-            if (platformState.videos.length > 0) {
-                // Display all videos
-                platformState.videos.forEach(video => {
-                    const videoCard = createVideoCard(video);
-                    elements.homeVideosGrid.appendChild(videoCard);
-                });
-            } else {
-                // Show loading or empty state
-                const emptyState = document.createElement('div');
-                emptyState.className = 'empty-state';
-                emptyState.innerHTML = `
-                    <div class="spinner"></div>
-                    <h2>Loading videos...</h2>
-                    <p>Please wait while we load the latest videos</p>
-                `;
-                elements.homeVideosGrid.appendChild(emptyState);
-            }
+            // Create video cards
+            platformState.videos.forEach(video => {
+                const videoCard = createVideoCard(video);
+                elements.videosGrid.appendChild(videoCard);
+            });
         }
         
-        // Create video card element with real video data
         function createVideoCard(video) {
             const card = document.createElement('div');
             card.className = 'video-card';
             card.dataset.videoId = video.id;
             
-            // Use Cloudinary thumbnail if available, otherwise use color
-            const thumbnailStyle = video.thumbnailUrl 
-                ? `background-image: url('${video.thumbnailUrl}'); background-size: cover; background-position: center;`
-                : `background-color: ${video.color || '#6a11cb'}`;
+            // Format view count
+            const viewCount = formatNumber(video.views);
+            
+            // Format date
+            const uploadDate = formatDate(video.createdAt);
+            
+            // Check if user liked this video
+            const isLiked = platformState.userLikes.has(video.id);
             
             card.innerHTML = `
-                <div class="video-thumbnail" style="${thumbnailStyle}">
+                <div class="video-thumbnail" style="background-image: url('${video.thumbnailUrl || 'https://via.placeholder.com/280x160?text=No+Thumbnail'}'); background-size: cover; background-position: center;">
                     <i class="fas fa-play-circle" style="font-size: 48px; color: rgba(255, 255, 255, 0.9); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></i>
                     ${video.duration ? `<span style="position: absolute; bottom: 8px; right: 8px; background: rgba(0, 0, 0, 0.8); color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">${video.duration}</span>` : ''}
-                    ${video.status === 'pending_verification' ? `<span style="position: absolute; top: 8px; left: 8px; background: rgba(255, 165, 0, 0.9); color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">Verifying...</span>` : ''}
                 </div>
                 <div class="video-info">
                     <h3 class="video-title">${video.title}</h3>
                     <p class="video-creator">${video.creatorName}</p>
                     <div class="video-stats">
-                        <span>${formatNumber(video.views || 0)} views</span>
+                        <span>${viewCount} views</span>
                         <span>•</span>
-                        <span>${video.uploadDate}</span>
+                        <span>${uploadDate}</span>
                     </div>
                 </div>
             `;
             
             card.addEventListener('click', () => {
-                // Store current video for video player
-                platformState.currentVideo = video;
-                
-                // Create and show video detail page
-                showVideoDetailPage(video);
+                showVideoDetail(video);
             });
             
             return card;
         }
         
-        // Show video detail page with player and interactions
-        function showVideoDetailPage(video) {
-            // Create video player view
-            const videoDetailHTML = `
-                <div class="video-detail-container">
-                    <div class="video-player-section">
-                        <div class="video-player">
-                            ${video.videoUrl ? 
-                                `<video controls autoplay style="width: 100%; border-radius: 12px; max-height: 70vh;">
-                                    <source src="${video.videoUrl}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>` :
-                                `<div style="background-color: ${video.color}; width: 100%; height: 500px; display: flex; align-items: center; justify-content: center; border-radius: 12px;">
-                                    <i class="fas fa-play-circle" style="font-size: 80px; color: white;"></i>
-                                </div>`
-                            }
-                        </div>
-                        <div class="video-info-detail">
-                            <h1 class="video-title-detail">${video.title}</h1>
-                            <div class="video-meta">
-                                <span>${formatNumber(video.views || 0)} views</span>
-                                <span>•</span>
-                                <span>${video.uploadDate}</span>
-                            </div>
-                            <div class="video-actions">
-                                <button class="action-button like-button" onclick="handleLike('${video.id}')">
-                                    <i class="fas fa-thumbs-up"></i>
-                                    <span>${video.likes || 0}</span>
-                                </button>
-                                <button class="action-button dislike-button" onclick="handleDislike('${video.id}')">
-                                    <i class="fas fa-thumbs-down"></i>
-                                    <span>${video.dislikes || 0}</span>
-                                </button>
-                                <button class="action-button share-button" onclick="shareVideo('${video.id}')">
-                                    <i class="fas fa-share"></i>
-                                    <span>Share</span>
-                                </button>
-                                <button class="action-button save-button" onclick="saveVideo('${video.id}')">
-                                    <i class="fas fa-bookmark"></i>
-                                    <span>Save</span>
-                                </button>
-                            </div>
-                            <div class="creator-info-detail">
-                                <div class="creator-avatar-small" style="background-color: ${getRandomColor()};">${video.creatorName?.charAt(0) || 'U'}</div>
-                                <div class="creator-details">
-                                    <h3>${video.creatorName}</h3>
-                                    <p>${video.creatorSubscribers || 0} subscribers</p>
-                                </div>
-                                <button class="subscribe-button" onclick="handleSubscribe('${video.creatorId}')">Subscribe</button>
-                            </div>
-                            <div class="video-description">
-                                <p>${video.description || 'No description provided.'}</p>
-                            </div>
-                        </div>
-                        <div class="comments-section">
-                            <h3>Comments (${video.commentsCount || 0})</h3>
-                            <div class="comment-input">
-                                <div class="user-avatar-small">${platformState.currentUser?.name?.charAt(0) || '?'}</div>
-                                <input type="text" placeholder="Add a comment..." id="commentInput">
-                                <button class="comment-button" onclick="addComment('${video.id}')">Comment</button>
-                            </div>
-                            <div id="commentsList" class="comments-list">
-                                <p>Loading comments...</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="related-videos">
-                        <h3>Recommended Videos</h3>
-                        <div id="relatedVideosList">
-                            <!-- Related videos will be loaded here -->
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Create a new view for video detail
-            const videoDetailView = document.createElement('div');
-            videoDetailView.className = 'view';
-            videoDetailView.id = 'videoDetailView';
-            videoDetailView.innerHTML = videoDetailHTML;
-            
-            // Hide current view and show video detail
-            elements.viewContainer.innerHTML = '';
-            elements.viewContainer.appendChild(videoDetailView);
-            
-            // Load comments and related videos
-            loadVideoComments(video.id);
-            loadRelatedVideos(video.id);
-            
-            // Increment view count
-            incrementViewCount(video.id);
-        }
-        
-        // Load video comments from Firebase
-        async function loadVideoComments(videoId) {
+        async function saveVideoToBack4App(videoData) {
             try {
-                const commentsList = document.getElementById('commentsList');
-                commentsList.innerHTML = '<p>Loading comments...</p>';
+                const Video = Parse.Object.extend('Video');
+                const video = new Video();
                 
-                const commentsSnapshot = await db.collection('videos').doc(videoId)
-                    .collection('comments')
-                    .orderBy('createdAt', 'desc')
-                    .limit(20)
-                    .get();
+                // Set video properties
+                video.set('title', videoData.title);
+                video.set('description', videoData.description);
+                video.set('videoUrl', videoData.videoUrl);
+                video.set('thumbnailUrl', videoData.thumbnailUrl);
+                video.set('creatorId', platformState.currentUser.uid);
+                video.set('creatorName', platformState.currentUser.displayName);
+                video.set('views', 0);
+                video.set('likes', 0);
+                video.set('dislikes', 0);
+                video.set('commentsCount', 0);
+                video.set('duration', videoData.duration || '0:00');
                 
-                if (commentsSnapshot.empty) {
-                    commentsList.innerHTML = '<p>No comments yet. Be the first to comment!</p>';
-                    return;
-                }
+                await video.save();
                 
-                let commentsHTML = '';
-                commentsSnapshot.forEach((doc) => {
-                    const comment = doc.data();
-                    commentsHTML += `
-                        <div class="comment">
-                            <div class="comment-avatar">${comment.userName?.charAt(0) || 'U'}</div>
-                            <div class="comment-content">
-                                <h4>${comment.userName}</h4>
-                                <p>${comment.text}</p>
-                                <div class="comment-actions">
-                                    <button class="comment-like" onclick="likeComment('${videoId}', '${doc.id}')">
-                                        <i class="fas fa-thumbs-up"></i> ${comment.likes || 0}
-                                    </button>
-                                    <span style="color: var(--light-text-secondary); font-size: 12px;">
-                                        ${formatFirestoreTimestamp(comment.createdAt)}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
+                // Add to local cache
+                const newVideo = {
+                    id: video.id,
+                    ...videoData,
+                    creatorId: platformState.currentUser.uid,
+                    creatorName: platformState.currentUser.displayName,
+                    views: 0,
+                    likes: 0,
+                    dislikes: 0,
+                    commentsCount: 0
+                };
                 
-                commentsList.innerHTML = commentsHTML;
+                platformState.videos.unshift(newVideo);
+                displayVideos();
+                
+                return video.id;
                 
             } catch (error) {
-                console.error('Error loading comments:', error);
-                document.getElementById('commentsList').innerHTML = '<p>Error loading comments</p>';
+                console.error('Error saving video to Back4App:', error);
+                throw error;
             }
         }
         
-        // Load related videos
-        function loadRelatedVideos(currentVideoId) {
-            const relatedVideosList = document.getElementById('relatedVideosList');
-            relatedVideosList.innerHTML = '';
-            
-            // Show up to 5 related videos (excluding current video)
-            const relatedVideos = platformState.videos
-                .filter(v => v.id !== currentVideoId)
-                .slice(0, 5);
-            
-            if (relatedVideos.length === 0) {
-                relatedVideosList.innerHTML = '<p>No related videos found.</p>';
-                return;
+        async function updateVideoLikes(videoId, increment = true) {
+            try {
+                const Video = Parse.Object.extend('Video');
+                const query = new Parse.Query(Video);
+                const video = await query.get(videoId);
+                
+                const currentLikes = video.get('likes') || 0;
+                video.set('likes', increment ? currentLikes + 1 : Math.max(0, currentLikes - 1));
+                
+                await video.save();
+                
+                // Update local cache
+                const videoIndex = platformState.videos.findIndex(v => v.id === videoId);
+                if (videoIndex !== -1) {
+                    if (increment) {
+                        platformState.videos[videoIndex].likes++;
+                    } else {
+                        platformState.videos[videoIndex].likes = Math.max(0, platformState.videos[videoIndex].likes - 1);
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Error updating video likes:', error);
+                throw error;
             }
-            
-            relatedVideos.forEach(video => {
-                const relatedCard = document.createElement('div');
-                relatedCard.className = 'related-video-card';
-                relatedCard.innerHTML = `
-                    <div class="related-thumbnail" style="background-color: ${video.color || '#6a11cb'};">
-                        <i class="fas fa-play-circle" style="font-size: 24px; color: rgba(255, 255, 255, 0.9); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></i>
-                    </div>
-                    <div class="related-info">
-                        <h4>${video.title}</h4>
-                        <p>${video.creatorName}</p>
-                        <p>${formatNumber(video.views || 0)} views • ${video.uploadDate}</p>
-                    </div>
-                `;
-                
-                relatedCard.addEventListener('click', () => {
-                    showVideoDetailPage(video);
-                });
-                
-                relatedVideosList.appendChild(relatedCard);
-            });
         }
         
-        // Increment view count
         async function incrementViewCount(videoId) {
             try {
-                // Increment in Firebase
-                await db.collection('videos').doc(videoId).update({
-                    views: firebase.firestore.FieldValue.increment(1),
-                    lastViewedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                const Video = Parse.Object.extend('Video');
+                const query = new Parse.Query(Video);
+                const video = await query.get(videoId);
                 
-                // Also update creator's total views
-                const video = platformState.videos.find(v => v.id === videoId);
-                if (video && video.creatorId) {
-                    await db.collection('users').doc(video.creatorId).update({
-                        totalViews: firebase.firestore.FieldValue.increment(1)
-                    });
+                const currentViews = video.get('views') || 0;
+                video.set('views', currentViews + 1);
+                
+                await video.save();
+                
+                // Update local cache
+                const videoIndex = platformState.videos.findIndex(v => v.id === videoId);
+                if (videoIndex !== -1) {
+                    platformState.videos[videoIndex].views++;
                 }
                 
             } catch (error) {
@@ -2531,24 +1624,405 @@
             }
         }
         
-        // Handle video upload
-        function handleVideoUpload() {
-            const file = elements.videoUpload.files[0];
-            if (!file) return;
+        // ============================
+        // USER LIKES MANAGEMENT
+        // ============================
+        async function loadUserLikes(userId) {
+            try {
+                const UserLike = Parse.Object.extend('UserLike');
+                const query = new Parse.Query(UserLike);
+                query.equalTo('userId', userId);
+                
+                const results = await query.find();
+                
+                platformState.userLikes.clear();
+                results.forEach(like => {
+                    platformState.userLikes.add(like.get('videoId'));
+                });
+                
+            } catch (error) {
+                console.error('Error loading user likes:', error);
+            }
+        }
+        
+        async function toggleLike(videoId) {
+            if (!platformState.isAuthenticated) {
+                showToast('Please login to like videos', 'error');
+                switchView('auth');
+                return;
+            }
             
-            showToast(`Video "${file.name}" selected for upload`, 'info');
+            try {
+                const UserLike = Parse.Object.extend('UserLike');
+                const query = new Parse.Query(UserLike);
+                query.equalTo('userId', platformState.currentUser.uid);
+                query.equalTo('videoId', videoId);
+                
+                const existingLike = await query.first();
+                
+                if (existingLike) {
+                    // Unlike
+                    await existingLike.destroy();
+                    platformState.userLikes.delete(videoId);
+                    await updateVideoLikes(videoId, false);
+                    showToast('Removed like', 'info');
+                } else {
+                    // Like
+                    const like = new UserLike();
+                    like.set('userId', platformState.currentUser.uid);
+                    like.set('videoId', videoId);
+                    await like.save();
+                    
+                    platformState.userLikes.add(videoId);
+                    await updateVideoLikes(videoId, true);
+                    showToast('Liked!', 'success');
+                }
+                
+                // Update UI if on video detail page
+                if (platformState.currentVideo && platformState.currentVideo.id === videoId) {
+                    updateLikeButton(videoId);
+                }
+                
+            } catch (error) {
+                console.error('Error toggling like:', error);
+                showToast('Error updating like', 'error');
+            }
         }
         
-        // Format duration from seconds to mm:ss
-        function formatDuration(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        // ============================
+        // VIDEO DETAIL VIEW
+        // ============================
+        async function showVideoDetail(video) {
+            platformState.currentVideo = video;
+            
+            // Increment view count
+            await incrementViewCount(video.id);
+            
+            // Create video detail HTML
+            const videoDetailHTML = `
+                <div class="video-detail-container">
+                    <div class="video-player-container" id="videoPlayerContainer">
+                        <!-- Fluid Player will be initialized here -->
+                    </div>
+                    
+                    <div class="video-info-detail">
+                        <h1 class="video-title-detail">${video.title}</h1>
+                        <div class="video-meta">
+                            <span>${formatNumber(video.views + 1)} views</span>
+                            <span>•</span>
+                            <span>${formatDate(video.createdAt)}</span>
+                        </div>
+                        
+                        <div class="video-actions">
+                            <button class="action-button ${platformState.userLikes.has(video.id) ? 'active' : ''}" 
+                                    onclick="toggleLike('${video.id}')" id="likeButton">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span id="likeCount">${video.likes}</span>
+                            </button>
+                            <button class="action-button" onclick="shareVideo('${video.id}')">
+                                <i class="fas fa-share"></i>
+                                <span>Share</span>
+                            </button>
+                        </div>
+                        
+                        <div class="creator-info-detail">
+                            <div class="creator-avatar-small">${video.creatorName.charAt(0).toUpperCase()}</div>
+                            <div class="creator-details">
+                                <h3>${video.creatorName}</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="video-description">
+                            <p>${video.description || 'No description provided.'}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Comments Section -->
+                    <div class="comments-section">
+                        <h3>Comments (${video.commentsCount || 0})</h3>
+                        ${platformState.isAuthenticated ? `
+                            <div class="comment-input">
+                                <div class="user-avatar-small">${platformState.currentUser.displayName.charAt(0).toUpperCase()}</div>
+                                <input type="text" placeholder="Add a comment..." id="commentInput">
+                                <button class="comment-button" onclick="addComment('${video.id}')">Comment</button>
+                            </div>
+                        ` : `
+                            <p>Please <a href="#" onclick="switchView('auth')">sign in</a> to comment.</p>
+                        `}
+                        <div id="commentsList">
+                            <!-- Comments will be loaded here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Related Videos -->
+                    <div class="related-videos">
+                        <h3>Recommended Videos</h3>
+                        <div id="relatedVideos">
+                            <!-- Related videos will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Update view
+            switchView('videoDetail');
+            elements.videoDetailView.innerHTML = videoDetailHTML;
+            
+            // Initialize Fluid Player with VAST ads
+            initializeVideoPlayer(video);
+            
+            // Load comments
+            loadComments(video.id);
+            
+            // Load related videos
+            loadRelatedVideos(video.id);
         }
         
-        // REAL VIDEO UPLOAD TO CLOUDINARY AND FIREBASE
-        async function uploadVideoToCloudinary() {
-            if (!platformState.isAuthenticated || !platformState.currentUser) {
+        function updateLikeButton(videoId) {
+            const likeButton = document.getElementById('likeButton');
+            const likeCount = document.getElementById('likeCount');
+            const video = platformState.videos.find(v => v.id === videoId);
+            
+            if (likeButton && video) {
+                if (platformState.userLikes.has(videoId)) {
+                    likeButton.classList.add('active');
+                    likeCount.textContent = video.likes;
+                } else {
+                    likeButton.classList.remove('active');
+                    likeCount.textContent = video.likes;
+                }
+            }
+        }
+        
+        // ============================
+        // FLUID VIDEO PLAYER WITH VAST ADS
+        // ============================
+        function initializeVideoPlayer(video) {
+            const container = document.getElementById('videoPlayerContainer');
+            
+            // Create video element
+            const videoElement = document.createElement('video');
+            videoElement.id = 'fluid-player-' + video.id;
+            videoElement.style.width = '100%';
+            videoElement.style.height = 'auto';
+            videoElement.controls = true;
+            
+            const source = document.createElement('source');
+            source.src = video.videoUrl;
+            source.type = 'video/mp4';
+            
+            videoElement.appendChild(source);
+            container.appendChild(videoElement);
+            
+            // Initialize Fluid Player with VAST ads
+            const player = fluidPlayer(
+                videoElement.id,
+                {
+                    layoutControls: {
+                        primaryColor: "#ff0000",
+                        posterImage: video.thumbnailUrl,
+                        allowDownload: false,
+                        playButtonShowing: true,
+                        fillToContainer: true,
+                        autoPlay: true,
+                        mute: true,
+                        keyboardControl: true,
+                        playlist: false,
+                        allowTheatre: true,
+                        playbackRateEnabled: true,
+                        logo: {
+                            imageUrl: null,
+                            position: 'top left',
+                            clickUrl: null,
+                            opacity: 1
+                        }
+                    },
+                    vastOptions: {
+                        adList: [
+                            {
+                                roll: 'preRoll',
+                                vastTag: VAST_AD_URL,
+                                adText: 'Advertisement - Skip in 5 seconds'
+                            },
+                            {
+                                roll: 'midRoll',
+                                vastTag: VAST_AD_URL,
+                                timer: 30, // Show mid-roll after 30 seconds
+                                adText: 'Advertisement - Skip in 5 seconds'
+                            }
+                        ],
+                        adCTAText: true,
+                        adCTATextPosition: 'top right',
+                        skipButtonCaption: 'Skip Ad [seconds]',
+                        skipButtonClickCaption: 'Skip Ad',
+                        adText: 'Advertisement',
+                        adTextPosition: 'top left',
+                        adClickable: true,
+                        autoPlayAd: true
+                    }
+                }
+            );
+            
+            // Handle ad errors gracefully
+            player.on('adError', function() {
+                console.log('Ad failed to load, continuing with video');
+                player.play();
+            });
+            
+            // Handle video errors
+            videoElement.addEventListener('error', function(e) {
+                console.error('Video error:', e);
+                showToast('Error playing video', 'error');
+            });
+        }
+        
+        // ============================
+        // COMMENTS MANAGEMENT
+        // ============================
+        async function loadComments(videoId) {
+            try {
+                const Comment = Parse.Object.extend('Comment');
+                const query = new Parse.Query(Comment);
+                query.equalTo('videoId', videoId);
+                query.descending('createdAt');
+                query.limit(50);
+                
+                const results = await query.find();
+                
+                const commentsList = document.getElementById('commentsList');
+                commentsList.innerHTML = '';
+                
+                if (results.length === 0) {
+                    commentsList.innerHTML = '<p>No comments yet. Be the first to comment!</p>';
+                    return;
+                }
+                
+                results.forEach(comment => {
+                    const commentElement = document.createElement('div');
+                    commentElement.className = 'comment';
+                    
+                    const userName = comment.get('userName') || 'Anonymous';
+                    const userInitial = userName.charAt(0).toUpperCase();
+                    
+                    commentElement.innerHTML = `
+                        <div class="comment-avatar">${userInitial}</div>
+                        <div class="comment-content">
+                            <h4>${userName}</h4>
+                            <p>${comment.get('text') || ''}</p>
+                            <div class="comment-actions">
+                                <span style="color: var(--light-text-secondary); font-size: 12px;">
+                                    ${formatDate(comment.get('createdAt'))}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    commentsList.appendChild(commentElement);
+                });
+                
+            } catch (error) {
+                console.error('Error loading comments:', error);
+                document.getElementById('commentsList').innerHTML = '<p>Error loading comments</p>';
+            }
+        }
+        
+        async function addComment(videoId) {
+            if (!platformState.isAuthenticated) {
+                showToast('Please login to comment', 'error');
+                return;
+            }
+            
+            const commentInput = document.getElementById('commentInput');
+            const text = commentInput.value.trim();
+            
+            if (!text) {
+                showToast('Please enter a comment', 'error');
+                return;
+            }
+            
+            try {
+                const Comment = Parse.Object.extend('Comment');
+                const comment = new Comment();
+                
+                comment.set('videoId', videoId);
+                comment.set('userId', platformState.currentUser.uid);
+                comment.set('userName', platformState.currentUser.displayName);
+                comment.set('text', text);
+                
+                await comment.save();
+                
+                // Update video comment count
+                const Video = Parse.Object.extend('Video');
+                const query = new Parse.Query(Video);
+                const video = await query.get(videoId);
+                
+                const currentCount = video.get('commentsCount') || 0;
+                video.set('commentsCount', currentCount + 1);
+                await video.save();
+                
+                // Update local cache
+                const videoIndex = platformState.videos.findIndex(v => v.id === videoId);
+                if (videoIndex !== -1) {
+                    platformState.videos[videoIndex].commentsCount = currentCount + 1;
+                }
+                
+                // Clear input and reload comments
+                commentInput.value = '';
+                loadComments(videoId);
+                
+                showToast('Comment added!', 'success');
+                
+            } catch (error) {
+                console.error('Error adding comment:', error);
+                showToast('Error adding comment', 'error');
+            }
+        }
+        
+        // ============================
+        // RELATED VIDEOS
+        // ============================
+        function loadRelatedVideos(currentVideoId) {
+            const relatedVideosContainer = document.getElementById('relatedVideos');
+            
+            // Get up to 5 related videos (excluding current)
+            const relatedVideos = platformState.videos
+                .filter(v => v.id !== currentVideoId)
+                .slice(0, 5);
+            
+            relatedVideosContainer.innerHTML = '';
+            
+            if (relatedVideos.length === 0) {
+                relatedVideosContainer.innerHTML = '<p>No related videos found.</p>';
+                return;
+            }
+            
+            relatedVideos.forEach(video => {
+                const card = document.createElement('div');
+                card.className = 'related-video-card';
+                card.innerHTML = `
+                    <div class="related-thumbnail" style="background-image: url('${video.thumbnailUrl || 'https://via.placeholder.com/160x90?text=No+Thumbnail'}'); background-size: cover; background-position: center;">
+                        <i class="fas fa-play-circle" style="font-size: 24px; color: rgba(255, 255, 255, 0.9); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></i>
+                    </div>
+                    <div class="related-info">
+                        <h4>${video.title}</h4>
+                        <p>${video.creatorName}</p>
+                        <p>${formatNumber(video.views)} views • ${formatDate(video.createdAt)}</p>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => {
+                    showVideoDetail(video);
+                });
+                
+                relatedVideosContainer.appendChild(card);
+            });
+        }
+        
+        // ============================
+        // VIDEO UPLOAD TO CLOUDINARY
+        // ============================
+        async function uploadVideo() {
+            if (!platformState.isAuthenticated) {
                 showToast('Please login to upload videos', 'error');
                 switchView('auth');
                 return;
@@ -2568,13 +2042,13 @@
                 return;
             }
             
-            // Size limit (2GB for Cloudinary)
+            // Validate file size (2GB max)
             if (videoFile.size > 2 * 1024 * 1024 * 1024) {
                 showToast('Video too large. Maximum size is 2GB', 'error');
                 return;
             }
             
-            // Show progress bar
+            // Show progress
             elements.uploadProgressContainer.style.display = 'block';
             elements.uploadProgressBar.style.width = '0%';
             elements.progressText.textContent = '0% uploaded';
@@ -2582,116 +2056,48 @@
             
             try {
                 // Upload to Cloudinary
-                showToast('Uploading video to Cloudinary...', 'info');
-                
                 const formData = new FormData();
                 formData.append('file', videoFile);
                 formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
                 formData.append('cloud_name', CLOUDINARY_CLOUD_NAME);
                 
-                // Simulate progress for demo (in real app, use XMLHttpRequest for progress)
-                let progress = 0;
-                const progressInterval = setInterval(() => {
-                    progress += 10;
-                    elements.uploadProgressBar.style.width = progress + '%';
-                    elements.progressText.textContent = progress + '% uploaded';
-                    
-                    if (progress >= 100) {
-                        clearInterval(progressInterval);
-                    }
-                }, 300);
+                // Simulate progress (in real app, use XMLHttpRequest for actual progress)
+                simulateUploadProgress();
                 
                 const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`, {
                     method: 'POST',
                     body: formData
                 });
                 
-                clearInterval(progressInterval);
-                
                 if (!response.ok) {
                     throw new Error('Cloudinary upload failed');
                 }
                 
                 const cloudinaryData = await response.json();
-                console.log('Cloudinary upload success:', cloudinaryData);
                 
                 // Generate thumbnail URL (frame at 1 second)
                 const thumbnailUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/video/upload/so_1/${cloudinaryData.public_id}.jpg`;
                 
-                // Generate preview video URL (3 seconds starting at 0)
-                const previewUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/video/upload/so_0,du_3/${cloudinaryData.public_id}.mp4`;
-                
                 // Format duration
-                const formattedDuration = formatDuration(cloudinaryData.duration);
-                const durationSec = Math.floor(cloudinaryData.duration);
+                const duration = formatDuration(cloudinaryData.duration);
                 
-                // Save to Firebase Firestore (PERMANENT STORAGE)
-                showToast('Saving video information to Firebase...', 'info');
-                
+                // Save to Back4App
                 const videoData = {
                     title: title,
                     description: description,
                     videoUrl: cloudinaryData.secure_url,
-                    publicId: cloudinaryData.public_id,
                     thumbnailUrl: thumbnailUrl,
-                    previewUrl: previewUrl,
-                    duration: formattedDuration,
-                    durationSec: durationSec,
-                    views: 0,
-                    likes: 0,
-                    dislikes: 0,
-                    commentsCount: 0,
-                    status: 'pending_verification',
-                    creatorId: platformState.currentUser.id,
-                    creatorName: platformState.currentUser.name,
-                    creatorEmail: platformState.currentUser.email,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    duration: duration
                 };
                 
-                // Add video to Firestore
-                const videoRef = await db.collection('videos').add(videoData);
+                await saveVideoToBack4App(videoData);
                 
-                // Update user's video count
-                await db.collection('users').doc(platformState.currentUser.id).update({
-                    videoCount: firebase.firestore.FieldValue.increment(1),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                // Show success message
+                // Show success
                 elements.uploadProgressContainer.style.display = 'none';
                 elements.uploadSuccess.style.display = 'block';
                 elements.submitUpload.style.display = 'none';
-                elements.shareButton.style.display = 'block';
                 
-                showToast('Video uploaded successfully! AI verification in progress...', 'success');
-                
-                // Store the uploaded video for sharing
-                window.lastUploadedVideo = {
-                    id: videoRef.id,
-                    ...videoData
-                };
-                
-                // Simulate AI verification (10 seconds as requested)
-                setTimeout(async () => {
-                    try {
-                        // Update video status to verified in Firebase
-                        await db.collection('videos').doc(videoRef.id).update({
-                            status: 'verified',
-                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                        
-                        showToast('Video verified and published!', 'success');
-                        
-                        // Refresh home page to show the video
-                        if (platformState.currentView === 'home') {
-                            loadHomeVideos();
-                        }
-                    } catch (error) {
-                        console.error('Error updating video status:', error);
-                        showToast('Error updating video status', 'error');
-                    }
-                }, 10000); // 10 seconds for AI verification
+                showToast('Video uploaded successfully!', 'success');
                 
             } catch (error) {
                 console.error('Upload error:', error);
@@ -2701,322 +2107,85 @@
             }
         }
         
-        // Share uploaded video with animation
-        function shareUploadedVideo() {
-            if (!window.lastUploadedVideo) {
-                showToast('No video to share', 'error');
-                return;
-            }
-            
-            const video = window.lastUploadedVideo;
-            
-            // Show animation
-            elements.shareAnimation.classList.add('show');
-            
-            // Simulate sharing process with progress
+        function simulateUploadProgress() {
             let progress = 0;
             const interval = setInterval(() => {
                 progress += 10;
-                elements.shareAnimation.innerHTML = `<i class="fas fa-share"></i> Sharing Video... ${progress}%`;
+                elements.uploadProgressBar.style.width = progress + '%';
+                elements.progressText.textContent = progress + '% uploaded';
                 
                 if (progress >= 100) {
                     clearInterval(interval);
-                    
-                    // Create share URL
-                    const shareUrl = `${window.location.origin}/video/${video.id}`;
-                    const shareText = `Check out my new video "${video.title}" on Haitian Tube!`;
-                    
-                    // Try to use Web Share API if available
-                    if (navigator.share) {
-                        navigator.share({
-                            title: video.title,
-                            text: shareText,
-                            url: shareUrl
-                        }).then(() => {
-                            elements.shareAnimation.classList.remove('show');
-                            showToast('Video shared successfully!', 'success');
-                        }).catch(err => {
-                            console.error('Share failed:', err);
-                            copyToClipboard(shareUrl);
-                        });
-                    } else {
-                        // Fallback to clipboard
-                        copyToClipboard(shareUrl);
-                    }
                 }
             }, 300);
         }
         
-        // Copy text to clipboard
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                elements.shareAnimation.classList.remove('show');
-                showToast('Link copied to clipboard!', 'success');
-            }).catch(err => {
-                console.error('Copy failed:', err);
-                elements.shareAnimation.classList.remove('show');
-                showToast('Failed to share video', 'error');
-            });
-        }
-        
-        // Reset upload form
-        function resetUploadForm() {
-            elements.videoTitle.value = '';
-            elements.videoDescription.value = '';
-            elements.videoUpload.value = '';
-            elements.uploadArea.classList.remove('drag-over');
-            elements.uploadProgressContainer.style.display = 'none';
-            elements.uploadSuccess.style.display = 'none';
-            elements.submitUpload.style.display = 'block';
-            elements.submitUpload.disabled = false;
-            elements.shareButton.style.display = 'none';
-            window.lastUploadedVideo = null;
-        }
-        
-        // Load creator page
-        async function loadCreatorPage(creatorId) {
-            try {
-                // Load creator data from Firestore
-                const creatorDoc = await db.collection('users').doc(creatorId).get();
+        // ============================
+        // AUTHENTICATION UI
+        // ============================
+        function updateAuthUI() {
+            if (platformState.isAuthenticated) {
+                // Update user avatar
+                elements.userAvatar.textContent = platformState.currentUser.displayName.charAt(0).toUpperCase();
                 
-                if (!creatorDoc.exists) {
-                    showToast('Creator not found', 'error');
-                    switchView('home');
-                    return;
-                }
+                // Show upload button
+                elements.uploadButton.style.display = 'block';
                 
-                const creator = creatorDoc.data();
-                platformState.currentCreator = {
-                    id: creatorId,
-                    ...creator
-                };
-                
-                // Update creator info
-                elements.channelAvatar.textContent = creator.displayName?.charAt(0).toUpperCase() || 'C';
-                elements.channelName.textContent = creator.displayName || 'Creator Name';
-                elements.channelSubscribers.textContent = `${formatNumber(creator.subscribers || 0)} subscribers`;
-                
-                // Count creator's videos
-                const videosSnapshot = await db.collection('videos')
-                    .where('creatorId', '==', creatorId)
-                    .get();
-                
-                elements.channelVideos.textContent = `${videosSnapshot.size} videos`;
-                
-                // Update other details
-                elements.channelDescription.textContent = creator.bio || 'No description available.';
-                elements.channelJoined.textContent = creator.createdAt ? formatFirestoreTimestamp(creator.createdAt) : 'Recently';
-                elements.channelTotalViews.textContent = formatNumber(creator.totalViews || 0);
-                
-                // Load creator's videos
-                loadCreatorVideos(creatorId);
-                
-            } catch (error) {
-                console.error('Error loading creator page:', error);
-                showToast('Error loading creator page', 'error');
-                switchView('home');
+                // Update sidebar
+                elements.loginItem.style.display = 'none';
+                elements.logoutItem.style.display = 'flex';
+            } else {
+                elements.userAvatar.textContent = '?';
+                elements.uploadButton.style.display = 'none';
+                elements.loginItem.style.display = 'flex';
+                elements.logoutItem.style.display = 'none';
             }
         }
         
-        // Load creator's videos
-        async function loadCreatorVideos(creatorId) {
-            // Clear the grid
-            elements.creatorVideosGrid.innerHTML = '';
-            
+        async function handleLogin(email, password) {
             try {
-                const videosSnapshot = await db.collection('videos')
-                    .where('creatorId', '==', creatorId)
-                    .orderBy('createdAt', 'desc')
-                    .get();
+                await firebase.auth().signInWithEmailAndPassword(email, password);
+                showToast('Successfully signed in!', 'success');
+                switchView('home');
+            } catch (error) {
+                console.error('Login error:', error);
+                showToast('Login failed: ' + error.message, 'error');
+            }
+        }
+        
+        async function handleSignup(username, email, password) {
+            try {
+                // Create user with email/password
+                const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
                 
-                if (videosSnapshot.empty) {
-                    const emptyState = document.createElement('div');
-                    emptyState.className = 'empty-state';
-                    emptyState.innerHTML = `
-                        <i class="fas fa-video empty-icon"></i>
-                        <h2>No videos yet</h2>
-                        <p>This creator hasn't uploaded any videos yet.</p>
-                    `;
-                    elements.creatorVideosGrid.appendChild(emptyState);
-                    return;
-                }
-                
-                // Display creator's videos
-                videosSnapshot.forEach((doc) => {
-                    const video = {
-                        id: doc.id,
-                        ...doc.data(),
-                        uploadDate: formatFirestoreTimestamp(doc.data().createdAt)
-                    };
-                    const videoCard = createVideoCard(video);
-                    elements.creatorVideosGrid.appendChild(videoCard);
+                // Update profile with username
+                await userCredential.user.updateProfile({
+                    displayName: username
                 });
                 
+                showToast('Account created successfully!', 'success');
+                switchView('home');
             } catch (error) {
-                console.error('Error loading creator videos:', error);
-                showToast('Error loading videos', 'error');
+                console.error('Signup error:', error);
+                showToast('Signup failed: ' + error.message, 'error');
             }
         }
         
-        // Switch creator tab
-        function switchCreatorTab(tabName) {
-            // Hide all tab panes
-            document.querySelectorAll('.tab-pane').forEach(pane => {
-                pane.classList.add('hidden');
-            });
-            
-            // Show selected tab
-            const tabId = tabName + 'Tab';
-            const tabPane = document.getElementById(tabId);
-            if (tabPane) {
-                tabPane.classList.remove('hidden');
+        async function handleGoogleLogin() {
+            try {
+                await firebase.auth().signInWithPopup(googleAuthProvider);
+                showToast('Successfully signed in with Google!', 'success');
+                switchView('home');
+            } catch (error) {
+                console.error('Google login error:', error);
+                showToast('Google login failed: ' + error.message, 'error');
             }
         }
         
-        // Toggle authentication mode (login/signup)
-        function toggleAuthMode() {
-            const isLoginMode = elements.authTitle.textContent === 'Sign In';
-            
-            if (isLoginMode) {
-                // Switch to signup mode
-                elements.authTitle.textContent = 'Create Account';
-                elements.authSubtitle.textContent = 'to start watching videos on Haitian Tube';
-                elements.usernameGroup.style.display = 'flex';
-                elements.emailGroup.style.display = 'flex';
-                elements.authSubmitButton.textContent = 'Sign Up';
-                elements.authToggleText.textContent = 'Already have an account?';
-                elements.authToggleLink.textContent = 'Sign in';
-            } else {
-                // Switch to login mode
-                elements.authTitle.textContent = 'Sign In';
-                elements.authSubtitle.textContent = 'to continue to Haitian Tube';
-                elements.usernameGroup.style.display = 'none';
-                elements.emailGroup.style.display = 'none';
-                elements.authSubmitButton.textContent = 'Sign In';
-                elements.authToggleText.textContent = 'Don\'t have an account?';
-                elements.authToggleLink.textContent = 'Sign up now';
-            }
-        }
-        
-        // Handle authentication form submission
-        async function handleAuthSubmit(e) {
-            e.preventDefault();
-            
-            const isLoginMode = elements.authTitle.textContent === 'Sign In';
-            
-            if (isLoginMode) {
-                // Login with Firebase
-                const email = elements.authEmail.value;
-                const password = elements.authPassword.value;
-                
-                if (!email || !password) {
-                    showToast('Please enter email and password', 'error');
-                    return;
-                }
-                
-                try {
-                    const userCredential = await auth.signInWithEmailAndPassword(email, password);
-                    showToast('Successfully signed in!', 'success');
-                    switchView('home');
-                    
-                } catch (error) {
-                    console.error('Login error:', error);
-                    showToast('Login failed: ' + error.message, 'error');
-                }
-                
-            } else {
-                // Signup with Firebase
-                const username = elements.authUsername.value;
-                const email = elements.authEmail.value;
-                const password = elements.authPassword.value;
-                
-                if (!username || !email || !password) {
-                    showToast('Please fill in all fields', 'error');
-                    return;
-                }
-                
-                // Validate email
-                if (!isValidEmail(email)) {
-                    showToast('Please enter a valid email address', 'error');
-                    return;
-                }
-                
-                // Validate password
-                if (password.length < 6) {
-                    showToast('Password must be at least 6 characters', 'error');
-                    return;
-                }
-                
-                try {
-                    // Create user with Firebase Auth
-                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-                    
-                    // Update profile with display name
-                    await userCredential.user.updateProfile({
-                        displayName: username
-                    });
-                    
-                    // Create user profile in Firestore
-                    await db.collection('users').doc(userCredential.user.uid).set({
-                        username: username,
-                        email: email,
-                        displayName: username,
-                        bio: '',
-                        subscribers: 0,
-                        totalViews: 0,
-                        earnings: 0,
-                        videoCount: 0,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    
-                    showToast('Account created successfully! You now have a creator channel.', 'success');
-                    switchView('home');
-                    
-                } catch (error) {
-                    console.error('Signup error:', error);
-                    showToast('Signup failed: ' + error.message, 'error');
-                }
-            }
-            
-            // Reset form
-            elements.authForm.reset();
-        }
-        
-        // Update UI based on authentication state
-        function updateAuthUI() {
-            if (platformState.isAuthenticated && platformState.currentUser) {
-                // Update user avatar
-                elements.userAvatar.textContent = platformState.currentUser.name.charAt(0).toUpperCase();
-                
-                // Show authenticated-only menu items
-                elements.myChannelItem.style.display = 'flex';
-                elements.dashboardItem.style.display = 'flex';
-                elements.withdrawalItem.style.display = 'flex';
-                elements.logoutItem.style.display = 'flex';
-                elements.loginItem.style.display = 'none';
-                elements.uploadButton.style.display = 'block';
-            } else {
-                // Show login menu item
-                elements.userAvatar.textContent = '?';
-                elements.myChannelItem.style.display = 'none';
-                elements.dashboardItem.style.display = 'none';
-                elements.withdrawalItem.style.display = 'none';
-                elements.logoutItem.style.display = 'none';
-                elements.loginItem.style.display = 'flex';
-                elements.uploadButton.style.display = 'none';
-            }
-        }
-        
-        // Logout function
         async function logout() {
             try {
-                await auth.signOut();
-                platformState.currentUser = null;
-                platformState.isAuthenticated = false;
-                
-                showToast('You have been logged out', 'info');
-                updateAuthUI();
+                await firebase.auth().signOut();
+                showToast('Successfully logged out', 'info');
                 switchView('home');
             } catch (error) {
                 console.error('Logout error:', error);
@@ -3024,399 +2193,246 @@
             }
         }
         
-        // Load dashboard data
-        async function loadDashboardData() {
-            if (!platformState.currentUser) return;
+        // ============================
+        // VIEW MANAGEMENT
+        // ============================
+        function switchView(viewName) {
+            // Hide all views
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.add('hidden');
+            });
+            
+            // Show requested view
+            platformState.currentView = viewName;
+            
+            switch(viewName) {
+                case 'home':
+                    elements.homeView.classList.remove('hidden');
+                    break;
+                case 'videoDetail':
+                    elements.videoDetailView.classList.remove('hidden');
+                    break;
+                case 'auth':
+                    elements.authView.classList.remove('hidden');
+                    break;
+                case 'upload':
+                    if (platformState.isAuthenticated) {
+                        elements.uploadView.classList.remove('hidden');
+                    } else {
+                        switchView('auth');
+                    }
+                    break;
+            }
+        }
+        
+        // ============================
+        // EVENT LISTENERS SETUP
+        // ============================
+        function setupEventListeners() {
+            // Mobile menu
+            elements.menuButton.addEventListener('click', () => {
+                elements.sidebar.classList.toggle('active');
+            });
+            
+            // Dark mode toggle
+            elements.darkModeToggle.addEventListener('click', toggleDarkMode);
+            
+            // Search
+            elements.searchButton.addEventListener('click', handleSearch);
+            elements.searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleSearch();
+            });
+            
+            // Sidebar navigation
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const view = item.dataset.view;
+                    if (view) {
+                        switchView(view);
+                    } else if (item.id === 'loginItem') {
+                        switchView('auth');
+                    } else if (item.id === 'logoutItem') {
+                        logout();
+                    }
+                    
+                    // Close sidebar on mobile
+                    if (window.innerWidth <= 768) {
+                        elements.sidebar.classList.remove('active');
+                    }
+                });
+            });
+            
+            // Upload button
+            elements.uploadButton.addEventListener('click', () => {
+                switchView('upload');
+            });
+            
+            // User avatar
+            elements.userAvatar.addEventListener('click', () => {
+                if (platformState.isAuthenticated) {
+                    // Could show user menu
+                } else {
+                    switchView('auth');
+                }
+            });
+            
+            // Authentication
+            elements.authForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = elements.authEmail.value;
+                const password = elements.authPassword.value;
+                handleLogin(email, password);
+            });
+            
+            elements.showSignup.addEventListener('click', () => {
+                elements.authForm.classList.add('hidden');
+                elements.signupForm.classList.remove('hidden');
+            });
+            
+            elements.signupButton.addEventListener('click', () => {
+                const username = elements.signupUsername.value;
+                const email = elements.signupEmail.value;
+                const password = elements.signupPassword.value;
+                handleSignup(username, email, password);
+            });
+            
+            // Upload functionality
+            elements.uploadArea.addEventListener('click', () => elements.videoUpload.click());
+            elements.videoUpload.addEventListener('change', handleVideoSelect);
+            elements.submitUpload.addEventListener('click', uploadVideo);
+            
+            // Drag and drop for upload
+            elements.uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                elements.uploadArea.classList.add('drag-over');
+            });
+            
+            elements.uploadArea.addEventListener('dragleave', () => {
+                elements.uploadArea.classList.remove('drag-over');
+            });
+            
+            elements.uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                elements.uploadArea.classList.remove('drag-over');
+                
+                if (e.dataTransfer.files.length) {
+                    elements.videoUpload.files = e.dataTransfer.files;
+                    handleVideoSelect();
+                }
+            });
+        }
+        
+        function handleVideoSelect() {
+            const file = elements.videoUpload.files[0];
+            if (file) {
+                showToast(`Selected: ${file.name}`, 'info');
+            }
+        }
+        
+        function handleSearch() {
+            const query = elements.searchInput.value.trim();
+            if (query) {
+                loadVideos(query);
+                showToast(`Searching for "${query}"...`, 'info');
+            } else {
+                loadVideos(); // Reload all videos
+            }
+        }
+        
+        // ============================
+        // UTILITY FUNCTIONS
+        // ============================
+        function formatNumber(num) {
+            if (!num) return '0';
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+        
+        function formatDate(dateString) {
+            if (!dateString) return 'Recently';
             
             try {
-                // Fetch user's videos from Firebase
-                const videosSnapshot = await db.collection('videos')
-                    .where('creatorId', '==', platformState.currentUser.id)
-                    .get();
+                const date = new Date(dateString);
+                const now = new Date();
+                const diffMs = now - date;
+                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
                 
-                // Calculate earnings based on views
-                let totalViews = 0;
-                videosSnapshot.forEach((doc) => {
-                    totalViews += doc.data().views || 0;
-                });
+                if (diffDays === 0) return 'Today';
+                if (diffDays === 1) return 'Yesterday';
+                if (diffDays < 7) return `${diffDays} days ago`;
+                if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
                 
-                // Calculate earnings: $0.01 per 10 views (for demo)
-                const earnings = totalViews * 0.001;
-                const monthEarnings = earnings * 0.1; // 10% of total for this month (demo)
-                
-                // Update dashboard values
-                elements.totalEarnings.textContent = `$${earnings.toFixed(2)}`;
-                elements.lifetimeEarnings.textContent = `Lifetime: $${(earnings * 1.2).toFixed(2)}`;
-                elements.monthEarnings.textContent = `$${monthEarnings.toFixed(2)}`;
-                elements.monthViews.textContent = `${Math.floor(totalViews * 0.1)} views`;
-                elements.totalViews.textContent = formatNumber(totalViews);
-                elements.subscribersCount.textContent = `${platformState.currentUser.subscribers || 0} subscribers`;
-                elements.availableBalance.textContent = `$${earnings.toFixed(2)}`;
-                
-                // Update KYC status
-                if (platformState.kycStatus === 'verified') {
-                    elements.kycStatusText.textContent = 'Your account is verified. You can withdraw your earnings.';
-                    elements.startKycButton.textContent = 'Go to Withdrawal';
-                } else {
-                    elements.kycStatusText.textContent = 'Your account is not verified. Complete KYC to enable withdrawals.';
-                    elements.startKycButton.textContent = 'Start KYC Verification';
-                }
-                
-                // Load video performance
-                loadVideoPerformance(videosSnapshot);
-                
-            } catch (error) {
-                console.error('Error loading dashboard data:', error);
-                showToast('Error loading dashboard data', 'error');
+                return date.toLocaleDateString();
+            } catch (e) {
+                return 'Recently';
             }
         }
         
-        // Load video performance data
-        function loadVideoPerformance(videosSnapshot) {
-            elements.videosPerformance.innerHTML = '';
+        function formatDuration(seconds) {
+            if (!seconds) return '0:00';
             
-            if (videosSnapshot.empty) {
-                elements.videosPerformance.innerHTML = '<p>No videos uploaded yet.</p>';
-                return;
-            }
-            
-            const table = document.createElement('table');
-            table.style.width = '100%';
-            table.style.borderCollapse = 'collapse';
-            table.style.marginTop = '20px';
-            
-            // Table header
-            let tableHTML = `
-                <thead>
-                    <tr style="border-bottom: 1px solid #ccc;">
-                        <th style="text-align: left; padding: 12px 8px;">Video</th>
-                        <th style="text-align: left; padding: 12px 8px;">Views</th>
-                        <th style="text-align: left; padding: 12px 8px;">Earnings</th>
-                        <th style="text-align: left; padding: 12px 8px;">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-            `;
-            
-            videosSnapshot.forEach((doc) => {
-                const video = doc.data();
-                const videoEarnings = (video.views || 0) * 0.001;
-                
-                tableHTML += `
-                    <tr style="border-bottom: 1px solid #eee;">
-                        <td style="padding: 12px 8px;">${video.title}</td>
-                        <td style="padding: 12px 8px;">${formatNumber(video.views || 0)}</td>
-                        <td style="padding: 12px 8px;">$${videoEarnings.toFixed(2)}</td>
-                        <td style="padding: 12px 8px;">
-                            <span style="padding: 4px 8px; border-radius: 12px; font-size: 12px; background-color: ${video.status === 'verified' ? '#4caf50' : video.status === 'pending_verification' ? '#ff9800' : '#f44336'}; color: white;">
-                                ${video.status === 'verified' ? 'Verified' : video.status === 'pending_verification' ? 'Verifying' : 'Pending'}
-                            </span>
-                        </td>
-                    </tr>
-                `;
-            });
-            
-            tableHTML += '</tbody>';
-            table.innerHTML = tableHTML;
-            
-            elements.videosPerformance.appendChild(table);
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
         
-        // Load withdrawal data
-        function loadWithdrawalData() {
-            // Show/hide KYC steps based on status
-            const steps = ['kycStep1', 'kycStep2', 'kycStep3', 'kycStep4', 'kycStep5', 'kycStep6'];
-            
-            // Hide all steps first
-            steps.forEach(step => {
-                const element = document.getElementById(step);
-                if (element) element.classList.add('hidden');
-            });
-            
-            // Show appropriate step based on KYC status
-            if (platformState.kycStatus === 'pending') {
-                elements.kycStep1.classList.remove('hidden');
-                elements.withdrawalStatusText.textContent = 'No withdrawals yet. Complete KYC to enable withdrawals.';
-            } else if (platformState.kycStatus === 'id_uploaded') {
-                elements.kycStep2.classList.remove('hidden');
-                elements.withdrawalStatusText.textContent = 'ID uploaded. Please upload a selfie to continue.';
-            } else if (platformState.kycStatus === 'selfie_uploaded') {
-                elements.kycStep3.classList.remove('hidden');
-                elements.withdrawalStatusText.textContent = 'Selfie uploaded. Please upload additional photo.';
-            } else if (platformState.kycStatus === 'photo_uploaded') {
-                elements.kycStep4.classList.remove('hidden');
-                elements.withdrawalStatusText.textContent = 'All documents uploaded. Ready for review.';
-            } else if (platformState.kycStatus === 'under_review') {
-                elements.kycStep5.classList.remove('hidden');
-                elements.withdrawalStatusText.textContent = 'KYC verification under review. Please check back in 24-48 hours.';
-            } else if (platformState.kycStatus === 'verified') {
-                elements.kycStep6.classList.remove('hidden');
-                elements.withdrawalStatusText.textContent = 'KYC verification complete. You can now withdraw your earnings.';
-            }
-        }
-        
-        // Handle ID upload
-        function handleIdUpload() {
-            const file = elements.idUpload.files[0];
-            if (!file) return;
-            
-            // Validate file type
-            if (!file.type.startsWith('image/')) {
-                showToast('Please select an image file', 'error');
-                return;
-            }
-            
-            // Create preview
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                elements.idPreview.innerHTML = `<img src="${e.target.result}" alt="ID preview" class="upload-preview">`;
-                platformState.kycStatus = 'id_uploaded';
-                localStorage.setItem('haitianTubeKycStatus', 'id_uploaded');
-                loadWithdrawalData();
-                showToast('ID uploaded successfully', 'success');
-            };
-            reader.readAsDataURL(file);
-        }
-        
-        // Handle selfie upload
-        function handleSelfieUpload() {
-            const file = elements.selfieUpload.files[0];
-            if (!file) return;
-            
-            // Validate file type
-            if (!file.type.startsWith('image/')) {
-                showToast('Please select an image file', 'error');
-                return;
-            }
-            
-            // Create preview
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                elements.selfiePreview.innerHTML = `<img src="${e.target.result}" alt="Selfie preview" class="upload-preview">`;
-                platformState.kycStatus = 'selfie_uploaded';
-                localStorage.setItem('haitianTubeKycStatus', 'selfie_uploaded');
-                loadWithdrawalData();
-                showToast('Selfie uploaded successfully', 'success');
-                
-                // Show step 3 (additional photo)
-                setTimeout(() => {
-                    if (!document.getElementById('kycStep3')) {
-                        const step2 = document.getElementById('kycStep2');
-                        const photoUploadStep = `
-                            <div class="kyc-step" id="kycStep3">
-                                <div class="step-header">
-                                    <div class="step-icon">3</div>
-                                    <h3 class="step-title">Upload Additional Photo</h3>
-                                </div>
-                                <p>Upload a clear photo holding your ID next to your face</p>
-                                <input type="file" class="upload-input" id="photoUpload" accept="image/*">
-                                <div id="photoPreview" style="margin-top: 10px;"></div>
-                                <button class="auth-button" id="uploadPhotoButton" style="margin-top: 20px;">Upload Photo</button>
-                            </div>
-                        `;
-                        step2.insertAdjacentHTML('afterend', photoUploadStep);
-                        
-                        // Add event listener for new button
-                        document.getElementById('uploadPhotoButton').addEventListener('click', () => {
-                            document.getElementById('photoUpload').click();
-                        });
-                        
-                        document.getElementById('photoUpload').addEventListener('change', handlePhotoUpload);
-                    }
-                }, 100);
-            };
-            reader.readAsDataURL(file);
-        }
-        
-        // Handle photo upload
-        function handlePhotoUpload() {
-            const file = document.getElementById('photoUpload').files[0];
-            if (!file) return;
-            
-            if (!file.type.startsWith('image/')) {
-                showToast('Please select an image file', 'error');
-                return;
-            }
-            
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                document.getElementById('photoPreview').innerHTML = 
-                    `<img src="${e.target.result}" alt="Photo preview" class="upload-preview">`;
-                
-                platformState.kycStatus = 'photo_uploaded';
-                localStorage.setItem('haitianTubeKycStatus', 'photo_uploaded');
-                
-                // Show step 4 (review & publish)
-                setTimeout(() => {
-                    if (!document.getElementById('kycStep4')) {
-                        const step3 = document.getElementById('kycStep3');
-                        const reviewStep = `
-                            <div class="kyc-step" id="kycStep4">
-                                <div class="step-header">
-                                    <div class="step-icon">4</div>
-                                    <h3 class="step-title">Review & Publish</h3>
-                                </div>
-                                <p>Review your KYC information and publish for verification</p>
-                                <div class="kyc-review">
-                                    <p><strong>ID Document:</strong> Uploaded ✓</p>
-                                    <p><strong>Selfie:</strong> Uploaded ✓</p>
-                                    <p><strong>Additional Photo:</strong> Uploaded ✓</p>
-                                </div>
-                                <button class="auth-button" id="publishKycButton">Publish for Verification</button>
-                            </div>
-                        `;
-                        step3.insertAdjacentHTML('afterend', reviewStep);
-                        
-                        // Add event listener for publish button
-                        document.getElementById('publishKycButton').addEventListener('click', publishKYCForReview);
-                    }
-                }, 100);
-                
-                showToast('Additional photo uploaded successfully', 'success');
-                loadWithdrawalData();
-            };
-            reader.readAsDataURL(file);
-        }
-        
-        // Publish KYC for review
-        function publishKYCForReview() {
-            platformState.kycStatus = 'under_review';
-            localStorage.setItem('haitianTubeKycStatus', 'under_review');
-            
-            // Show review step
-            document.getElementById('kycStep4').classList.add('hidden');
-            
-            // Create and show step 5
-            setTimeout(() => {
-                if (!document.getElementById('kycStep5')) {
-                    const step4 = document.getElementById('kycStep4');
-                    const reviewStep = `
-                        <div class="kyc-step" id="kycStep5">
-                            <div class="step-header">
-                                <div class="step-icon"><i class="fas fa-clock"></i></div>
-                                <h3 class="step-title">KYC Under Review</h3>
-                            </div>
-                            <p>Your KYC verification is under review. This may take 24-48 hours.</p>
-                            <div class="review-status">
-                                <div class="spinner" style="margin: 20px auto;"></div>
-                                <p>Status: Under Review</p>
-                            </div>
-                        </div>
-                    `;
-                    step4.insertAdjacentHTML('afterend', reviewStep);
-                } else {
-                    document.getElementById('kycStep5').classList.remove('hidden');
-                }
-            }, 100);
-            
-            // Update withdrawal status
-            elements.withdrawalStatusText.textContent = 'KYC verification under review. Please check back in 24-48 hours.';
-            
-            showToast('KYC submitted for review. Verification in progress.', 'success');
-            
-            // Simulate verification completion after 2 seconds for demo (would be 2 days in production)
-            setTimeout(() => {
-                platformState.kycStatus = 'verified';
-                localStorage.setItem('haitianTubeKycStatus', 'verified');
-                
-                // Update step 5 to show verified status
-                document.getElementById('kycStep5').innerHTML = `
-                    <div class="step-header">
-                        <div class="step-icon"><i class="fas fa-check"></i></div>
-                        <h3 class="step-title">KYC Verified</h3>
-                    </div>
-                    <p>Your KYC verification is complete! You can now withdraw your earnings.</p>
-                    <div class="verified-status">
-                        <i class="fas fa-check-circle" style="font-size: 48px; color: #4caf50; margin: 20px 0;"></i>
-                        <p>Status: Verified ✓</p>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="withdrawAmount">Withdrawal Amount</label>
-                        <input type="number" class="form-input" id="withdrawAmount" placeholder="Minimum $10.00" min="10" step="0.01">
-                    </div>
-                    <button class="auth-button" id="withdrawButton">Withdraw to PayPal</button>
-                `;
-                
-                // Re-add event listener for withdraw button
-                document.getElementById('withdrawButton').addEventListener('click', handleWithdrawal);
-                
-                showToast('KYC verification complete! You can now withdraw earnings.', 'success');
-                loadWithdrawalData();
-            }, 2000); // 2 seconds for demo
-        }
-        
-        // Handle withdrawal request
-        function handleWithdrawal() {
-            const amount = parseFloat(document.getElementById('withdrawAmount').value);
-            
-            if (!amount || amount < 10) {
-                showToast('Minimum withdrawal amount is $10.00', 'error');
-                return;
-            }
-            
-            // Check available balance (simulated)
-            const availableBalance = parseFloat(elements.availableBalance.textContent.replace('$', ''));
-            
-            if (amount > availableBalance) {
-                showToast(`Insufficient balance. Available: $${availableBalance.toFixed(2)}`, 'error');
-                return;
-            }
-            
-            // Simulate withdrawal processing
-            setTimeout(() => {
-                showToast(`Withdrawal request for $${amount.toFixed(2)} submitted to PayPal. Funds will arrive in 3-5 business days.`, 'success');
-                document.getElementById('withdrawAmount').value = '';
-                elements.withdrawalStatusText.textContent = `Withdrawal of $${amount.toFixed(2)} pending. Status: Processing`;
-                
-                // In a real app, this would be sent to Firebase for processing
-                console.log('Withdrawal request sent to Firebase (simulated)');
-            }, 1500);
-        }
-        
-        // Toggle sidebar on mobile
-        function toggleSidebar() {
-            elements.sidebar.classList.toggle('active');
-        }
-        
-        // Toggle dark mode
         function toggleDarkMode() {
             if (platformState.isDarkMode) {
-                disableDarkMode();
+                document.body.classList.remove('dark-mode');
+                platformState.isDarkMode = false;
+                localStorage.setItem('haitianTubeDarkMode', 'false');
+                elements.darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
             } else {
-                enableDarkMode();
+                document.body.classList.add('dark-mode');
+                platformState.isDarkMode = true;
+                localStorage.setItem('haitianTubeDarkMode', 'true');
+                elements.darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
             }
         }
         
-        // Enable dark mode
         function enableDarkMode() {
             document.body.classList.add('dark-mode');
-            platformState.isDarkMode = true;
-            localStorage.setItem('haitianTubeDarkMode', 'true');
             elements.darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
         }
         
-        // Disable dark mode
-        function disableDarkMode() {
-            document.body.classList.remove('dark-mode');
-            platformState.isDarkMode = false;
-            localStorage.setItem('haitianTubeDarkMode', 'false');
-            elements.darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        function shareVideo(videoId) {
+            const video = platformState.videos.find(v => v.id === videoId);
+            if (video) {
+                const shareUrl = window.location.origin + window.location.pathname + '?video=' + videoId;
+                const shareText = `Watch "${video.title}" on Haitian Tube`;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: video.title,
+                        text: shareText,
+                        url: shareUrl
+                    });
+                } else {
+                    navigator.clipboard.writeText(shareUrl);
+                    showToast('Link copied to clipboard!', 'success');
+                }
+            }
         }
         
-        // Handle search
-        function handleSearch() {
-            const query = elements.searchInput.value.trim();
-            if (!query) return;
-            
-            showToast(`Searching for "${query}"...`, 'info');
-            // In a real app, this would search videos in Firebase
-        }
-        
-        // Show toast notification
         function showToast(message, type = 'info') {
             elements.toastMessage.textContent = message;
             elements.toast.className = `toast toast-${type}`;
-            elements.toastIcon.className = getToastIcon(type);
+            
+            // Set icon based on type
+            switch(type) {
+                case 'success':
+                    elements.toastIcon.className = 'fas fa-check-circle';
+                    break;
+                case 'error':
+                    elements.toastIcon.className = 'fas fa-exclamation-circle';
+                    break;
+                default:
+                    elements.toastIcon.className = 'fas fa-info-circle';
+            }
             
             elements.toast.classList.remove('hidden');
             elements.toast.classList.add('show');
@@ -3429,218 +2445,16 @@
             }, 3000);
         }
         
-        // Get toast icon based on type
-        function getToastIcon(type) {
-            switch(type) {
-                case 'success': return 'fas fa-check-circle';
-                case 'error': return 'fas fa-exclamation-circle';
-                default: return 'fas fa-info-circle';
-            }
-        }
-        
-        // Video interaction functions
-        async function handleLike(videoId) {
-            if (!platformState.isAuthenticated) {
-                showToast('Please login to like videos', 'error');
-                switchView('auth');
-                return;
-            }
-            
-            try {
-                await db.collection('videos').doc(videoId).update({
-                    likes: firebase.firestore.FieldValue.increment(1)
-                });
-                showToast('Liked!', 'success');
-            } catch (error) {
-                console.error('Error liking video:', error);
-                showToast('Error liking video', 'error');
-            }
-        }
-        
-        async function handleDislike(videoId) {
-            if (!platformState.isAuthenticated) {
-                showToast('Please login to dislike videos', 'error');
-                switchView('auth');
-                return;
-            }
-            
-            try {
-                await db.collection('videos').doc(videoId).update({
-                    dislikes: firebase.firestore.FieldValue.increment(1)
-                });
-                showToast('Disliked!', 'info');
-            } catch (error) {
-                console.error('Error disliking video:', error);
-                showToast('Error disliking video', 'error');
-            }
-        }
-        
-        async function addComment(videoId) {
-            if (!platformState.isAuthenticated) {
-                showToast('Please login to comment', 'error');
-                switchView('auth');
-                return;
-            }
-            
-            const commentInput = document.getElementById('commentInput');
-            const commentText = commentInput.value.trim();
-            
-            if (!commentText) {
-                showToast('Please enter a comment', 'error');
-                return;
-            }
-            
-            try {
-                const commentData = {
-                    text: commentText,
-                    userId: platformState.currentUser.id,
-                    userName: platformState.currentUser.name,
-                    userEmail: platformState.currentUser.email,
-                    likes: 0,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-                
-                // Add comment to video's subcollection
-                await db.collection('videos').doc(videoId).collection('comments').add(commentData);
-                
-                // Increment comment count
-                await db.collection('videos').doc(videoId).update({
-                    commentsCount: firebase.firestore.FieldValue.increment(1)
-                });
-                
-                commentInput.value = '';
-                showToast('Comment added!', 'success');
-                
-                // Reload comments
-                loadVideoComments(videoId);
-                
-            } catch (error) {
-                console.error('Error adding comment:', error);
-                showToast('Error adding comment', 'error');
-            }
-        }
-        
-        async function likeComment(videoId, commentId) {
-            if (!platformState.isAuthenticated) {
-                showToast('Please login to like comments', 'error');
-                return;
-            }
-            
-            try {
-                await db.collection('videos').doc(videoId)
-                    .collection('comments').doc(commentId)
-                    .update({
-                        likes: firebase.firestore.FieldValue.increment(1)
-                    });
-                
-                showToast('Comment liked!', 'info');
-                // Reload comments to show updated count
-                loadVideoComments(videoId);
-                
-            } catch (error) {
-                console.error('Error liking comment:', error);
-                showToast('Error liking comment', 'error');
-            }
-        }
-        
-        function shareVideo(videoId) {
-            const video = platformState.videos.find(v => v.id === videoId);
-            if (video) {
-                const shareUrl = `${window.location.origin}/video/${videoId}`;
-                if (navigator.share) {
-                    navigator.share({
-                        title: video.title,
-                        text: `Watch "${video.title}" on Haitian Tube`,
-                        url: shareUrl
-                    });
-                } else {
-                    navigator.clipboard.writeText(shareUrl);
-                    showToast('Link copied to clipboard!', 'success');
-                }
-            }
-        }
-        
-        async function saveVideo(videoId) {
-            if (!platformState.isAuthenticated) {
-                showToast('Please login to save videos', 'error');
-                switchView('auth');
-                return;
-            }
-            
-            try {
-                // Save video to user's saved list in Firestore
-                await db.collection('users').doc(platformState.currentUser.id)
-                    .collection('savedVideos').doc(videoId).set({
-                        videoId: videoId,
-                        savedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                
-                showToast('Video saved to your library!', 'success');
-            } catch (error) {
-                console.error('Error saving video:', error);
-                showToast('Error saving video', 'error');
-            }
-        }
-        
-        async function handleSubscribe(creatorId) {
-            if (!platformState.isAuthenticated) {
-                showToast('Please login to subscribe', 'error');
-                switchView('auth');
-                return;
-            }
-            
-            try {
-                // Add subscription to user's subscriptions
-                await db.collection('users').doc(platformState.currentUser.id)
-                    .collection('subscriptions').doc(creatorId).set({
-                        subscribedAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                
-                // Increment creator's subscriber count
-                await db.collection('users').doc(creatorId).update({
-                    subscribers: firebase.firestore.FieldValue.increment(1)
-                });
-                
-                // Update subscribe button
-                const subscribeButton = document.querySelector('.subscribe-button');
-                if (subscribeButton) {
-                    subscribeButton.textContent = 'Subscribed';
-                    subscribeButton.style.backgroundColor = '#666';
-                    subscribeButton.disabled = true;
-                }
-                
-                showToast('Subscribed!', 'success');
-                
-            } catch (error) {
-                console.error('Error subscribing:', error);
-                showToast('Error subscribing', 'error');
-            }
-        }
-        
-        // Utility functions
-        function isValidEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-        
-        function formatNumber(num) {
-            if (!num) return '0';
-            if (num >= 1000000) {
-                return (num / 1000000).toFixed(1) + 'M';
-            } else if (num >= 1000) {
-                return (num / 1000).toFixed(1) + 'K';
-            }
-            return num.toString();
-        }
-        
-        function getRandomColor() {
-            const colors = ['#6a11cb', '#2575fc', '#ff7e5f', '#f5576c', '#4facfe', '#00f2fe', '#43e97b', '#38f9d7', '#fa709a', '#fee140'];
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
-        
-        // Initialize the platform when DOM is loaded
+        // ============================
+        // INITIALIZE PLATFORM
+        // ============================
         document.addEventListener('DOMContentLoaded', initPlatform);
+        
+        // Make functions globally available for HTML onclick handlers
+        window.switchView = switchView;
+        window.toggleLike = toggleLike;
+        window.shareVideo = shareVideo;
+        window.addComment = addComment;
     </script>
 </body>
 </html>
