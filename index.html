@@ -6,6 +6,11 @@
     <title>Haitian Tube - Video Sharing Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-analytics-compat.js"></script>
     <style>
         /* CSS Reset & Base Styles */
         * {
@@ -681,6 +686,53 @@
             display: none;
         }
 
+        /* Upload Progress */
+        .upload-progress-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .upload-progress {
+            width: 100%;
+            height: 20px;
+            background-color: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .upload-progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-size: 14px;
+            color: var(--light-text-secondary);
+        }
+
+        body.dark-mode .progress-text {
+            color: var(--dark-text-secondary);
+        }
+
+        .upload-success {
+            text-align: center;
+            padding: 20px;
+            background-color: #d4edda;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        body.dark-mode .upload-success {
+            background-color: #155724;
+            color: white;
+        }
+
         /* Dashboard & Earnings */
         .dashboard-container {
             max-width: 1200px;
@@ -1227,6 +1279,28 @@
             text-align: center;
             padding: 20px 0;
         }
+        
+        /* Share Button Animation */
+        .share-button-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--primary-color);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 4000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        
+        .share-button-animation.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -1334,7 +1408,7 @@
                     
                     <h1>Recommended Videos</h1>
                     <div class="videos-grid" id="homeVideosGrid">
-                        <!-- Videos will be inserted here -->
+                        <!-- Videos will be loaded from Firebase -->
                     </div>
                 </div>
 
@@ -1362,7 +1436,7 @@
                     <div class="tab-content">
                         <div class="tab-pane active" id="videosTab">
                             <div class="videos-grid" id="creatorVideosGrid">
-                                <!-- Creator's videos will be inserted here -->
+                                <!-- Creator's videos will be loaded from Firebase -->
                             </div>
                         </div>
                         <div class="tab-pane hidden" id="aboutTab">
@@ -1430,6 +1504,22 @@
                             </p>
                         </div>
                         
+                        <!-- Upload Progress -->
+                        <div class="upload-progress-container" id="uploadProgressContainer">
+                            <div class="upload-progress">
+                                <div class="upload-progress-bar" id="uploadProgressBar"></div>
+                            </div>
+                            <div class="progress-text" id="progressText">0% uploaded</div>
+                        </div>
+                        
+                        <!-- Upload Success Message -->
+                        <div class="upload-success" id="uploadSuccess">
+                            <i class="fas fa-check-circle" style="font-size: 48px; color: #4caf50; margin-bottom: 16px;"></i>
+                            <h3>Video Uploaded Successfully!</h3>
+                            <p>Your video is being processed and will be available shortly.</p>
+                            <button class="auth-button" onclick="switchView('home')" style="margin-top: 20px;">Go to Home</button>
+                        </div>
+                        
                         <div class="form-group">
                             <label class="form-label" for="videoTitle">Video Title</label>
                             <input type="text" class="form-input" id="videoTitle" placeholder="Enter a title for your video">
@@ -1440,13 +1530,10 @@
                             <textarea class="form-input" id="videoDescription" rows="4" placeholder="Describe your video"></textarea>
                         </div>
                         
-                        <div class="form-group">
-                            <label class="form-label" for="thumbnailUpload">Thumbnail</label>
-                            <input type="file" class="upload-input" id="thumbnailUpload" accept="image/*">
-                            <div id="thumbnailPreview" style="margin-top: 10px;"></div>
-                        </div>
-                        
                         <button class="auth-button" id="submitUpload">Upload Video</button>
+                        <button class="auth-button" id="shareButton" style="margin-top: 10px; display: none; background-color: #4caf50;">
+                            <i class="fas fa-share"></i> Share Video
+                        </button>
                     </div>
                 </div>
 
@@ -1605,16 +1692,14 @@
         <span id="toastMessage">This is a toast message</span>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-analytics-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <!-- Share Button Animation -->
+    <div class="share-button-animation hidden" id="shareAnimation">
+        <i class="fas fa-share"></i> Sharing Video...
+    </div>
+
     <script>
-        // Back4App (Parse) Initialization
-        const APP_ID = 'HTBaadcYs57u8ECziBzSX0FfBi23mpjtRazAghjY';
-        const CLIENT_KEY = 'Lamvvi0XInNVEft5fx0GJ3krqqdwLtL2r9BGIgTm';
-        
         // Firebase configuration
-        const FIREBASE_CONFIG = {
+        const firebaseConfig = {
             apiKey: "AIzaSyBsfheLc8i-CsRGJ9jkbGUhdTj3ZD3SLu8",
             authDomain: "haitiantube-2affb.firebaseapp.com",
             projectId: "haitiantube-2affb",
@@ -1624,14 +1709,24 @@
             measurementId: "G-8WS57GK218"
         };
         
+        // Cloudinary Configuration
+        const CLOUDINARY_CLOUD_NAME = "dqx9c4kc6";
+        const CLOUDINARY_UPLOAD_PRESET = "xp4psfnn";
+        
+        // Firebase App
+        let firebaseApp;
+        let auth;
+        let db;
+        let analytics;
+        
         // Platform State
         const platformState = {
             currentUser: null,
             currentView: 'home',
             isAuthenticated: false,
             ageVerified: false,
-            videos: [],
-            creators: [],
+            videos: [], // Temporary cache
+            creators: [], // Temporary cache
             currentCreator: null,
             currentVideo: null,
             isDarkMode: false,
@@ -1705,9 +1800,12 @@
             videoUpload: document.getElementById('videoUpload'),
             videoTitle: document.getElementById('videoTitle'),
             videoDescription: document.getElementById('videoDescription'),
-            thumbnailUpload: document.getElementById('thumbnailUpload'),
-            thumbnailPreview: document.getElementById('thumbnailPreview'),
             submitUpload: document.getElementById('submitUpload'),
+            uploadProgressContainer: document.getElementById('uploadProgressContainer'),
+            uploadProgressBar: document.getElementById('uploadProgressBar'),
+            progressText: document.getElementById('progressText'),
+            uploadSuccess: document.getElementById('uploadSuccess'),
+            shareButton: document.getElementById('shareButton'),
             
             // Dashboard
             totalEarnings: document.getElementById('totalEarnings'),
@@ -1748,9 +1846,83 @@
             toastIcon: document.getElementById('toastIcon'),
             toastMessage: document.getElementById('toastMessage'),
             
+            // Animation
+            shareAnimation: document.getElementById('shareAnimation'),
+            
             // Tab buttons
             tabButtons: document.querySelectorAll('.tab-button')
         };
+        
+        // Initialize Firebase
+        function initializeFirebase() {
+            try {
+                firebaseApp = firebase.initializeApp(firebaseConfig);
+                auth = firebase.auth();
+                db = firebase.firestore();
+                analytics = firebase.analytics();
+                console.log('Firebase initialized successfully');
+                
+                // Set up auth state listener
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        // User is signed in
+                        platformState.currentUser = {
+                            id: user.uid,
+                            name: user.displayName || user.email.split('@')[0],
+                            email: user.email,
+                            username: user.displayName || user.email.split('@')[0],
+                            photoURL: user.photoURL,
+                            joinedDate: new Date(user.metadata.creationTime).toLocaleDateString()
+                        };
+                        platformState.isAuthenticated = true;
+                        
+                        // Load user profile from Firestore
+                        loadUserProfile(user.uid);
+                        
+                        showToast('Welcome back!', 'success');
+                    } else {
+                        // User is signed out
+                        platformState.currentUser = null;
+                        platformState.isAuthenticated = false;
+                    }
+                    updateAuthUI();
+                });
+                
+            } catch (error) {
+                console.error('Firebase initialization error:', error);
+            }
+        }
+        
+        // Load user profile from Firestore
+        async function loadUserProfile(userId) {
+            try {
+                const userDoc = await db.collection('users').doc(userId).get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    platformState.currentUser = {
+                        ...platformState.currentUser,
+                        ...userData,
+                        subscribers: userData.subscribers || 0,
+                        totalViews: userData.totalViews || 0,
+                        earnings: userData.earnings || 0
+                    };
+                } else {
+                    // Create user profile if it doesn't exist
+                    await db.collection('users').doc(userId).set({
+                        username: platformState.currentUser.username,
+                        email: platformState.currentUser.email,
+                        displayName: platformState.currentUser.name,
+                        subscribers: 0,
+                        totalViews: 0,
+                        earnings: 0,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading user profile:', error);
+            }
+        }
         
         // Initialize the platform
         function initPlatform() {
@@ -1769,43 +1941,8 @@
                 enableDarkMode();
             }
             
-            // Check for existing user session
-            const savedUser = localStorage.getItem('haitianTubeUser');
-            if (savedUser) {
-                try {
-                    platformState.currentUser = JSON.parse(savedUser);
-                    platformState.isAuthenticated = true;
-                    updateAuthUI();
-                } catch (e) {
-                    console.error('Error parsing saved user:', e);
-                }
-            }
-            
-            // Load videos from localStorage
-            const savedVideos = localStorage.getItem('haitianTubeVideos');
-            if (savedVideos) {
-                try {
-                    platformState.videos = JSON.parse(savedVideos);
-                } catch (e) {
-                    console.error('Error parsing saved videos:', e);
-                }
-            }
-            
-            // Load creators from localStorage
-            const savedCreators = localStorage.getItem('haitianTubeCreators');
-            if (savedCreators) {
-                try {
-                    platformState.creators = JSON.parse(savedCreators);
-                } catch (e) {
-                    console.error('Error parsing saved creators:', e);
-                }
-            }
-            
-            // Load KYC status
-            const savedKycStatus = localStorage.getItem('haitianTubeKycStatus');
-            if (savedKycStatus) {
-                platformState.kycStatus = savedKycStatus;
-            }
+            // Initialize Firebase
+            initializeFirebase();
             
             // Set up event listeners
             setupEventListeners();
@@ -1813,52 +1950,67 @@
             // Show home view by default
             switchView('home');
             
-            // Initialize Firebase
-            initializeFirebase();
-            
-            // Initialize Back4App (Parse) SDK
-            initializeBack4App();
+            // Load videos from Firebase
+            loadVideosFromFirebase();
         }
         
-        // Initialize Back4App (Parse) SDK
-        function initializeBack4App() {
-            // In a real implementation, we would load the Parse SDK and initialize it
-            // For this single-file demo, we'll simulate the initialization
-            console.log('Initializing Back4App with App ID:', APP_ID);
-            console.log('Back4App initialized successfully (simulated)');
-            
-            // Simulate Parse object
-            window.Parse = {
-                Cloud: {
-                    run: async function(functionName, params) {
-                        console.log(`Calling Back4App Cloud Function: ${functionName}`, params);
-                        
-                        // Simulate successful response from Bunny.net
-                        return new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve({
-                                    success: true,
-                                    videoUrl: `https://videos.haitiantube.com/${Date.now()}.mp4`,
-                                    thumbnailUrl: `https://thumbnails.haitiantube.com/${Date.now()}.jpg`,
-                                    duration: '5:24',
-                                    fileId: `video_${Date.now()}`
-                                });
-                            }, 2000);
-                        });
-                    }
-                }
-            };
-        }
-        
-        // Initialize Firebase
-        function initializeFirebase() {
+        // Load videos from Firebase Firestore
+        function loadVideosFromFirebase() {
             try {
-                // Initialize Firebase
-                window.firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
-                firebase.analytics();
-                console.log('Firebase initialized successfully');
+                // Listen for videos in real-time
+                db.collection('videos')
+                    .where('status', 'in', ['verified', 'pending_verification'])
+                    .orderBy('createdAt', 'desc')
+                    .limit(50)
+                    .onSnapshot((snapshot) => {
+                        platformState.videos = [];
+                        snapshot.forEach((doc) => {
+                            const video = {
+                                id: doc.id,
+                                ...doc.data(),
+                                uploadDate: formatFirestoreTimestamp(doc.data().createdAt)
+                            };
+                            platformState.videos.push(video);
+                        });
+                        
+                        // Update UI if on home view
+                        if (platformState.currentView === 'home') {
+                            loadHomeVideos();
+                        }
+                    }, (error) => {
+                        console.error('Error loading videos:', error);
+                        showToast('Error loading videos', 'error');
+                    });
+                    
             } catch (error) {
-                console.log('Firebase already initialized or error:', error);
+                console.error('Error setting up videos listener:', error);
+            }
+        }
+        
+        // Format Firestore timestamp
+        function formatFirestoreTimestamp(timestamp) {
+            if (!timestamp) return 'Recently';
+            
+            try {
+                const date = timestamp.toDate();
+                const now = new Date();
+                const diffMs = now - date;
+                const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                
+                if (diffDays === 0) {
+                    return 'Today';
+                } else if (diffDays === 1) {
+                    return 'Yesterday';
+                } else if (diffDays < 7) {
+                    return `${diffDays} days ago`;
+                } else if (diffDays < 30) {
+                    const weeks = Math.floor(diffDays / 7);
+                    return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+                } else {
+                    return date.toLocaleDateString();
+                }
+            } catch (error) {
+                return 'Recently';
             }
         }
         
@@ -1970,7 +2122,10 @@
             // Upload functionality
             elements.uploadArea.addEventListener('click', () => elements.videoUpload.click());
             elements.videoUpload.addEventListener('change', handleVideoUpload);
-            elements.submitUpload.addEventListener('click', uploadVideoToBunny);
+            elements.submitUpload.addEventListener('click', uploadVideoToCloudinary);
+            
+            // Share button
+            elements.shareButton.addEventListener('click', shareUploadedVideo);
             
             // Drag and drop for upload
             elements.uploadArea.addEventListener('dragover', (e) => {
@@ -1991,9 +2146,6 @@
                     handleVideoUpload();
                 }
             });
-            
-            // Thumbnail upload
-            elements.thumbnailUpload.addEventListener('change', handleThumbnailUpload);
             
             // Creator page tabs
             elements.tabButtons.forEach(button => {
@@ -2116,29 +2268,26 @@
             }
         }
         
-        // Load home videos - NEVER show empty state if videos exist
+        // Load home videos from Firebase
         function loadHomeVideos() {
             // Always clear the grid
             elements.homeVideosGrid.innerHTML = '';
             
-            // Check if videos exist anywhere in the platform
+            // Check if videos exist
             if (platformState.videos.length > 0) {
-                // Display all videos (including pending verification)
+                // Display all videos
                 platformState.videos.forEach(video => {
-                    // Only show verified videos or videos in verification
-                    if (video.status === 'verified' || video.status === 'pending_verification') {
-                        const videoCard = createVideoCard(video);
-                        elements.homeVideosGrid.appendChild(videoCard);
-                    }
+                    const videoCard = createVideoCard(video);
+                    elements.homeVideosGrid.appendChild(videoCard);
                 });
             } else {
-                // Only show empty state if NO videos exist in the entire platform
+                // Show loading or empty state
                 const emptyState = document.createElement('div');
                 emptyState.className = 'empty-state';
                 emptyState.innerHTML = `
-                    <i class="fas fa-video empty-icon"></i>
-                    <h2>No videos yet</h2>
-                    <p>Be the first to upload a video to Haitian Tube!</p>
+                    <div class="spinner"></div>
+                    <h2>Loading videos...</h2>
+                    <p>Please wait while we load the latest videos</p>
                 `;
                 elements.homeVideosGrid.appendChild(emptyState);
             }
@@ -2150,7 +2299,7 @@
             card.className = 'video-card';
             card.dataset.videoId = video.id;
             
-            // Use actual thumbnail if available, otherwise use color
+            // Use Cloudinary thumbnail if available, otherwise use color
             const thumbnailStyle = video.thumbnailUrl 
                 ? `background-image: url('${video.thumbnailUrl}'); background-size: cover; background-position: center;`
                 : `background-color: ${video.color || '#6a11cb'}`;
@@ -2165,7 +2314,7 @@
                     <h3 class="video-title">${video.title}</h3>
                     <p class="video-creator">${video.creatorName}</p>
                     <div class="video-stats">
-                        <span>${formatNumber(video.views)} views</span>
+                        <span>${formatNumber(video.views || 0)} views</span>
                         <span>•</span>
                         <span>${video.uploadDate}</span>
                     </div>
@@ -2203,16 +2352,16 @@
                         <div class="video-info-detail">
                             <h1 class="video-title-detail">${video.title}</h1>
                             <div class="video-meta">
-                                <span>${formatNumber(video.views)} views</span>
+                                <span>${formatNumber(video.views || 0)} views</span>
                                 <span>•</span>
                                 <span>${video.uploadDate}</span>
                             </div>
                             <div class="video-actions">
-                                <button class="action-button like-button" data-video-id="${video.id}">
+                                <button class="action-button like-button" onclick="handleLike('${video.id}')">
                                     <i class="fas fa-thumbs-up"></i>
                                     <span>${video.likes || 0}</span>
                                 </button>
-                                <button class="action-button dislike-button" data-video-id="${video.id}">
+                                <button class="action-button dislike-button" onclick="handleDislike('${video.id}')">
                                     <i class="fas fa-thumbs-down"></i>
                                     <span>${video.dislikes || 0}</span>
                                 </button>
@@ -2226,10 +2375,10 @@
                                 </button>
                             </div>
                             <div class="creator-info-detail">
-                                <div class="creator-avatar-small" style="background-color: ${getRandomColor()};">${video.creatorName.charAt(0)}</div>
+                                <div class="creator-avatar-small" style="background-color: ${getRandomColor()};">${video.creatorName?.charAt(0) || 'U'}</div>
                                 <div class="creator-details">
                                     <h3>${video.creatorName}</h3>
-                                    <p>${platformState.currentUser?.subscribers || 0} subscribers</p>
+                                    <p>${video.creatorSubscribers || 0} subscribers</p>
                                 </div>
                                 <button class="subscribe-button" onclick="handleSubscribe('${video.creatorId}')">Subscribe</button>
                             </div>
@@ -2238,44 +2387,22 @@
                             </div>
                         </div>
                         <div class="comments-section">
-                            <h3>Comments (${video.comments ? video.comments.length : 0})</h3>
+                            <h3>Comments (${video.commentsCount || 0})</h3>
                             <div class="comment-input">
                                 <div class="user-avatar-small">${platformState.currentUser?.name?.charAt(0) || '?'}</div>
                                 <input type="text" placeholder="Add a comment..." id="commentInput">
                                 <button class="comment-button" onclick="addComment('${video.id}')">Comment</button>
                             </div>
-                            <div class="comments-list">
-                                ${video.comments && video.comments.length > 0 ? 
-                                    video.comments.map(comment => `
-                                        <div class="comment">
-                                            <div class="comment-avatar">${comment.user.charAt(0)}</div>
-                                            <div class="comment-content">
-                                                <h4>${comment.user}</h4>
-                                                <p>${comment.text}</p>
-                                                <div class="comment-actions">
-                                                    <button class="comment-like" onclick="likeComment('${comment.id}')"><i class="fas fa-thumbs-up"></i> ${comment.likes || 0}</button>
-                                                    <button class="comment-reply" onclick="replyToComment('${comment.id}')">Reply</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `).join('') : 
-                                    '<p>No comments yet. Be the first to comment!</p>'
-                                }
+                            <div id="commentsList" class="comments-list">
+                                <p>Loading comments...</p>
                             </div>
                         </div>
                     </div>
                     <div class="related-videos">
                         <h3>Recommended Videos</h3>
-                        ${platformState.videos.slice(0, 5).map(v => v.id !== video.id ? `
-                            <div class="related-video-card" onclick="showVideoDetailPageById('${v.id}')">
-                                <div class="related-thumbnail" style="background-color: ${v.color};"></div>
-                                <div class="related-info">
-                                    <h4>${v.title}</h4>
-                                    <p>${v.creatorName}</p>
-                                    <p>${formatNumber(v.views)} views • ${v.uploadDate}</p>
-                                </div>
-                            </div>
-                        ` : '').join('')}
+                        <div id="relatedVideosList">
+                            <!-- Related videos will be loaded here -->
+                        </div>
                     </div>
                 </div>
             `;
@@ -2289,14 +2416,118 @@
             // Hide current view and show video detail
             elements.viewContainer.innerHTML = '';
             elements.viewContainer.appendChild(videoDetailView);
+            
+            // Load comments and related videos
+            loadVideoComments(video.id);
+            loadRelatedVideos(video.id);
+            
+            // Increment view count
+            incrementViewCount(video.id);
         }
         
-        // Show video detail by ID
-        function showVideoDetailPageById(videoId) {
-            const video = platformState.videos.find(v => v.id === videoId);
-            if (video) {
-                platformState.currentVideo = video;
-                showVideoDetailPage(video);
+        // Load video comments from Firebase
+        async function loadVideoComments(videoId) {
+            try {
+                const commentsList = document.getElementById('commentsList');
+                commentsList.innerHTML = '<p>Loading comments...</p>';
+                
+                const commentsSnapshot = await db.collection('videos').doc(videoId)
+                    .collection('comments')
+                    .orderBy('createdAt', 'desc')
+                    .limit(20)
+                    .get();
+                
+                if (commentsSnapshot.empty) {
+                    commentsList.innerHTML = '<p>No comments yet. Be the first to comment!</p>';
+                    return;
+                }
+                
+                let commentsHTML = '';
+                commentsSnapshot.forEach((doc) => {
+                    const comment = doc.data();
+                    commentsHTML += `
+                        <div class="comment">
+                            <div class="comment-avatar">${comment.userName?.charAt(0) || 'U'}</div>
+                            <div class="comment-content">
+                                <h4>${comment.userName}</h4>
+                                <p>${comment.text}</p>
+                                <div class="comment-actions">
+                                    <button class="comment-like" onclick="likeComment('${videoId}', '${doc.id}')">
+                                        <i class="fas fa-thumbs-up"></i> ${comment.likes || 0}
+                                    </button>
+                                    <span style="color: var(--light-text-secondary); font-size: 12px;">
+                                        ${formatFirestoreTimestamp(comment.createdAt)}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                commentsList.innerHTML = commentsHTML;
+                
+            } catch (error) {
+                console.error('Error loading comments:', error);
+                document.getElementById('commentsList').innerHTML = '<p>Error loading comments</p>';
+            }
+        }
+        
+        // Load related videos
+        function loadRelatedVideos(currentVideoId) {
+            const relatedVideosList = document.getElementById('relatedVideosList');
+            relatedVideosList.innerHTML = '';
+            
+            // Show up to 5 related videos (excluding current video)
+            const relatedVideos = platformState.videos
+                .filter(v => v.id !== currentVideoId)
+                .slice(0, 5);
+            
+            if (relatedVideos.length === 0) {
+                relatedVideosList.innerHTML = '<p>No related videos found.</p>';
+                return;
+            }
+            
+            relatedVideos.forEach(video => {
+                const relatedCard = document.createElement('div');
+                relatedCard.className = 'related-video-card';
+                relatedCard.innerHTML = `
+                    <div class="related-thumbnail" style="background-color: ${video.color || '#6a11cb'};">
+                        <i class="fas fa-play-circle" style="font-size: 24px; color: rgba(255, 255, 255, 0.9); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></i>
+                    </div>
+                    <div class="related-info">
+                        <h4>${video.title}</h4>
+                        <p>${video.creatorName}</p>
+                        <p>${formatNumber(video.views || 0)} views • ${video.uploadDate}</p>
+                    </div>
+                `;
+                
+                relatedCard.addEventListener('click', () => {
+                    showVideoDetailPage(video);
+                });
+                
+                relatedVideosList.appendChild(relatedCard);
+            });
+        }
+        
+        // Increment view count
+        async function incrementViewCount(videoId) {
+            try {
+                // Increment in Firebase
+                await db.collection('videos').doc(videoId).update({
+                    views: firebase.firestore.FieldValue.increment(1),
+                    lastViewedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Also update creator's total views
+                const video = platformState.videos.find(v => v.id === videoId);
+                if (video && video.creatorId) {
+                    await db.collection('users').doc(video.creatorId).update({
+                        totalViews: firebase.firestore.FieldValue.increment(1)
+                    });
+                }
+                
+            } catch (error) {
+                console.error('Error incrementing view count:', error);
             }
         }
         
@@ -2308,126 +2539,147 @@
             showToast(`Video "${file.name}" selected for upload`, 'info');
         }
         
-        // Handle thumbnail upload
-        function handleThumbnailUpload() {
-            const file = elements.thumbnailUpload.files[0];
-            if (!file) return;
-            
-            // Validate file type
-            if (!file.type.startsWith('image/')) {
-                showToast('Please select an image file', 'error');
+        // Format duration from seconds to mm:ss
+        function formatDuration(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+        
+        // REAL VIDEO UPLOAD TO CLOUDINARY AND FIREBASE
+        async function uploadVideoToCloudinary() {
+            if (!platformState.isAuthenticated || !platformState.currentUser) {
+                showToast('Please login to upload videos', 'error');
+                switchView('auth');
                 return;
             }
             
-            // Create preview
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                elements.thumbnailPreview.innerHTML = `<img src="${e.target.result}" alt="Thumbnail preview" style="max-width: 200px; border-radius: 8px;">`;
-            };
-            reader.readAsDataURL(file);
-        }
-        
-        // REAL VIDEO UPLOAD TO BUNNY.NET VIA BACK4APP
-        async function uploadVideoToBunny() {
             const videoFile = elements.videoUpload.files[0];
-            const title = elements.videoTitle.value;
-            const description = elements.videoDescription.value;
-            const thumbnailFile = elements.thumbnailUpload.files[0];
-
+            const title = elements.videoTitle.value.trim();
+            const description = elements.videoDescription.value.trim();
+            
             if (!videoFile) {
                 showToast('Please select a video file', 'error');
                 return;
             }
-
+            
             if (!title) {
                 showToast('Please enter a video title', 'error');
                 return;
             }
-
-            // Size limit for safety (Back4App limit)
-            if (videoFile.size > 50 * 1024 * 1024) {
-                showToast('Video too large. Maximum size is 50MB', 'error');
+            
+            // Size limit (2GB for Cloudinary)
+            if (videoFile.size > 2 * 1024 * 1024 * 1024) {
+                showToast('Video too large. Maximum size is 2GB', 'error');
                 return;
             }
-
-            showToast('Uploading video to Bunny.net... Please wait', 'info');
             
-            // Read video file as Base64
-            const reader = new FileReader();
+            // Show progress bar
+            elements.uploadProgressContainer.style.display = 'block';
+            elements.uploadProgressBar.style.width = '0%';
+            elements.progressText.textContent = '0% uploaded';
+            elements.submitUpload.disabled = true;
             
-            reader.onload = async () => {
-                try {
-                    const base64Data = reader.result.split(',')[1];
+            try {
+                // Upload to Cloudinary
+                showToast('Uploading video to Cloudinary...', 'info');
+                
+                const formData = new FormData();
+                formData.append('file', videoFile);
+                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+                formData.append('cloud_name', CLOUDINARY_CLOUD_NAME);
+                
+                // Simulate progress for demo (in real app, use XMLHttpRequest for progress)
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 10;
+                    elements.uploadProgressBar.style.width = progress + '%';
+                    elements.progressText.textContent = progress + '% uploaded';
                     
-                    // Call Back4App Cloud Code function
-                    const response = await Parse.Cloud.run("uploadVideoToBunny", {
-                        fileBase64: base64Data,
-                        title: title,
-                        description: description,
-                        fileName: videoFile.name,
-                        fileType: videoFile.type,
-                        creatorId: platformState.currentUser.id,
-                        creatorName: platformState.currentUser.name
-                    });
-
-                    console.log("Bunny upload success:", response.videoUrl);
-                    
-                    // Create video object with REAL Bunny URL
-                    const newVideo = {
-                        id: 'video_' + Date.now(),
-                        title: title,
-                        description: description,
-                        creatorId: platformState.currentUser.id,
-                        creatorName: platformState.currentUser.name,
-                        views: 0,
-                        uploadDate: new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-                        color: getRandomColor(),
-                        status: 'pending_verification', // Pending AI verification
-                        earnings: 0,
-                        videoUrl: response.videoUrl, // REAL video URL from Bunny.net
-                        thumbnailUrl: response.thumbnailUrl || '', // Thumbnail URL from Bunny
-                        likes: 0,
-                        dislikes: 0,
-                        comments: [],
-                        duration: response.duration || '5:24'
-                    };
-
-                    // Handle thumbnail upload if provided
-                    if (thumbnailFile) {
-                        try {
-                            const thumbnailBase64 = await readFileAsBase64(thumbnailFile);
-                            // In real implementation, you would upload thumbnail to Bunny/CDN
-                            newVideo.thumbnailUrl = `data:${thumbnailFile.type};base64,${thumbnailBase64}`;
-                        } catch (error) {
-                            console.error('Thumbnail upload failed:', error);
-                        }
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
                     }
-
-                    // Add to videos list immediately (video can be played during verification)
-                    platformState.videos.unshift(newVideo);
-                    
-                    // Save to localStorage for persistence
-                    localStorage.setItem('haitianTubeVideos', JSON.stringify(platformState.videos));
-                    
-                    // Add creator to creators list if not exists
-                    if (!platformState.creators.find(c => c.id === platformState.currentUser.id)) {
-                        platformState.creators.push({
-                            id: platformState.currentUser.id,
-                            name: platformState.currentUser.name,
-                            subscribers: 0,
-                            totalViews: 0,
-                            joinedDate: new Date().toLocaleDateString()
+                }, 300);
+                
+                const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/video/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                clearInterval(progressInterval);
+                
+                if (!response.ok) {
+                    throw new Error('Cloudinary upload failed');
+                }
+                
+                const cloudinaryData = await response.json();
+                console.log('Cloudinary upload success:', cloudinaryData);
+                
+                // Generate thumbnail URL (frame at 1 second)
+                const thumbnailUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/video/upload/so_1/${cloudinaryData.public_id}.jpg`;
+                
+                // Generate preview video URL (3 seconds starting at 0)
+                const previewUrl = `https://res.cloudinary.com/${CLOUDINARY_CLOUD_NAME}/video/upload/so_0,du_3/${cloudinaryData.public_id}.mp4`;
+                
+                // Format duration
+                const formattedDuration = formatDuration(cloudinaryData.duration);
+                const durationSec = Math.floor(cloudinaryData.duration);
+                
+                // Save to Firebase Firestore (PERMANENT STORAGE)
+                showToast('Saving video information to Firebase...', 'info');
+                
+                const videoData = {
+                    title: title,
+                    description: description,
+                    videoUrl: cloudinaryData.secure_url,
+                    publicId: cloudinaryData.public_id,
+                    thumbnailUrl: thumbnailUrl,
+                    previewUrl: previewUrl,
+                    duration: formattedDuration,
+                    durationSec: durationSec,
+                    views: 0,
+                    likes: 0,
+                    dislikes: 0,
+                    commentsCount: 0,
+                    status: 'pending_verification',
+                    creatorId: platformState.currentUser.id,
+                    creatorName: platformState.currentUser.name,
+                    creatorEmail: platformState.currentUser.email,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                // Add video to Firestore
+                const videoRef = await db.collection('videos').add(videoData);
+                
+                // Update user's video count
+                await db.collection('users').doc(platformState.currentUser.id).update({
+                    videoCount: firebase.firestore.FieldValue.increment(1),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Show success message
+                elements.uploadProgressContainer.style.display = 'none';
+                elements.uploadSuccess.style.display = 'block';
+                elements.submitUpload.style.display = 'none';
+                elements.shareButton.style.display = 'block';
+                
+                showToast('Video uploaded successfully! AI verification in progress...', 'success');
+                
+                // Store the uploaded video for sharing
+                window.lastUploadedVideo = {
+                    id: videoRef.id,
+                    ...videoData
+                };
+                
+                // Simulate AI verification (10 seconds as requested)
+                setTimeout(async () => {
+                    try {
+                        // Update video status to verified in Firebase
+                        await db.collection('videos').doc(videoRef.id).update({
+                            status: 'verified',
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                         });
-                        localStorage.setItem('haitianTubeCreators', JSON.stringify(platformState.creators));
-                    }
-                    
-                    showToast('Video uploaded successfully! AI verification in progress... Video is playable now.', 'success');
-                    
-                    // Simulate AI verification (10 seconds as requested)
-                    setTimeout(() => {
-                        newVideo.status = 'verified';
-                        // Update in localStorage
-                        localStorage.setItem('haitianTubeVideos', JSON.stringify(platformState.videos));
                         
                         showToast('Video verified and published!', 'success');
                         
@@ -2435,37 +2687,75 @@
                         if (platformState.currentView === 'home') {
                             loadHomeVideos();
                         }
-                    }, 10000); // 10 seconds for AI verification
-
-                    // Reset form
-                    resetUploadForm();
-                    
-                    // Switch to home view
-                    switchView('home');
-
-                } catch (error) {
-                    console.error("Upload error:", error);
-                    showToast('Upload failed. Please try again.', 'error');
-                }
-            };
-
-            reader.onerror = () => {
-                showToast('Error reading video file', 'error');
-            };
-
-            reader.readAsDataURL(videoFile);
+                    } catch (error) {
+                        console.error('Error updating video status:', error);
+                        showToast('Error updating video status', 'error');
+                    }
+                }, 10000); // 10 seconds for AI verification
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                elements.uploadProgressContainer.style.display = 'none';
+                elements.submitUpload.disabled = false;
+                showToast('Upload failed: ' + error.message, 'error');
+            }
         }
         
-        // Helper function to read file as Base64
-        function readFileAsBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const base64 = reader.result.split(',')[1];
-                    resolve(base64);
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
+        // Share uploaded video with animation
+        function shareUploadedVideo() {
+            if (!window.lastUploadedVideo) {
+                showToast('No video to share', 'error');
+                return;
+            }
+            
+            const video = window.lastUploadedVideo;
+            
+            // Show animation
+            elements.shareAnimation.classList.add('show');
+            
+            // Simulate sharing process with progress
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                elements.shareAnimation.innerHTML = `<i class="fas fa-share"></i> Sharing Video... ${progress}%`;
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    
+                    // Create share URL
+                    const shareUrl = `${window.location.origin}/video/${video.id}`;
+                    const shareText = `Check out my new video "${video.title}" on Haitian Tube!`;
+                    
+                    // Try to use Web Share API if available
+                    if (navigator.share) {
+                        navigator.share({
+                            title: video.title,
+                            text: shareText,
+                            url: shareUrl
+                        }).then(() => {
+                            elements.shareAnimation.classList.remove('show');
+                            showToast('Video shared successfully!', 'success');
+                        }).catch(err => {
+                            console.error('Share failed:', err);
+                            copyToClipboard(shareUrl);
+                        });
+                    } else {
+                        // Fallback to clipboard
+                        copyToClipboard(shareUrl);
+                    }
+                }
+            }, 300);
+        }
+        
+        // Copy text to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                elements.shareAnimation.classList.remove('show');
+                showToast('Link copied to clipboard!', 'success');
+            }).catch(err => {
+                console.error('Copy failed:', err);
+                elements.shareAnimation.classList.remove('show');
+                showToast('Failed to share video', 'error');
             });
         }
         
@@ -2474,63 +2764,98 @@
             elements.videoTitle.value = '';
             elements.videoDescription.value = '';
             elements.videoUpload.value = '';
-            elements.thumbnailUpload.value = '';
-            elements.thumbnailPreview.innerHTML = '';
             elements.uploadArea.classList.remove('drag-over');
+            elements.uploadProgressContainer.style.display = 'none';
+            elements.uploadSuccess.style.display = 'none';
+            elements.submitUpload.style.display = 'block';
+            elements.submitUpload.disabled = false;
+            elements.shareButton.style.display = 'none';
+            window.lastUploadedVideo = null;
         }
         
         // Load creator page
-        function loadCreatorPage(creatorId) {
-            const creator = platformState.currentCreator || platformState.creators.find(c => c.id === creatorId);
-            
-            if (!creator) {
-                showToast('Creator not found', 'error');
+        async function loadCreatorPage(creatorId) {
+            try {
+                // Load creator data from Firestore
+                const creatorDoc = await db.collection('users').doc(creatorId).get();
+                
+                if (!creatorDoc.exists) {
+                    showToast('Creator not found', 'error');
+                    switchView('home');
+                    return;
+                }
+                
+                const creator = creatorDoc.data();
+                platformState.currentCreator = {
+                    id: creatorId,
+                    ...creator
+                };
+                
+                // Update creator info
+                elements.channelAvatar.textContent = creator.displayName?.charAt(0).toUpperCase() || 'C';
+                elements.channelName.textContent = creator.displayName || 'Creator Name';
+                elements.channelSubscribers.textContent = `${formatNumber(creator.subscribers || 0)} subscribers`;
+                
+                // Count creator's videos
+                const videosSnapshot = await db.collection('videos')
+                    .where('creatorId', '==', creatorId)
+                    .get();
+                
+                elements.channelVideos.textContent = `${videosSnapshot.size} videos`;
+                
+                // Update other details
+                elements.channelDescription.textContent = creator.bio || 'No description available.';
+                elements.channelJoined.textContent = creator.createdAt ? formatFirestoreTimestamp(creator.createdAt) : 'Recently';
+                elements.channelTotalViews.textContent = formatNumber(creator.totalViews || 0);
+                
+                // Load creator's videos
+                loadCreatorVideos(creatorId);
+                
+            } catch (error) {
+                console.error('Error loading creator page:', error);
+                showToast('Error loading creator page', 'error');
                 switchView('home');
-                return;
             }
-            
-            // Update creator info
-            elements.channelAvatar.textContent = creator.name.charAt(0).toUpperCase();
-            elements.channelName.textContent = creator.name;
-            elements.channelSubscribers.textContent = `${formatNumber(creator.subscribers || 0)} subscribers`;
-            
-            // Count creator's videos
-            const creatorVideos = platformState.videos.filter(v => v.creatorId === creator.id);
-            elements.channelVideos.textContent = `${creatorVideos.length} videos`;
-            
-            // Update other details
-            elements.channelDescription.textContent = creator.description || 'No description available.';
-            elements.channelJoined.textContent = creator.joinedDate || 'Recently';
-            elements.channelTotalViews.textContent = formatNumber(creator.totalViews || 0);
-            
-            // Load creator's videos
-            loadCreatorVideos(creator.id);
         }
         
         // Load creator's videos
-        function loadCreatorVideos(creatorId) {
+        async function loadCreatorVideos(creatorId) {
             // Clear the grid
             elements.creatorVideosGrid.innerHTML = '';
             
-            const creatorVideos = platformState.videos.filter(v => v.creatorId === creatorId);
-            
-            if (creatorVideos.length === 0) {
-                const emptyState = document.createElement('div');
-                emptyState.className = 'empty-state';
-                emptyState.innerHTML = `
-                    <i class="fas fa-video empty-icon"></i>
-                    <h2>No videos yet</h2>
-                    <p>This creator hasn't uploaded any videos yet.</p>
-                `;
-                elements.creatorVideosGrid.appendChild(emptyState);
-                return;
+            try {
+                const videosSnapshot = await db.collection('videos')
+                    .where('creatorId', '==', creatorId)
+                    .orderBy('createdAt', 'desc')
+                    .get();
+                
+                if (videosSnapshot.empty) {
+                    const emptyState = document.createElement('div');
+                    emptyState.className = 'empty-state';
+                    emptyState.innerHTML = `
+                        <i class="fas fa-video empty-icon"></i>
+                        <h2>No videos yet</h2>
+                        <p>This creator hasn't uploaded any videos yet.</p>
+                    `;
+                    elements.creatorVideosGrid.appendChild(emptyState);
+                    return;
+                }
+                
+                // Display creator's videos
+                videosSnapshot.forEach((doc) => {
+                    const video = {
+                        id: doc.id,
+                        ...doc.data(),
+                        uploadDate: formatFirestoreTimestamp(doc.data().createdAt)
+                    };
+                    const videoCard = createVideoCard(video);
+                    elements.creatorVideosGrid.appendChild(videoCard);
+                });
+                
+            } catch (error) {
+                console.error('Error loading creator videos:', error);
+                showToast('Error loading videos', 'error');
             }
-            
-            // Display creator's videos
-            creatorVideos.forEach(video => {
-                const videoCard = createVideoCard(video);
-                elements.creatorVideosGrid.appendChild(videoCard);
-            });
         }
         
         // Switch creator tab
@@ -2574,41 +2899,33 @@
         }
         
         // Handle authentication form submission
-        function handleAuthSubmit(e) {
+        async function handleAuthSubmit(e) {
             e.preventDefault();
             
             const isLoginMode = elements.authTitle.textContent === 'Sign In';
             
             if (isLoginMode) {
-                // Login logic
+                // Login with Firebase
+                const email = elements.authEmail.value;
                 const password = elements.authPassword.value;
                 
-                if (!password) {
-                    showToast('Please enter your password', 'error');
+                if (!email || !password) {
+                    showToast('Please enter email and password', 'error');
                     return;
                 }
                 
-                // For demo, we'll create a mock user
-                const mockUser = {
-                    id: 'user_' + Date.now(),
-                    name: 'Demo User',
-                    email: 'demo@haitiantube.com',
-                    username: 'demouser',
-                    joinedDate: new Date().toLocaleDateString(),
-                    subscribers: 0,
-                    totalViews: 0
-                };
-                
-                platformState.currentUser = mockUser;
-                platformState.isAuthenticated = true;
-                localStorage.setItem('haitianTubeUser', JSON.stringify(mockUser));
-                
-                showToast('Successfully signed in!', 'success');
-                updateAuthUI();
-                switchView('home');
+                try {
+                    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                    showToast('Successfully signed in!', 'success');
+                    switchView('home');
+                    
+                } catch (error) {
+                    console.error('Login error:', error);
+                    showToast('Login failed: ' + error.message, 'error');
+                }
                 
             } else {
-                // Signup logic
+                // Signup with Firebase
                 const username = elements.authUsername.value;
                 const email = elements.authEmail.value;
                 const password = elements.authPassword.value;
@@ -2630,29 +2947,36 @@
                     return;
                 }
                 
-                // Create new user
-                const newUser = {
-                    id: 'user_' + Date.now(),
-                    name: username,
-                    email: email,
-                    username: username.toLowerCase(),
-                    joinedDate: new Date().toLocaleDateString(),
-                    subscribers: 0,
-                    totalViews: 0,
-                    videos: []
-                };
-                
-                platformState.currentUser = newUser;
-                platformState.isAuthenticated = true;
-                localStorage.setItem('haitianTubeUser', JSON.stringify(newUser));
-                
-                // Add to creators list
-                platformState.creators.push(newUser);
-                localStorage.setItem('haitianTubeCreators', JSON.stringify(platformState.creators));
-                
-                showToast('Account created successfully! You now have a creator channel.', 'success');
-                updateAuthUI();
-                switchView('home');
+                try {
+                    // Create user with Firebase Auth
+                    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                    
+                    // Update profile with display name
+                    await userCredential.user.updateProfile({
+                        displayName: username
+                    });
+                    
+                    // Create user profile in Firestore
+                    await db.collection('users').doc(userCredential.user.uid).set({
+                        username: username,
+                        email: email,
+                        displayName: username,
+                        bio: '',
+                        subscribers: 0,
+                        totalViews: 0,
+                        earnings: 0,
+                        videoCount: 0,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    
+                    showToast('Account created successfully! You now have a creator channel.', 'success');
+                    switchView('home');
+                    
+                } catch (error) {
+                    console.error('Signup error:', error);
+                    showToast('Signup failed: ' + error.message, 'error');
+                }
             }
             
             // Reset form
@@ -2671,6 +2995,7 @@
                 elements.withdrawalItem.style.display = 'flex';
                 elements.logoutItem.style.display = 'flex';
                 elements.loginItem.style.display = 'none';
+                elements.uploadButton.style.display = 'block';
             } else {
                 // Show login menu item
                 elements.userAvatar.textContent = '?';
@@ -2679,59 +3004,78 @@
                 elements.withdrawalItem.style.display = 'none';
                 elements.logoutItem.style.display = 'none';
                 elements.loginItem.style.display = 'flex';
+                elements.uploadButton.style.display = 'none';
             }
         }
         
         // Logout function
-        function logout() {
-            platformState.currentUser = null;
-            platformState.isAuthenticated = false;
-            localStorage.removeItem('haitianTubeUser');
-            
-            showToast('You have been logged out', 'info');
-            updateAuthUI();
-            switchView('home');
+        async function logout() {
+            try {
+                await auth.signOut();
+                platformState.currentUser = null;
+                platformState.isAuthenticated = false;
+                
+                showToast('You have been logged out', 'info');
+                updateAuthUI();
+                switchView('home');
+            } catch (error) {
+                console.error('Logout error:', error);
+                showToast('Logout failed: ' + error.message, 'error');
+            }
         }
         
         // Load dashboard data
-        function loadDashboardData() {
+        async function loadDashboardData() {
             if (!platformState.currentUser) return;
             
-            // Calculate earnings based on views
-            const creatorVideos = platformState.videos.filter(v => v.creatorId === platformState.currentUser.id);
-            const totalViews = creatorVideos.reduce((sum, video) => sum + video.views, 0);
-            
-            // Calculate earnings: $0.01 per 10 views (for demo)
-            const earnings = totalViews * 0.001;
-            const monthEarnings = earnings * 0.1; // 10% of total for this month (demo)
-            
-            // Update dashboard values
-            elements.totalEarnings.textContent = `$${earnings.toFixed(2)}`;
-            elements.lifetimeEarnings.textContent = `Lifetime: $${(earnings * 1.2).toFixed(2)}`;
-            elements.monthEarnings.textContent = `$${monthEarnings.toFixed(2)}`;
-            elements.monthViews.textContent = `${Math.floor(totalViews * 0.1)} views`;
-            elements.totalViews.textContent = formatNumber(totalViews);
-            elements.subscribersCount.textContent = `${platformState.currentUser.subscribers || 0} subscribers`;
-            elements.availableBalance.textContent = `$${earnings.toFixed(2)}`;
-            
-            // Update KYC status
-            if (platformState.kycStatus === 'verified') {
-                elements.kycStatusText.textContent = 'Your account is verified. You can withdraw your earnings.';
-                elements.startKycButton.textContent = 'Go to Withdrawal';
-            } else {
-                elements.kycStatusText.textContent = 'Your account is not verified. Complete KYC to enable withdrawals.';
-                elements.startKycButton.textContent = 'Start KYC Verification';
+            try {
+                // Fetch user's videos from Firebase
+                const videosSnapshot = await db.collection('videos')
+                    .where('creatorId', '==', platformState.currentUser.id)
+                    .get();
+                
+                // Calculate earnings based on views
+                let totalViews = 0;
+                videosSnapshot.forEach((doc) => {
+                    totalViews += doc.data().views || 0;
+                });
+                
+                // Calculate earnings: $0.01 per 10 views (for demo)
+                const earnings = totalViews * 0.001;
+                const monthEarnings = earnings * 0.1; // 10% of total for this month (demo)
+                
+                // Update dashboard values
+                elements.totalEarnings.textContent = `$${earnings.toFixed(2)}`;
+                elements.lifetimeEarnings.textContent = `Lifetime: $${(earnings * 1.2).toFixed(2)}`;
+                elements.monthEarnings.textContent = `$${monthEarnings.toFixed(2)}`;
+                elements.monthViews.textContent = `${Math.floor(totalViews * 0.1)} views`;
+                elements.totalViews.textContent = formatNumber(totalViews);
+                elements.subscribersCount.textContent = `${platformState.currentUser.subscribers || 0} subscribers`;
+                elements.availableBalance.textContent = `$${earnings.toFixed(2)}`;
+                
+                // Update KYC status
+                if (platformState.kycStatus === 'verified') {
+                    elements.kycStatusText.textContent = 'Your account is verified. You can withdraw your earnings.';
+                    elements.startKycButton.textContent = 'Go to Withdrawal';
+                } else {
+                    elements.kycStatusText.textContent = 'Your account is not verified. Complete KYC to enable withdrawals.';
+                    elements.startKycButton.textContent = 'Start KYC Verification';
+                }
+                
+                // Load video performance
+                loadVideoPerformance(videosSnapshot);
+                
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                showToast('Error loading dashboard data', 'error');
             }
-            
-            // Load video performance
-            loadVideoPerformance(creatorVideos);
         }
         
         // Load video performance data
-        function loadVideoPerformance(videos) {
+        function loadVideoPerformance(videosSnapshot) {
             elements.videosPerformance.innerHTML = '';
             
-            if (videos.length === 0) {
+            if (videosSnapshot.empty) {
                 elements.videosPerformance.innerHTML = '<p>No videos uploaded yet.</p>';
                 return;
             }
@@ -2742,7 +3086,7 @@
             table.style.marginTop = '20px';
             
             // Table header
-            table.innerHTML = `
+            let tableHTML = `
                 <thead>
                     <tr style="border-bottom: 1px solid #ccc;">
                         <th style="text-align: left; padding: 12px 8px;">Video</th>
@@ -2752,20 +3096,28 @@
                     </tr>
                 </thead>
                 <tbody>
-                    ${videos.map(video => `
-                        <tr style="border-bottom: 1px solid #eee;">
-                            <td style="padding: 12px 8px;">${video.title}</td>
-                            <td style="padding: 12px 8px;">${formatNumber(video.views)}</td>
-                            <td style="padding: 12px 8px;">$${(video.views * 0.001).toFixed(2)}</td>
-                            <td style="padding: 12px 8px;">
-                                <span style="padding: 4px 8px; border-radius: 12px; font-size: 12px; background-color: ${video.status === 'verified' ? '#4caf50' : video.status === 'pending_verification' ? '#ff9800' : '#f44336'}; color: white;">
-                                    ${video.status === 'verified' ? 'Verified' : video.status === 'pending_verification' ? 'Verifying' : 'Pending'}
-                                </span>
-                            </td>
-                        </tr>
-                    `).join('')}
-                </tbody>
             `;
+            
+            videosSnapshot.forEach((doc) => {
+                const video = doc.data();
+                const videoEarnings = (video.views || 0) * 0.001;
+                
+                tableHTML += `
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 12px 8px;">${video.title}</td>
+                        <td style="padding: 12px 8px;">${formatNumber(video.views || 0)}</td>
+                        <td style="padding: 12px 8px;">$${videoEarnings.toFixed(2)}</td>
+                        <td style="padding: 12px 8px;">
+                            <span style="padding: 4px 8px; border-radius: 12px; font-size: 12px; background-color: ${video.status === 'verified' ? '#4caf50' : video.status === 'pending_verification' ? '#ff9800' : '#f44336'}; color: white;">
+                                ${video.status === 'verified' ? 'Verified' : video.status === 'pending_verification' ? 'Verifying' : 'Pending'}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += '</tbody>';
+            table.innerHTML = tableHTML;
             
             elements.videosPerformance.appendChild(table);
         }
@@ -3003,10 +3355,7 @@
             }
             
             // Check available balance (simulated)
-            const creatorVideos = platformState.videos.filter(v => v.creatorId === platformState.currentUser.id);
-            const totalViews = creatorVideos.reduce((sum, video) => sum + video.views, 0);
-            const earnings = totalViews * 0.001;
-            const availableBalance = earnings;
+            const availableBalance = parseFloat(elements.availableBalance.textContent.replace('$', ''));
             
             if (amount > availableBalance) {
                 showToast(`Insufficient balance. Available: $${availableBalance.toFixed(2)}`, 'error');
@@ -3060,7 +3409,7 @@
             if (!query) return;
             
             showToast(`Searching for "${query}"...`, 'info');
-            // In a real app, this would search videos in Back4App
+            // In a real app, this would search videos in Firebase
         }
         
         // Show toast notification
@@ -3090,23 +3439,49 @@
         }
         
         // Video interaction functions
-        function handleLikeDislike(videoId, isLike) {
-            const video = platformState.videos.find(v => v.id === videoId);
-            if (!video) return;
-            
-            if (isLike) {
-                video.likes = (video.likes || 0) + 1;
-            } else {
-                video.dislikes = (video.dislikes || 0) + 1;
+        async function handleLike(videoId) {
+            if (!platformState.isAuthenticated) {
+                showToast('Please login to like videos', 'error');
+                switchView('auth');
+                return;
             }
             
-            // Update in localStorage
-            localStorage.setItem('haitianTubeVideos', JSON.stringify(platformState.videos));
-            
-            showToast(isLike ? 'Liked!' : 'Disliked!', 'info');
+            try {
+                await db.collection('videos').doc(videoId).update({
+                    likes: firebase.firestore.FieldValue.increment(1)
+                });
+                showToast('Liked!', 'success');
+            } catch (error) {
+                console.error('Error liking video:', error);
+                showToast('Error liking video', 'error');
+            }
         }
         
-        function addComment(videoId) {
+        async function handleDislike(videoId) {
+            if (!platformState.isAuthenticated) {
+                showToast('Please login to dislike videos', 'error');
+                switchView('auth');
+                return;
+            }
+            
+            try {
+                await db.collection('videos').doc(videoId).update({
+                    dislikes: firebase.firestore.FieldValue.increment(1)
+                });
+                showToast('Disliked!', 'info');
+            } catch (error) {
+                console.error('Error disliking video:', error);
+                showToast('Error disliking video', 'error');
+            }
+        }
+        
+        async function addComment(videoId) {
+            if (!platformState.isAuthenticated) {
+                showToast('Please login to comment', 'error');
+                switchView('auth');
+                return;
+            }
+            
             const commentInput = document.getElementById('commentInput');
             const commentText = commentInput.value.trim();
             
@@ -3115,72 +3490,58 @@
                 return;
             }
             
-            const video = platformState.videos.find(v => v.id === videoId);
-            if (!video) return;
-            
-            if (!video.comments) {
-                video.comments = [];
-            }
-            
-            const newComment = {
-                id: 'comment_' + Date.now(),
-                user: platformState.currentUser?.name || 'Anonymous',
-                text: commentText,
-                date: new Date().toLocaleDateString(),
-                likes: 0
-            };
-            
-            video.comments.unshift(newComment);
-            
-            // Update in localStorage
-            localStorage.setItem('haitianTubeVideos', JSON.stringify(platformState.videos));
-            
-            // Refresh comments section
-            const commentsList = document.querySelector('.comments-list');
-            if (commentsList) {
-                const commentHTML = `
-                    <div class="comment">
-                        <div class="comment-avatar">${newComment.user.charAt(0)}</div>
-                        <div class="comment-content">
-                            <h4>${newComment.user}</h4>
-                            <p>${newComment.text}</p>
-                            <div class="comment-actions">
-                                <button class="comment-like" onclick="likeComment('${newComment.id}')"><i class="fas fa-thumbs-up"></i> ${newComment.likes}</button>
-                                <button class="comment-reply" onclick="replyToComment('${newComment.id}')">Reply</button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                commentsList.insertAdjacentHTML('afterbegin', commentHTML);
-            }
-            
-            // Update comment count
-            const commentsTitle = document.querySelector('.comments-section h3');
-            if (commentsTitle) {
-                commentsTitle.textContent = `Comments (${video.comments.length})`;
-            }
-            
-            commentInput.value = '';
-            showToast('Comment added!', 'success');
-        }
-        
-        function likeComment(commentId) {
-            // Find comment in any video
-            for (const video of platformState.videos) {
-                if (video.comments) {
-                    const comment = video.comments.find(c => c.id === commentId);
-                    if (comment) {
-                        comment.likes = (comment.likes || 0) + 1;
-                        localStorage.setItem('haitianTubeVideos', JSON.stringify(platformState.videos));
-                        showToast('Comment liked!', 'info');
-                        return;
-                    }
-                }
+            try {
+                const commentData = {
+                    text: commentText,
+                    userId: platformState.currentUser.id,
+                    userName: platformState.currentUser.name,
+                    userEmail: platformState.currentUser.email,
+                    likes: 0,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                // Add comment to video's subcollection
+                await db.collection('videos').doc(videoId).collection('comments').add(commentData);
+                
+                // Increment comment count
+                await db.collection('videos').doc(videoId).update({
+                    commentsCount: firebase.firestore.FieldValue.increment(1)
+                });
+                
+                commentInput.value = '';
+                showToast('Comment added!', 'success');
+                
+                // Reload comments
+                loadVideoComments(videoId);
+                
+            } catch (error) {
+                console.error('Error adding comment:', error);
+                showToast('Error adding comment', 'error');
             }
         }
         
-        function replyToComment(commentId) {
-            showToast('Reply functionality coming soon!', 'info');
+        async function likeComment(videoId, commentId) {
+            if (!platformState.isAuthenticated) {
+                showToast('Please login to like comments', 'error');
+                return;
+            }
+            
+            try {
+                await db.collection('videos').doc(videoId)
+                    .collection('comments').doc(commentId)
+                    .update({
+                        likes: firebase.firestore.FieldValue.increment(1)
+                    });
+                
+                showToast('Comment liked!', 'info');
+                // Reload comments to show updated count
+                loadVideoComments(videoId);
+                
+            } catch (error) {
+                console.error('Error liking comment:', error);
+                showToast('Error liking comment', 'error');
+            }
         }
         
         function shareVideo(videoId) {
@@ -3200,45 +3561,61 @@
             }
         }
         
-        function saveVideo(videoId) {
-            // Save video to user's saved list
-            if (!platformState.currentUser.savedVideos) {
-                platformState.currentUser.savedVideos = [];
+        async function saveVideo(videoId) {
+            if (!platformState.isAuthenticated) {
+                showToast('Please login to save videos', 'error');
+                switchView('auth');
+                return;
             }
             
-            if (!platformState.currentUser.savedVideos.includes(videoId)) {
-                platformState.currentUser.savedVideos.push(videoId);
-                localStorage.setItem('haitianTubeUser', JSON.stringify(platformState.currentUser));
+            try {
+                // Save video to user's saved list in Firestore
+                await db.collection('users').doc(platformState.currentUser.id)
+                    .collection('savedVideos').doc(videoId).set({
+                        videoId: videoId,
+                        savedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                
                 showToast('Video saved to your library!', 'success');
-            } else {
-                showToast('Video already saved!', 'info');
+            } catch (error) {
+                console.error('Error saving video:', error);
+                showToast('Error saving video', 'error');
             }
         }
         
-        function handleSubscribe(creatorId) {
-            const creator = platformState.creators.find(c => c.id === creatorId);
-            if (!creator) return;
-            
-            creator.subscribers = (creator.subscribers || 0) + 1;
-            
-            // Update in localStorage
-            localStorage.setItem('haitianTubeCreators', JSON.stringify(platformState.creators));
-            
-            // Update subscribe button
-            const subscribeButton = document.querySelector('.subscribe-button');
-            if (subscribeButton) {
-                subscribeButton.textContent = 'Subscribed';
-                subscribeButton.style.backgroundColor = '#666';
-                subscribeButton.disabled = true;
+        async function handleSubscribe(creatorId) {
+            if (!platformState.isAuthenticated) {
+                showToast('Please login to subscribe', 'error');
+                switchView('auth');
+                return;
             }
             
-            // Update subscriber count
-            const subscriberCount = document.querySelector('.creator-details p');
-            if (subscriberCount) {
-                subscriberCount.textContent = `${creator.subscribers} subscribers`;
+            try {
+                // Add subscription to user's subscriptions
+                await db.collection('users').doc(platformState.currentUser.id)
+                    .collection('subscriptions').doc(creatorId).set({
+                        subscribedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                
+                // Increment creator's subscriber count
+                await db.collection('users').doc(creatorId).update({
+                    subscribers: firebase.firestore.FieldValue.increment(1)
+                });
+                
+                // Update subscribe button
+                const subscribeButton = document.querySelector('.subscribe-button');
+                if (subscribeButton) {
+                    subscribeButton.textContent = 'Subscribed';
+                    subscribeButton.style.backgroundColor = '#666';
+                    subscribeButton.disabled = true;
+                }
+                
+                showToast('Subscribed!', 'success');
+                
+            } catch (error) {
+                console.error('Error subscribing:', error);
+                showToast('Error subscribing', 'error');
             }
-            
-            showToast(`Subscribed to ${creator.name}!`, 'success');
         }
         
         // Utility functions
@@ -3248,6 +3625,7 @@
         }
         
         function formatNumber(num) {
+            if (!num) return '0';
             if (num >= 1000000) {
                 return (num / 1000000).toFixed(1) + 'M';
             } else if (num >= 1000) {
