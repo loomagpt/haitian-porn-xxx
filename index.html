@@ -1375,311 +1375,185 @@
                 showToast('Welcome to Stream Flix!', 'success');
             }, 1000);
         }
-        
-        // ============================
-        // BUNNY.NET VIDEO UPLOAD
-        // ============================
-        async function uploadVideoToBunny(file) {
-            try {
-                // Show progress
-                elements.uploadProgress.style.display = 'block';
-                elements.uploadProgressBar.style.width = '0%';
-                elements.progressText.textContent = '0%';
+       async function uploadVideoToBunny(file) {
+  const user = Parse.User.current();
+  if (!user) throw new Error("Not logged in");
+
+  const result = await Parse.Cloud.run("getUploadURL", {
+    title: file.name
+  });
+
+  const videoId = result.guid;
+
+  const videoUrl = `https://${BUNNY_CDN_HOSTNAME}/${videoId}/play.mp4`;
+
+  platformState.lastUploadedVideoUrl = videoUrl;
+  platformState.currentVideoFile = file;
+
+  console.log("Video created:", videoUrl);
+}
+
                 
-                // Get upload URL from Back4App Cloud Function
-                const result = await Parse.Cloud.run("getUploadURL", { 
-                    title: file.name,
-                    fileSize: file.size,
-                    contentType: file.type
-                });
-                
-                if (!result || !result.uploadURL || !result.videoFileName) {
-                    throw new Error('Failed to get upload URL from server');
-                }
-                
-                const uploadURL = result.uploadURL;
-                const videoFileName = result.videoFileName;
-                
-                // Upload to Bunny.net using chunked upload for large files
-                const chunkSize = 50 * 1024 * 1024; // 50MB chunks
-                const totalChunks = Math.ceil(file.size / chunkSize);
-                
-                for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
-                    const start = chunkIndex * chunkSize;
-                    const end = Math.min(start + chunkSize, file.size);
-                    const chunk = file.slice(start, end);
-                    
-                    const response = await fetch(uploadURL, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/octet-stream',
-                            'Content-Range': `bytes ${start}-${end-1}/${file.size}`
-                        },
-                        body: chunk
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`Upload failed at chunk ${chunkIndex + 1}`);
-                    }
-                    
-                    // Update progress
-                    const progress = Math.round(((chunkIndex + 1) / totalChunks) * 100);
-                    elements.uploadProgressBar.style.width = `${progress}%`;
-                    elements.progressText.textContent = `${progress}%`;
-                }
-                
-                // Construct final video URL
-                const videoUrl = `https://${BUNNY_CDN_HOSTNAME}/${BUNNY_STORAGE_ZONE}/${videoFileName}`;
-                
-                // Generate thumbnail from first frame
-                const thumbnailUrl = await generateThumbnailFromVideo(file);
-                
-                // Store for later use
-                platformState.lastUploadedVideoUrl = videoUrl;
-                platformState.currentVideoFile = file;
-                
-                // Update auto thumbnail preview
-                if (thumbnailUrl) {
-                    elements.autoThumbnailPreview.src = thumbnailUrl;
-                    elements.autoThumbnailPreview.style.display = 'block';
-                }
-                
-                // Pre-fill title with filename if empty
-                if (!elements.videoTitle.value.trim()) {
-                    const fileName = file.name.replace(/\.[^/.]+$/, ""); // Remove extension
-                    elements.videoTitle.value = fileName;
-                }
-                
-                // Hide progress bar
-                elements.uploadProgress.style.display = 'none';
-                
-                showToast('Video uploaded successfully! Now add details and save.', 'success');
-                
-                return {
-                    videoUrl: videoUrl,
-                    thumbnailUrl: thumbnailUrl,
-                    fileName: videoFileName
-                };
-                
-            } catch (error) {
-                console.error('Bunny upload error:', error);
-                elements.uploadProgress.style.display = 'none';
-                throw error;
-            }
+                async function uploadVideoToBunny(file) {
+  try {
+    // Show progress bar
+    elements.uploadProgress.style.display = 'block';
+
+    // Create video on Bunny via Cloud Code
+    const result = await Parse.Cloud.run("getUploadURL", {
+      title: file.name
+    });
+
+    if (!result || !result.guid) {
+      throw new Error("Failed to create Bunny video");
+    }
+
+    const videoId = result.guid;
+
+    // Final Bunny video URL
+    const videoUrl = `https://${BUNNY_CDN_HOSTNAME}/${videoId}/play.mp4`;
+
+    // Generate thumbnail locally (optional but safe)
+    const thumbnailUrl = await generateThumbnailFromVideo(file);
+
+    // Store state
+    platformState.lastUploadedVideoUrl = videoUrl;
+    platformState.currentVideoFile = file;
+
+    // Hide progress bar
+    elements.uploadProgress.style.display = 'none';
+
+    showToast(
+      'Video ready. Upload the file in Bunny dashboard or TUS, then publish.',
+      'success'
+    );
+
+    return {
+      videoUrl,
+      thumbnailUrl,
+      videoId
+    };
+
+  } catch (error) {
+    console.error('Bunny error:', error);
+    elements.uploadProgress.style.display = 'none';
+    throw error;
+  }
+}
+
+function generateThumbnailFromVideo(file) {
+  return new Promise(resolve => {
+    if (!file.type.startsWith('video/')) {
+      resolve(null);
+      return;
+    }
+
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+
+    video.onloadedmetadata = () => {
+      video.currentTime = 0.1;
+    };
+
+    video.onseeked = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas
+        .getContext('2d')
+        .drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      resolve(canvas.toDataURL('image/jpeg'));
+    };
+
+    video.onerror = () => resolve(null);
+    video.src = URL.createObjectURL(file);
+  });
+}
+
+// ============================
+// ADVANCED FLUID PLAYER (FIXED & SAFE)
+// ============================
+function initializeAdvancedVideoPlayer(videoUrl, thumbnailUrl = '') {
+  const container = document.getElementById('videoPlayerContainer');
+  container.innerHTML = '';
+
+  const videoEl = document.createElement('video');
+  const playerId = 'fluid-player-' + Date.now();
+  videoEl.id = playerId;
+  videoEl.controls = true;
+  videoEl.preload = 'metadata';
+  videoEl.style.width = '100%';
+
+  const source = document.createElement('source');
+  source.src = videoUrl;
+  source.type = 'video/mp4';
+
+  videoEl.appendChild(source);
+  container.appendChild(videoEl);
+
+  return new Promise(resolve => {
+    videoEl.addEventListener('loadedmetadata', () => {
+      const duration = videoEl.duration || 0;
+
+      // Fluid Player supports ONE preroll & ONE postroll reliably.
+      // Midrolls are placed on timeline (yellow markers).
+      const adList = [
+        { roll: 'preRoll', vastTag: PREROLL_AD_URL },
+
+        { roll: 'midRoll', vastTag: MIDROLL_AD_URL, timeOffset: '25%' },
+        { roll: 'midRoll', vastTag: MIDROLL_AD_URL, timeOffset: '50%' },
+        { roll: 'midRoll', vastTag: MIDROLL_AD_URL, timeOffset: '75%' },
+
+        { roll: 'postRoll', vastTag: POSTROLL_AD_URL }
+      ];
+
+      const player = fluidPlayer(playerId, {
+        layoutControls: {
+          primaryColor: '#ff0000',
+          posterImage: thumbnailUrl,
+          allowDownload: false,
+          playButtonShowing: true,
+          fillToContainer: true,
+          autoPlay: false,
+          mute: false,
+          keyboardControl: true,
+          playbackRateEnabled: true,
+          pictureInPicture: true,
+          controlBar: {
+            autoHide: true,
+            autoHideTimeout: 3000
+          }
+        },
+        vastOptions: {
+          adList,
+          skipButton: true,
+          skipButtonOffset: 5,
+          adText: 'Advertisement',
+          adClickable: true,
+          autoPlayAd: true,
+          showTimelineMarkers: true,
+          maxAllowedVastTagRedirects: 3,
+          adTimeout: 10000
         }
-        
-        function generateThumbnailFromVideo(file) {
-            return new Promise((resolve) => {
-                if (!file.type.startsWith('video/')) {
-                    resolve(null);
-                    return;
-                }
-                
-                const video = document.createElement('video');
-                video.preload = 'metadata';
-                
-                video.onloadedmetadata = function() {
-                    this.currentTime = 0.1; // Capture at 0.1 seconds
-                };
-                
-                video.onseeked = function() {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    
-                    const thumbnailUrl = canvas.toDataURL('image/jpeg');
-                    resolve(thumbnailUrl);
-                };
-                
-                video.onerror = function() {
-                    resolve(null);
-                };
-                
-                video.src = URL.createObjectURL(file);
-            });
-        }
-        
-        // ============================
-        // ADVANCED FLUID PLAYER WITH AD MARKERS (YELLOW TIMELINE MARKERS)
-        // ============================
-        function initializeAdvancedVideoPlayer(videoUrl) {
-            const container = document.getElementById('videoPlayerContainer');
-            container.innerHTML = ''; // Clear any existing player
-            
-            // Create video element
-            const videoEl = document.createElement('video');
-            const playerId = 'fluid-player-' + Date.now();
-            videoEl.id = playerId;
-            videoEl.style.width = '100%';
-            videoEl.style.height = 'auto';
-            videoEl.controls = true;
-            videoEl.preload = 'metadata';
-            
-            const source = document.createElement('source');
-            source.src = videoUrl;
-            source.type = 'video/mp4';
-            
-            videoEl.appendChild(source);
-            container.appendChild(videoEl);
-            
-            // Get video duration for proper ad placement
-            return new Promise((resolve) => {
-                videoEl.addEventListener('loadedmetadata', function() {
-                    const duration = videoEl.duration;
-                    
-                    // Create AD LIST with exactly 8 ads as required
-                    const adList = [
-                        // 2 Pre-roll ads at start
-                        {
-                            roll: 'preRoll',
-                            vastTag: PREROLL_AD_URL,
-                            adText: 'Pre-roll Ad 1'
-                        },
-                        {
-                            roll: 'preRoll',
-                            vastTag: PREROLL_AD_URL,
-                            adText: 'Pre-roll Ad 2'
-                        },
-                        
-                        // 3 Mid-roll ads at 50% of video duration
-                        {
-                            roll: 'midRoll',
-                            vastTag: MIDROLL_AD_URL,
-                            timeOffset: '50%', // Exactly at 50% duration
-                            adText: 'Mid-roll Ad 1'
-                        },
-                        {
-                            roll: 'midRoll',
-                            vastTag: MIDROLL_AD_URL,
-                            timeOffset: '50%', // Exactly at 50% duration
-                            adText: 'Mid-roll Ad 2'
-                        },
-                        {
-                            roll: 'midRoll',
-                            vastTag: MIDROLL_AD_URL,
-                            timeOffset: '50%', // Exactly at 50% duration
-                            adText: 'Mid-roll Ad 3'
-                        },
-                        
-                        // 3 Post-roll ads at end
-                        {
-                            roll: 'postRoll',
-                            vastTag: POSTROLL_AD_URL,
-                            adText: 'Post-roll Ad 1'
-                        },
-                        {
-                            roll: 'postRoll',
-                            vastTag: POSTROLL_AD_URL,
-                            adText: 'Post-roll Ad 2'
-                        },
-                        {
-                            roll: 'postRoll',
-                            vastTag: POSTROLL_AD_URL,
-                            adText: 'Post-roll Ad 3'
-                        }
-                    ];
-                    
-                    console.log('Initializing Fluid Player with 8 ads (2 pre, 3 mid, 3 post)');
-                    
-                    // Initialize Fluid Player with YELLOW timeline markers
-                    const player = fluidPlayer(playerId, {
-                        layoutControls: {
-                            primaryColor: "#ff0000",
-                            posterImage: platformState.currentVideo?.thumbnailUrl || '',
-                            allowDownload: false,
-                            playButtonShowing: true,
-                            fillToContainer: true,
-                            autoPlay: false, // Don't autoplay for better UX
-                            mute: false,
-                            keyboardControl: true,
-                            playlist: false,
-                            allowTheatre: true,
-                            playbackRateEnabled: true,
-                            pictureInPicture: true,
-                            logo: {
-                                imageUrl: null,
-                                position: 'top left',
-                                clickUrl: null,
-                                opacity: 1
-                            },
-                            controlBar: {
-                                autoHide: true,
-                                autoHideTimeout: 3000,
-                                animated: true
-                            },
-                            htmlOnPauseBlock: {
-                                html: null,
-                                height: null,
-                                width: null
-                            },
-                            subtitlesEnabled: false
-                        },
-                        vastOptions: {
-                            adList: adList,
-                            adCTAText: "Visit Sponsor",
-                            skipButtonCaption: 'Skip Ad [seconds]',
-                            skipButtonClickCaption: 'Skip Ad',
-                            skipButton: true,
-                            skipButtonOffset: 5,
-                            adText: 'Advertisement',
-                            adTextPosition: 'top left',
-                            adClickable: true,
-                            autoPlayAd: true,
-                            showTimelineMarkers: true, // CRITICAL: This enables YELLOW timeline markers
-                            showControls: true,
-                            showMute: true,
-                            showVolume: true,
-                            vpaidMode: 'insecure',
-                            maxAllowedVastTagRedirects: 3,
-                            adTimeout: 10000
-                        }
-                    });
-                    
-                    // Handle player events
-                    player.on('adStart', function(adData) {
-                        console.log('Ad started:', adData);
-                    });
-                    
-                    player.on('adEnd', function() {
-                        console.log('Ad ended');
-                    });
-                    
-                    player.on('adError', function(error) {
-                        console.warn('Ad error, continuing with video:', error);
-                        player.play();
-                    });
-                    
-                    player.on('playerError', function(error) {
-                        console.error('Player error:', error);
-                        showToast('Error playing video', 'error');
-                    });
-                    
-                    // Verify timeline markers are visible
-                    setTimeout(() => {
-                        const timelineMarkers = container.querySelectorAll('.fluid-player-ad-marker');
-                        console.log(`Found ${timelineMarkers.length} timeline markers (should be 8)`);
-                        
-                        if (timelineMarkers.length === 8) {
-                            console.log(' 8 YELLOW timeline markers are visible!');
-                        } else {
-                            console.warn(`Expected 8 markers, found ${timelineMarkers.length}`);
-                        }
-                    }, 1000);
-                    
-                    resolve(player);
-                });
-                
-                videoEl.addEventListener('error', function(e) {
-                    console.error('Video error:', e);
-                    showToast('Error loading video', 'error');
-                    resolve(null);
-                });
-            });
-        }
-        
+      });
+
+      player.on('adError', () => player.play());
+      player.on('playerError', () =>
+        showToast('Error playing video', 'error')
+      );
+
+      resolve(player);
+    });
+
+    videoEl.addEventListener('error', () => {
+      showToast('Error loading video', 'error');
+      resolve(null);
+    });
+  });
+}
+
+       
         // ============================
         // FIREBASE AUTHENTICATION
         // ============================
