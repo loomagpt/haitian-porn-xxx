@@ -7,8 +7,6 @@
     <!-- Fluid Player -->
     <link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css">
     <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
-    <!-- Cloudinary Upload Widget -->
-    <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -16,7 +14,6 @@
     <!-- Firebase Auth -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-analytics-compat.js"></script>
     <!-- Back4App/Parse -->
     <script src="https://npmcdn.com/parse/dist/parse.min.js"></script>
     <style>
@@ -492,6 +489,7 @@
             text-align: center;
             margin-bottom: 30px;
             transition: var(--transition);
+            cursor: pointer;
         }
 
         body.dark-mode .upload-area {
@@ -515,6 +513,13 @@
             border-radius: var(--border-radius);
             overflow: hidden;
             margin-bottom: 20px;
+            position: relative;
+            width: 100%;
+        }
+
+        #fluid-player-container {
+            width: 100%;
+            height: auto;
         }
 
         .fluid-player-container {
@@ -796,6 +801,13 @@
             .thumbnail-options {
                 flex-direction: column;
             }
+            
+            .video-player-container {
+                margin-left: -20px;
+                margin-right: -20px;
+                border-radius: 0;
+                width: calc(100% + 40px);
+            }
         }
 
         /* Mobile Menu Button */
@@ -906,18 +918,37 @@
             color: var(--dark-text-secondary);
         }
 
-        /* Upload Status */
-        .upload-status {
-            text-align: center;
-            padding: 20px;
-            background-color: var(--light-surface);
-            border-radius: var(--border-radius);
-            margin: 20px 0;
-            font-weight: 500;
+        /* Upload Progress */
+        .upload-progress-container {
+            margin-top: 20px;
+            display: none;
         }
 
-        body.dark-mode .upload-status {
-            background-color: var(--dark-surface);
+        .upload-progress {
+            width: 100%;
+            height: 20px;
+            background-color: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .upload-progress-bar {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-size: 14px;
+            color: var(--light-text-secondary);
+        }
+
+        body.dark-mode .progress-text {
+            color: var(--dark-text-secondary);
         }
 
         .upload-success {
@@ -984,6 +1015,10 @@
 
         body.dark-mode .thumbnail-preview {
             background-color: #333;
+        }
+
+        .thumbnail-input {
+            display: none;
         }
 
         /* Banner Ads */
@@ -1132,11 +1167,12 @@
                         <h1>Upload Video</h1>
                         <p>Upload a video to your channel</p>
                         
-                        <button class="auth-button" id="cloudinaryUploadButton">
-                            <i class="fas fa-cloud-upload-alt"></i> Upload Video via Cloudinary
-                        </button>
-                        
-                        <div id="uploadStatus" class="upload-status" style="display: none;"></div>
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                            <h3>Select video file</h3>
+                            <p>Supports MP4, WebM, AVI files up to 20GB</p>
+                            <input type="file" id="videoFileInput" accept="video/*" style="margin-top: 20px;">
+                        </div>
                         
                         <!-- Thumbnail Options -->
                         <div class="form-group">
@@ -1153,8 +1189,9 @@
                                     <i class="fas fa-upload thumbnail-icon"></i>
                                     <h3>Upload Your Own</h3>
                                     <p>Upload a custom thumbnail image</p>
+                                    <input type="file" class="thumbnail-input" id="customThumbnailUpload" accept="image/*">
                                     <img class="thumbnail-preview" id="customThumbnailPreview" src="" alt="Custom Thumbnail">
-                                    <button type="button" class="auth-button" style="margin-top: 10px; background-color: var(--secondary-color);" id="uploadThumbnailButton">
+                                    <button type="button" class="auth-button" style="margin-top: 10px; background-color: var(--secondary-color);" onclick="document.getElementById('customThumbnailUpload').click()">
                                         Choose Image
                                     </button>
                                 </div>
@@ -1172,13 +1209,23 @@
                             <textarea class="form-input" id="videoDescription" rows="4" placeholder="Describe your video"></textarea>
                         </div>
                         
+                        <!-- Upload Progress -->
+                        <div class="upload-progress-container" id="uploadProgress">
+                            <div class="upload-progress">
+                                <div class="upload-progress-bar" id="uploadProgressBar"></div>
+                            </div>
+                            <div class="progress-text" id="progressText">0%</div>
+                        </div>
+                        
                         <!-- Upload Success Message -->
-                        <div class="upload-success" id="uploadSuccess" style="display: none;">
+                        <div class="upload-success" id="uploadSuccess">
                             <i class="fas fa-check-circle" style="font-size: 48px; color: #4caf50; margin-bottom: 16px;"></i>
                             <h3>Video Uploaded Successfully!</h3>
                             <p>Your video is being processed and will be available shortly.</p>
                             <button class="auth-button" onclick="switchView('home')" style="margin-top: 20px;">Go to Home</button>
                         </div>
+                        
+                        <button class="auth-button" id="submitUpload">Save Video Info</button>
                     </div>
                 </div>
             </div>
@@ -1208,26 +1255,18 @@
         };
         
         // Back4App/Parse Configuration
-        Parse.initialize("LGOfGtw0y0y9oCqehyzVb5tMvCOJuZkGErwB9zBO", "0POoxieFSbIWMResepdUcxBB8I8RB4HNz7OTcbZn");
+        Parse.initialize("Eiuz56RdBYjC2dFVLkHOJFOVKM4tC2pdDRrd8VeN", "wgtO2l7ZkkAUHs5h4dFvdhlnHr3kSavZo8gZn4J5");
         Parse.serverURL = 'https://parseapi.back4app.com/';
         
-        // VAST Ads URLs - Using multiple ad tags for 2 pre-roll, 3 mid-roll, 3 post-roll
-        const PRE_ROLL_AD_URLS = [
-            "https://s.magsrv.com/v1/vast.php?idzone=5829940",
-            "https://s.magsrv.com/v1/vast.php?idzone=5829941"
-        ];
+        // Bunny.net CDN Configuration
+        const BUNNY_CDN_HOSTNAME = "vz-10d8ee77-06f.b-cdn.net";
+        const BUNNY_STORAGE_ZONE = "1355411";
+        const BUNNY_API_KEY = ""; // Will be retrieved from Back4App cloud function
         
-        const MID_ROLL_AD_URLS = [
-            "https://cpm.afkwa.com/vast?zone=283171&tagid=387067",
-            "https://cpm.afkwa.com/vast?zone=283172&tagid=387067",
-            "https://cpm.afkwa.com/vast?zone=283173&tagid=387067"
-        ];
-        
-        const POST_ROLL_AD_URLS = [
-            "https://vast.unityads.unity3d.com/vast/v2/getAds?publisherId=123456&placementId=video",
-            "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dpreonly&ciu_szs=300x250&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=",
-            "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_ad_samples&sz=640x480&cust_params=sample_ct%3Dlinear&ciu_szs=300x250&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator="
-        ];
+        // VAST Ads URLs
+        const PREROLL_AD_URL = "https://s.magsrv.com/v1/vast.php?idzone=5834688";
+        const MIDROLL_AD_URL = "https://s.magsrv.com/v1/vast.php?idzone=5829940";
+        const POSTROLL_AD_URL = "https://cpm.afkwa.com/vast?zone=283171&tagid=387067";
         
         // ============================
         // PLATFORM STATE
@@ -1242,10 +1281,11 @@
             userLikes: new Set(), // Track liked videos for current user
             isDarkMode: localStorage.getItem('streamFlixDarkMode') === 'true',
             currentVideo: null,
-            cloudinaryWidget: null,
-            uploadedVideoUrl: null,
-            uploadedThumbnailUrl: null,
-            selectedThumbnailType: 'auto'
+            isUploading: false,
+            selectedThumbnailType: 'auto', // 'auto' or 'custom'
+            customThumbnailFile: null,
+            lastUploadedVideoUrl: null,
+            currentVideoFile: null
         };
         
         // ============================
@@ -1289,18 +1329,22 @@
             signupButton: document.getElementById('signupButton'),
             
             // Upload
-            cloudinaryUploadButton: document.getElementById('cloudinaryUploadButton'),
-            uploadStatus: document.getElementById('uploadStatus'),
+            uploadArea: document.getElementById('uploadArea'),
+            videoFileInput: document.getElementById('videoFileInput'),
             videoTitle: document.getElementById('videoTitle'),
             videoDescription: document.getElementById('videoDescription'),
+            submitUpload: document.getElementById('submitUpload'),
             uploadSuccess: document.getElementById('uploadSuccess'),
+            uploadProgress: document.getElementById('uploadProgress'),
+            uploadProgressBar: document.getElementById('uploadProgressBar'),
+            progressText: document.getElementById('progressText'),
             
             // Thumbnail Options
             autoThumbnailOption: document.getElementById('autoThumbnailOption'),
             customThumbnailOption: document.getElementById('customThumbnailOption'),
             autoThumbnailPreview: document.getElementById('autoThumbnailPreview'),
             customThumbnailPreview: document.getElementById('customThumbnailPreview'),
-            uploadThumbnailButton: document.getElementById('uploadThumbnailButton'),
+            customThumbnailUpload: document.getElementById('customThumbnailUpload'),
             
             // Toast
             toast: document.getElementById('toast'),
@@ -1314,9 +1358,6 @@
         async function initPlatform() {
             // Initialize Firebase
             initializeFirebase();
-            
-            // Initialize Cloudinary Upload Widget
-            initializeCloudinaryWidget();
             
             // Set up event listeners
             setupEventListeners();
@@ -1336,144 +1377,306 @@
         }
         
         // ============================
-        // CLOUDINARY UPLOAD WIDGET
+        // BUNNY.NET VIDEO UPLOAD
         // ============================
-        function initializeCloudinaryWidget() {
-            platformState.cloudinaryWidget = cloudinary.createUploadWidget({
-                cloudName: "dsvfrkt4m",
-                resourceType: "video",
-                uploadSignature: async (callback, paramsToSign) => {
-                    try {
-                        // You need to implement this server-side function
-                        // For now, we'll use a mock signature
-                        const mockSignature = {
-                            signature: "mock_signature",
-                            timestamp: Math.floor(Date.now() / 1000)
-                        };
-                        callback(mockSignature);
-                    } catch (error) {
-                        console.error('Signature error:', error);
-                        callback(null);
+        async function uploadVideoToBunny(file) {
+            try {
+                // Show progress
+                elements.uploadProgress.style.display = 'block';
+                elements.uploadProgressBar.style.width = '0%';
+                elements.progressText.textContent = '0%';
+                
+                // Get upload URL from Back4App Cloud Function
+                const result = await Parse.Cloud.run("getUploadURL", { 
+                    title: file.name,
+                    fileSize: file.size,
+                    contentType: file.type
+                });
+                
+                if (!result || !result.uploadURL || !result.videoFileName) {
+                    throw new Error('Failed to get upload URL from server');
+                }
+                
+                const uploadURL = result.uploadURL;
+                const videoFileName = result.videoFileName;
+                
+                // Upload to Bunny.net using chunked upload for large files
+                const chunkSize = 50 * 1024 * 1024; // 50MB chunks
+                const totalChunks = Math.ceil(file.size / chunkSize);
+                
+                for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+                    const start = chunkIndex * chunkSize;
+                    const end = Math.min(start + chunkSize, file.size);
+                    const chunk = file.slice(start, end);
+                    
+                    const response = await fetch(uploadURL, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/octet-stream',
+                            'Content-Range': `bytes ${start}-${end-1}/${file.size}`
+                        },
+                        body: chunk
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Upload failed at chunk ${chunkIndex + 1}`);
                     }
-                },
-                sources: ["local", "url", "camera"],
-                multiple: false,
-                maxFileSize: 10737418240, // 10GB
-                chunkSize: 20000000, // 20MB chunks
-                maxRetries: 5,
-                retryInterval: 3000,
-                secure: true,
-                showPoweredBy: false,
-                showAdvancedOptions: true,
-                cropping: false,
-                styles: {
-                    palette: {
-                        window: "#FFFFFF",
-                        windowBorder: "#90A0B3",
-                        tabIcon: "#0078FF",
-                        menuIcons: "#5A616A",
-                        textDark: "#000000",
-                        textLight: "#FFFFFF",
-                        link: "#0078FF",
-                        action: "#FF620C",
-                        inactiveTabIcon: "#0E2F5A",
-                        error: "#F44235",
-                        inProgress: "#0078FF",
-                        complete: "#20B832",
-                        sourceBg: "#E4EBF1"
-                    }
-                }
-            }, (error, result) => {
-                if (error) {
-                    console.warn("Upload retrying…", error);
-                    elements.uploadStatus.innerHTML = "Reconnecting…";
-                    elements.uploadStatus.style.display = 'block';
-                    return;
-                }
-
-                if (result.event === "upload-progress") {
-                    elements.uploadStatus.innerHTML = `Uploading ${Math.round(result.info.progress)}%`;
-                    elements.uploadStatus.style.display = 'block';
-                }
-
-                if (result.event === "success") {
-                    elements.uploadStatus.innerHTML = "Upload completed!";
-                    elements.uploadStatus.style.backgroundColor = '#d4edda';
-                    elements.uploadStatus.style.color = '#155724';
                     
-                    platformState.uploadedVideoUrl = result.info.secure_url;
-                    
-                    // Auto-generate thumbnail from video (frame at 1 second)
-                    const publicId = result.info.public_id;
-                    platformState.uploadedThumbnailUrl = `https://res.cloudinary.com/dsvfrkt4m/video/upload/so_1/${publicId}.jpg`;
-                    
-                    // Show auto thumbnail preview
-                    elements.autoThumbnailPreview.src = platformState.uploadedThumbnailUrl;
+                    // Update progress
+                    const progress = Math.round(((chunkIndex + 1) / totalChunks) * 100);
+                    elements.uploadProgressBar.style.width = `${progress}%`;
+                    elements.progressText.textContent = `${progress}%`;
+                }
+                
+                // Construct final video URL
+                const videoUrl = `https://${BUNNY_CDN_HOSTNAME}/${BUNNY_STORAGE_ZONE}/${videoFileName}`;
+                
+                // Generate thumbnail from first frame
+                const thumbnailUrl = await generateThumbnailFromVideo(file);
+                
+                // Store for later use
+                platformState.lastUploadedVideoUrl = videoUrl;
+                platformState.currentVideoFile = file;
+                
+                // Update auto thumbnail preview
+                if (thumbnailUrl) {
+                    elements.autoThumbnailPreview.src = thumbnailUrl;
                     elements.autoThumbnailPreview.style.display = 'block';
-                    handleThumbnailSelection('auto');
-                    
-                    // Auto-fill title if empty
-                    if (!elements.videoTitle.value.trim()) {
-                        const fileName = result.info.original_filename || "My Video";
-                        elements.videoTitle.value = fileName.charAt(0).toUpperCase() + fileName.slice(1);
-                    }
-                    
-                    showToast('Video uploaded successfully! Now fill in details and save.', 'success');
-                    
-                    // Enable save button
-                    setTimeout(() => {
-                        elements.uploadStatus.innerHTML = "Video uploaded! Fill in details below and click 'Save Video'";
-                    }, 2000);
                 }
                 
-                if (result.event === "close") {
-                    console.log("Upload widget closed");
+                // Pre-fill title with filename if empty
+                if (!elements.videoTitle.value.trim()) {
+                    const fileName = file.name.replace(/\.[^/.]+$/, ""); // Remove extension
+                    elements.videoTitle.value = fileName;
                 }
                 
-                if (result.event === "abort") {
-                    elements.uploadStatus.innerHTML = "Upload cancelled";
-                    elements.uploadStatus.style.display = 'block';
-                }
+                // Hide progress bar
+                elements.uploadProgress.style.display = 'none';
                 
-                if (result.event === "display-changed") {
-                    console.log("Display changed");
-                }
-            });
-            
-            // Open widget on button click
-            elements.cloudinaryUploadButton.addEventListener('click', () => {
-                if (!platformState.isAuthenticated) {
-                    showToast('Please login to upload videos', 'error');
-                    switchView('auth');
+                showToast('Video uploaded successfully! Now add details and save.', 'success');
+                
+                return {
+                    videoUrl: videoUrl,
+                    thumbnailUrl: thumbnailUrl,
+                    fileName: videoFileName
+                };
+                
+            } catch (error) {
+                console.error('Bunny upload error:', error);
+                elements.uploadProgress.style.display = 'none';
+                throw error;
+            }
+        }
+        
+        function generateThumbnailFromVideo(file) {
+            return new Promise((resolve) => {
+                if (!file.type.startsWith('video/')) {
+                    resolve(null);
                     return;
                 }
                 
-                platformState.cloudinaryWidget.open();
-            });
-            
-            // Initialize thumbnail upload button
-            elements.uploadThumbnailButton.addEventListener('click', () => {
-                // Create a simple file input for thumbnail
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
-                input.onchange = (e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(event) {
-                            elements.customThumbnailPreview.src = event.target.result;
-                            elements.customThumbnailPreview.style.display = 'block';
-                            handleThumbnailSelection('custom');
-                            
-                            // For now, we'll use data URL
-                            // In production, upload to Cloudinary
-                            platformState.uploadedThumbnailUrl = event.target.result;
-                        };
-                        reader.readAsDataURL(file);
-                    }
+                const video = document.createElement('video');
+                video.preload = 'metadata';
+                
+                video.onloadedmetadata = function() {
+                    this.currentTime = 0.1; // Capture at 0.1 seconds
                 };
-                input.click();
+                
+                video.onseeked = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    
+                    const thumbnailUrl = canvas.toDataURL('image/jpeg');
+                    resolve(thumbnailUrl);
+                };
+                
+                video.onerror = function() {
+                    resolve(null);
+                };
+                
+                video.src = URL.createObjectURL(file);
+            });
+        }
+        
+        // ============================
+        // ADVANCED FLUID PLAYER WITH AD MARKERS (YELLOW TIMELINE MARKERS)
+        // ============================
+        function initializeAdvancedVideoPlayer(videoUrl) {
+            const container = document.getElementById('videoPlayerContainer');
+            container.innerHTML = ''; // Clear any existing player
+            
+            // Create video element
+            const videoEl = document.createElement('video');
+            const playerId = 'fluid-player-' + Date.now();
+            videoEl.id = playerId;
+            videoEl.style.width = '100%';
+            videoEl.style.height = 'auto';
+            videoEl.controls = true;
+            videoEl.preload = 'metadata';
+            
+            const source = document.createElement('source');
+            source.src = videoUrl;
+            source.type = 'video/mp4';
+            
+            videoEl.appendChild(source);
+            container.appendChild(videoEl);
+            
+            // Get video duration for proper ad placement
+            return new Promise((resolve) => {
+                videoEl.addEventListener('loadedmetadata', function() {
+                    const duration = videoEl.duration;
+                    
+                    // Create AD LIST with exactly 8 ads as required
+                    const adList = [
+                        // 2 Pre-roll ads at start
+                        {
+                            roll: 'preRoll',
+                            vastTag: PREROLL_AD_URL,
+                            adText: 'Pre-roll Ad 1'
+                        },
+                        {
+                            roll: 'preRoll',
+                            vastTag: PREROLL_AD_URL,
+                            adText: 'Pre-roll Ad 2'
+                        },
+                        
+                        // 3 Mid-roll ads at 50% of video duration
+                        {
+                            roll: 'midRoll',
+                            vastTag: MIDROLL_AD_URL,
+                            timeOffset: '50%', // Exactly at 50% duration
+                            adText: 'Mid-roll Ad 1'
+                        },
+                        {
+                            roll: 'midRoll',
+                            vastTag: MIDROLL_AD_URL,
+                            timeOffset: '50%', // Exactly at 50% duration
+                            adText: 'Mid-roll Ad 2'
+                        },
+                        {
+                            roll: 'midRoll',
+                            vastTag: MIDROLL_AD_URL,
+                            timeOffset: '50%', // Exactly at 50% duration
+                            adText: 'Mid-roll Ad 3'
+                        },
+                        
+                        // 3 Post-roll ads at end
+                        {
+                            roll: 'postRoll',
+                            vastTag: POSTROLL_AD_URL,
+                            adText: 'Post-roll Ad 1'
+                        },
+                        {
+                            roll: 'postRoll',
+                            vastTag: POSTROLL_AD_URL,
+                            adText: 'Post-roll Ad 2'
+                        },
+                        {
+                            roll: 'postRoll',
+                            vastTag: POSTROLL_AD_URL,
+                            adText: 'Post-roll Ad 3'
+                        }
+                    ];
+                    
+                    console.log('Initializing Fluid Player with 8 ads (2 pre, 3 mid, 3 post)');
+                    
+                    // Initialize Fluid Player with YELLOW timeline markers
+                    const player = fluidPlayer(playerId, {
+                        layoutControls: {
+                            primaryColor: "#ff0000",
+                            posterImage: platformState.currentVideo?.thumbnailUrl || '',
+                            allowDownload: false,
+                            playButtonShowing: true,
+                            fillToContainer: true,
+                            autoPlay: false, // Don't autoplay for better UX
+                            mute: false,
+                            keyboardControl: true,
+                            playlist: false,
+                            allowTheatre: true,
+                            playbackRateEnabled: true,
+                            pictureInPicture: true,
+                            logo: {
+                                imageUrl: null,
+                                position: 'top left',
+                                clickUrl: null,
+                                opacity: 1
+                            },
+                            controlBar: {
+                                autoHide: true,
+                                autoHideTimeout: 3000,
+                                animated: true
+                            },
+                            htmlOnPauseBlock: {
+                                html: null,
+                                height: null,
+                                width: null
+                            },
+                            subtitlesEnabled: false
+                        },
+                        vastOptions: {
+                            adList: adList,
+                            adCTAText: "Visit Sponsor",
+                            skipButtonCaption: 'Skip Ad [seconds]',
+                            skipButtonClickCaption: 'Skip Ad',
+                            skipButton: true,
+                            skipButtonOffset: 5,
+                            adText: 'Advertisement',
+                            adTextPosition: 'top left',
+                            adClickable: true,
+                            autoPlayAd: true,
+                            showTimelineMarkers: true, // CRITICAL: This enables YELLOW timeline markers
+                            showControls: true,
+                            showMute: true,
+                            showVolume: true,
+                            vpaidMode: 'insecure',
+                            maxAllowedVastTagRedirects: 3,
+                            adTimeout: 10000
+                        }
+                    });
+                    
+                    // Handle player events
+                    player.on('adStart', function(adData) {
+                        console.log('Ad started:', adData);
+                    });
+                    
+                    player.on('adEnd', function() {
+                        console.log('Ad ended');
+                    });
+                    
+                    player.on('adError', function(error) {
+                        console.warn('Ad error, continuing with video:', error);
+                        player.play();
+                    });
+                    
+                    player.on('playerError', function(error) {
+                        console.error('Player error:', error);
+                        showToast('Error playing video', 'error');
+                    });
+                    
+                    // Verify timeline markers are visible
+                    setTimeout(() => {
+                        const timelineMarkers = container.querySelectorAll('.fluid-player-ad-marker');
+                        console.log(`Found ${timelineMarkers.length} timeline markers (should be 8)`);
+                        
+                        if (timelineMarkers.length === 8) {
+                            console.log(' 8 YELLOW timeline markers are visible!');
+                        } else {
+                            console.warn(`Expected 8 markers, found ${timelineMarkers.length}`);
+                        }
+                    }, 1000);
+                    
+                    resolve(player);
+                });
+                
+                videoEl.addEventListener('error', function(e) {
+                    console.error('Video error:', e);
+                    showToast('Error loading video', 'error');
+                    resolve(null);
+                });
             });
         }
         
@@ -1509,6 +1712,9 @@
                         updateAuthUI();
                     }
                 });
+                
+                // Google Auth Provider
+                window.googleAuthProvider = new firebase.auth.GoogleAuthProvider();
                 
             } catch (error) {
                 console.error('Firebase initialization error:', error);
@@ -1639,90 +1845,45 @@
             return card;
         }
         
-        async function saveVideoToBack4App() {
-            if (!platformState.uploadedVideoUrl) {
-                showToast('Please upload a video first', 'error');
-                return;
-            }
-            
-            const title = elements.videoTitle.value.trim();
-            const description = elements.videoDescription.value.trim();
-            
-            if (!title) {
-                showToast('Please enter a video title', 'error');
-                return;
-            }
-            
+        async function saveVideoToBack4App(videoData) {
             try {
                 const Video = Parse.Object.extend('Video');
                 const video = new Video();
                 
                 // Set video properties
-                video.set('title', title);
-                video.set('description', description);
-                video.set('videoUrl', platformState.uploadedVideoUrl);
-                
-                // Use selected thumbnail
-                if (platformState.selectedThumbnailType === 'custom' && platformState.uploadedThumbnailUrl) {
-                    video.set('thumbnailUrl', platformState.uploadedThumbnailUrl);
-                } else if (platformState.uploadedThumbnailUrl) {
-                    // Use auto-generated thumbnail
-                    video.set('thumbnailUrl', platformState.uploadedThumbnailUrl);
-                }
-                
+                video.set('title', videoData.title);
+                video.set('description', videoData.description);
+                video.set('videoUrl', videoData.videoUrl);
+                video.set('thumbnailUrl', videoData.thumbnailUrl);
                 video.set('creatorId', platformState.currentUser.uid);
                 video.set('creatorName', platformState.currentUser.displayName);
                 video.set('views', 0);
                 video.set('likes', 0);
                 video.set('dislikes', 0);
                 video.set('commentsCount', 0);
-                video.set('duration', '0:00'); // Would need to extract from video metadata
+                video.set('duration', videoData.duration || '0:00');
                 
                 await video.save();
                 
                 // Add to local cache
                 const newVideo = {
                     id: video.id,
-                    title: title,
-                    description: description,
-                    videoUrl: platformState.uploadedVideoUrl,
-                    thumbnailUrl: platformState.uploadedThumbnailUrl,
+                    ...videoData,
                     creatorId: platformState.currentUser.uid,
                     creatorName: platformState.currentUser.displayName,
                     views: 0,
                     likes: 0,
                     dislikes: 0,
-                    commentsCount: 0,
-                    duration: '0:00'
+                    commentsCount: 0
                 };
                 
                 platformState.videos.unshift(newVideo);
                 displayVideos();
                 
-                // Show success
-                elements.uploadSuccess.style.display = 'block';
-                elements.uploadStatus.style.display = 'none';
-                
-                // Reset form
-                elements.videoTitle.value = '';
-                elements.videoDescription.value = '';
-                elements.autoThumbnailPreview.style.display = 'none';
-                elements.customThumbnailPreview.style.display = 'none';
-                platformState.uploadedVideoUrl = null;
-                platformState.uploadedThumbnailUrl = null;
-                
-                // Reset thumbnail selection
-                elements.autoThumbnailOption.classList.add('selected');
-                elements.customThumbnailOption.classList.remove('selected');
-                platformState.selectedThumbnailType = 'auto';
-                
-                showToast('Video saved successfully!', 'success');
-                
                 return video.id;
                 
             } catch (error) {
                 console.error('Error saving video to Back4App:', error);
-                showToast('Error saving video: ' + error.message, 'error');
                 throw error;
             }
         }
@@ -1842,7 +2003,7 @@
         }
         
         // ============================
-        // VIDEO DETAIL VIEW WITH FLUID PLAYER & VAST ADS
+        // VIDEO DETAIL VIEW
         // ============================
         async function showVideoDetail(video) {
             platformState.currentVideo = video;
@@ -1854,7 +2015,7 @@
             const videoDetailHTML = `
                 <div class="video-detail-container">
                     <div class="video-player-container" id="videoPlayerContainer">
-                        <!-- Fluid Player will be initialized here -->
+                        <!-- Advanced Fluid Player will be initialized here -->
                     </div>
                     
                     <div class="video-info-detail">
@@ -1920,8 +2081,8 @@
             switchView('videoDetail');
             elements.videoDetailView.innerHTML = videoDetailHTML;
             
-            // Initialize Fluid Player with VAST ads
-            initializeVideoPlayer(video);
+            // Initialize Advanced Fluid Player with YELLOW timeline markers
+            await initializeAdvancedVideoPlayer(video.videoUrl);
             
             // Load comments
             loadComments(video.id);
@@ -1944,142 +2105,6 @@
                     likeCount.textContent = video.likes;
                 }
             }
-        }
-        
-        // ============================
-        // FLUID VIDEO PLAYER WITH VAST ADS (EXACT REQUIREMENTS)
-        // ============================
-        function initializeVideoPlayer(video) {
-            const container = document.getElementById('videoPlayerContainer');
-            
-            // Create video element
-            const videoElement = document.createElement('video');
-            videoElement.id = 'fluid-player-' + video.id;
-            videoElement.style.width = '100%';
-            videoElement.style.height = 'auto';
-            videoElement.controls = true;
-            videoElement.preload = 'metadata';
-            
-            const source = document.createElement('source');
-            source.src = video.videoUrl;
-            source.type = 'video/mp4';
-            
-            videoElement.appendChild(source);
-            container.appendChild(videoElement);
-            
-            // Create ad list exactly as required: 2 pre-roll, 3 mid-roll (at 50%), 3 post-roll
-            const adList = [];
-            
-            // Add 2 pre-roll ads
-            PRE_ROLL_AD_URLS.forEach((url, index) => {
-                adList.push({
-                    roll: 'preRoll',
-                    vastTag: url,
-                    adText: `Pre-roll Ad ${index + 1}`
-                });
-            });
-            
-            // Add 3 mid-roll ads at 50% of video duration
-            MID_ROLL_AD_URLS.forEach((url, index) => {
-                adList.push({
-                    roll: 'midRoll',
-                    vastTag: url,
-                    timer: "50%", // Exactly at 50% of video duration
-                    adText: `Mid-roll Ad ${index + 1}`
-                });
-            });
-            
-            // Add 3 post-roll ads
-            POST_ROLL_AD_URLS.forEach((url, index) => {
-                adList.push({
-                    roll: 'postRoll',
-                    vastTag: url,
-                    adText: `Post-roll Ad ${index + 1}`
-                });
-            });
-            
-            // Initialize Fluid Player with exact requirements
-            const player = fluidPlayer(
-                videoElement.id,
-                {
-                    layoutControls: {
-                        primaryColor: "#ff0000",
-                        posterImage: video.thumbnailUrl,
-                        allowDownload: false,
-                        playButtonShowing: true,
-                        fillToContainer: true,
-                        autoPlay: false, // Don't auto-play to respect user preference
-                        mute: false,
-                        keyboardControl: true,
-                        playlist: false,
-                        allowTheatre: true,
-                        playbackRateEnabled: true,
-                        logo: {
-                            imageUrl: null,
-                            position: 'top left',
-                            clickUrl: null,
-                            opacity: 1
-                        },
-                        // Enable timeline markers for ads
-                        showAdMarkers: true,
-                        adList: adList
-                    },
-                    vastOptions: {
-                        adList: adList,
-                        adCTAText: true,
-                        adCTATextPosition: 'top right',
-                        skipButtonCaption: 'Skip Ad [seconds]',
-                        skipButtonClickCaption: 'Skip Ad',
-                        adText: 'Advertisement',
-                        adTextPosition: 'top left',
-                        adClickable: true,
-                        autoPlayAd: true,
-                        // IMPORTANT: Enable timeline markers
-                        showTimelineMarkers: true,
-                        timelineMarkerDuration: 2000,
-                        timelineMarkerStyle: {
-                            color: "#FFD700", // Yellow color like YouTube
-                            opacity: 0.8
-                        },
-                        // Set mid-roll to show at 50% exactly
-                        midRollPercentage: 50
-                    }
-                }
-            );
-            
-            // Handle ad events
-            player.on('adStarted', function() {
-                console.log('Ad started playing');
-            });
-            
-            player.on('adCompleted', function() {
-                console.log('Ad completed');
-            });
-            
-            player.on('adError', function(error) {
-                console.log('Ad error:', error);
-                // Continue playing video if ad fails
-                player.play();
-            });
-            
-            player.on('vastAdLoad', function(adData) {
-                console.log('VAST ad loaded:', adData);
-            });
-            
-            // Handle video errors
-            videoElement.addEventListener('error', function(e) {
-                console.error('Video error:', e);
-                showToast('Error playing video', 'error');
-            });
-            
-            // Log ad markers info
-            setTimeout(() => {
-                console.log('Ad markers should be visible on timeline:');
-                console.log('- 2 yellow markers at start (pre-roll)');
-                console.log('- 3 yellow markers at 50% (mid-roll)');
-                console.log('- 3 yellow markers at end (post-roll)');
-                console.log('Total: 8 yellow markers on timeline');
-            }, 1000);
         }
         
         // ============================
@@ -2225,6 +2250,101 @@
         }
         
         // ============================
+        // VIDEO UPLOAD PROCESS
+        // ============================
+        async function saveVideoInfo() {
+            if (platformState.isUploading) {
+                return; // Prevent multiple saves
+            }
+            
+            if (!platformState.isAuthenticated) {
+                showToast('Please login to upload videos', 'error');
+                switchView('auth');
+                return;
+            }
+            
+            const title = elements.videoTitle.value.trim();
+            const description = elements.videoDescription.value.trim();
+            
+            // Validate inputs
+            if (!title) {
+                showToast('Please enter a video title', 'error');
+                return;
+            }
+            
+            if (!platformState.lastUploadedVideoUrl) {
+                showToast('Please upload a video first', 'error');
+                return;
+            }
+            
+            // Set uploading state
+            platformState.isUploading = true;
+            elements.submitUpload.disabled = true;
+            elements.submitUpload.textContent = 'Saving...';
+            
+            try {
+                // Upload thumbnail
+                let thumbnailUrl;
+                if (platformState.selectedThumbnailType === 'custom' && platformState.customThumbnailFile) {
+                    // Upload custom thumbnail
+                    thumbnailUrl = await uploadThumbnailToBack4App(platformState.customThumbnailFile);
+                } else {
+                    // Use auto-generated thumbnail
+                    thumbnailUrl = elements.autoThumbnailPreview.src;
+                }
+                
+                // Save to Back4App
+                const videoData = {
+                    title: title,
+                    description: description,
+                    videoUrl: platformState.lastUploadedVideoUrl,
+                    thumbnailUrl: thumbnailUrl,
+                    duration: '0:00' // Will be updated when video is played
+                };
+                
+                await saveVideoToBack4App(videoData);
+                
+                // Show success
+                elements.uploadSuccess.style.display = 'block';
+                elements.submitUpload.style.display = 'none';
+                
+                // Reset form
+                elements.videoTitle.value = '';
+                elements.videoDescription.value = '';
+                elements.customThumbnailUpload.value = '';
+                elements.autoThumbnailPreview.style.display = 'none';
+                elements.customThumbnailPreview.style.display = 'none';
+                elements.videoFileInput.value = '';
+                platformState.customThumbnailFile = null;
+                platformState.lastUploadedVideoUrl = null;
+                platformState.currentVideoFile = null;
+                
+                // Reset thumbnail selection
+                elements.autoThumbnailOption.classList.add('selected');
+                elements.customThumbnailOption.classList.remove('selected');
+                platformState.selectedThumbnailType = 'auto';
+                
+                platformState.isUploading = false;
+                
+                showToast('Video saved successfully!', 'success');
+                
+            } catch (error) {
+                console.error('Save error:', error);
+                elements.submitUpload.disabled = false;
+                elements.submitUpload.textContent = 'Save Video Info';
+                platformState.isUploading = false;
+                showToast('Save failed: ' + error.message, 'error');
+            }
+        }
+        
+        async function uploadThumbnailToBack4App(file) {
+            // For thumbnails, we can use Back4App's file storage
+            const parseFile = new Parse.File(file.name, file);
+            await parseFile.save();
+            return parseFile.url();
+        }
+        
+        // ============================
         // THUMBNAIL MANAGEMENT
         // ============================
         function handleThumbnailSelection(type) {
@@ -2234,19 +2354,9 @@
             if (type === 'auto') {
                 elements.autoThumbnailOption.classList.add('selected');
                 elements.customThumbnailOption.classList.remove('selected');
-                if (platformState.uploadedThumbnailUrl) {
-                    elements.autoThumbnailPreview.src = platformState.uploadedThumbnailUrl;
-                    elements.autoThumbnailPreview.style.display = 'block';
-                }
-                elements.customThumbnailPreview.style.display = 'none';
             } else {
                 elements.autoThumbnailOption.classList.remove('selected');
                 elements.customThumbnailOption.classList.add('selected');
-                elements.autoThumbnailPreview.style.display = 'none';
-                if (platformState.uploadedThumbnailUrl) {
-                    elements.customThumbnailPreview.src = platformState.uploadedThumbnailUrl;
-                    elements.customThumbnailPreview.style.display = 'block';
-                }
             }
         }
         
@@ -2337,9 +2447,13 @@
                 case 'upload':
                     if (platformState.isAuthenticated) {
                         elements.uploadView.classList.remove('hidden');
-                        // Reset upload form if needed
+                        // Reset upload form
                         elements.uploadSuccess.style.display = 'none';
-                        elements.uploadStatus.style.display = 'none';
+                        elements.uploadProgress.style.display = 'none';
+                        elements.submitUpload.style.display = 'block';
+                        elements.submitUpload.disabled = false;
+                        elements.submitUpload.textContent = 'Save Video Info';
+                        platformState.isUploading = false;
                     } else {
                         switchView('auth');
                     }
@@ -2431,28 +2545,63 @@
                 handleSignup(username, email, password);
             });
             
-            // Save video button in upload view
-            document.addEventListener('click', (e) => {
-                if (e.target && e.target.id === 'saveVideoButton') {
-                    e.preventDefault();
-                    saveVideoToBack4App();
+            // Upload functionality
+            elements.videoFileInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                if (!file.type.startsWith('video/')) {
+                    showToast('Please select a video file', 'error');
+                    return;
+                }
+                
+                if (file.size > 20 * 1024 * 1024 * 1024) { // 20GB limit
+                    showToast('File size exceeds 20GB limit', 'error');
+                    return;
+                }
+                
+                try {
+                    elements.submitUpload.disabled = true;
+                    elements.submitUpload.textContent = 'Uploading...';
+                    
+                    const uploadResult = await uploadVideoToBunny(file);
+                    
+                    // Enable submit button
+                    elements.submitUpload.disabled = false;
+                    elements.submitUpload.textContent = 'Save Video Info';
+                    
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    showToast('Upload failed: ' + error.message, 'error');
+                    elements.submitUpload.disabled = false;
+                    elements.submitUpload.textContent = 'Save Video Info';
                 }
             });
             
-            // Add save video button dynamically
-            const saveButton = document.createElement('button');
-            saveButton.id = 'saveVideoButton';
-            saveButton.className = 'auth-button';
-            saveButton.style.marginTop = '20px';
-            saveButton.style.backgroundColor = '#4CAF50';
-            saveButton.innerHTML = '<i class="fas fa-save"></i> Save Video to Platform';
-            saveButton.onclick = (e) => {
-                e.preventDefault();
-                saveVideoToBack4App();
-            };
+            // Thumbnail options
+            elements.autoThumbnailOption.addEventListener('click', () => handleThumbnailSelection('auto'));
+            elements.customThumbnailOption.addEventListener('click', () => handleThumbnailSelection('custom'));
             
-            // Add save button to upload view
-            elements.uploadView.querySelector('.upload-container').appendChild(saveButton);
+            // Custom thumbnail upload
+            elements.customThumbnailUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    platformState.customThumbnailFile = file;
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        elements.customThumbnailPreview.src = event.target.result;
+                        elements.customThumbnailPreview.style.display = 'block';
+                        handleThumbnailSelection('custom');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Handle save video info button
+            elements.submitUpload.addEventListener('click', (e) => {
+                e.preventDefault();
+                saveVideoInfo();
+            });
         }
         
         function handleSearch() {
@@ -2574,7 +2723,6 @@
         window.shareVideo = shareVideo;
         window.addComment = addComment;
         window.handleThumbnailSelection = handleThumbnailSelection;
-        window.saveVideoToBack4App = saveVideoToBack4App;
     </script>
 </body>
 </html>
