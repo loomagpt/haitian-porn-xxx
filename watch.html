@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Watch Video</title>
+</head>
+
+<body>
+
+<h2 id="title"></h2>
+
+<video id="player" controls autoplay width="100%"></video>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const videoId = params.get("id");
+
+if (!videoId) {
+    document.body.innerHTML = "Video not found";
+} else {
+
+    // CHEMEN VIDEO YO
+    const videoPath = "/videos/" + videoId + ".mp4";
+
+    document.getElementById("player").src = videoPath;
+    document.getElementById("title").innerText =
+        "Watching: " + videoId;
+}
+</script>
+
+</body>
+</html>
