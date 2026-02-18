@@ -1827,165 +1827,25 @@ function exitSite(){
 </script>
 <!-- ===== END AGE VERIFICATION ===== -->
 
- <!-- ===== HEADER NEON RED ===== -->
-<style>
-.main-header{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:60px;
-    background:#0a0a0a;
-    display:flex;
-    align-items:center;
-    padding:0 15px;
-    border-bottom:1px solid #ff0033;
-    box-shadow:0 0 15px rgba(255,0,51,.6);
-    z-index:9999;
-}
+        <button class="search-toggle" id="searchToggle">
+            <i class="fas fa-search"></i>
+        </button>
 
-.menu-button{
-    background:none;
-    border:none;
-    color:white;
-    font-size:22px;
-    cursor:pointer;
-    margin-right:15px;
-}
-
-.menu-button:hover{
-    color:#ff0033;
-    text-shadow:0 0 10px #ff0033;
-}
-
-.logo-container{
-    display:flex;
-    align-items:center;
-    gap:8px;
-}
-
-.logo-icon{
-    color:#ff0033;
-    font-size:26px;
-    text-shadow:0 0 15px #ff0033;
-}
-
-.logo-text{
-    color:white;
-    font-size:20px;
-    font-weight:bold;
-}
-</style>
-
-<header class="main-header">
-    <button class="menu-button">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <div class="logo-container">
-        <i class="fas fa-play-circle logo-icon"></i>
-        <span class="logo-text">Haitian Porn XXX</span>
-    </div>
-</header>
-<!-- ===== END HEADER ===== -->
-
-<!-- ===== SEARCH STYLE ===== -->
-<style>
-
-/* SEARCH TOGGLE ICON */
-.search-toggle{
-    background:none;
-    border:none;
-    color:white;
-    font-size:20px;
-    cursor:pointer;
-    margin-left:auto;
-}
-
-.search-toggle:hover{
-    color:#ff0033;
-    text-shadow:0 0 10px #ff0033;
-}
-
-/* WRAPPER */
-.search-wrapper{
-    position:absolute;
-    top:60px;
-    left:0;
-    width:100%;
-    background:#0b0b0b;
-    padding:15px;
-    border-bottom:1px solid #ff0033;
-    display:none;
-}
-
-/* SEARCH BOX */
-.search-container{
-    max-width:700px;
-    margin:auto;
-    display:flex;
-    align-items:center;
-    background:#111;
-    border-radius:30px;
-    padding:8px 15px;
-    border:1px solid #222;
-    box-shadow:0 0 12px rgba(255,0,51,.5);
-}
-
-/* ICON */
-.search-icon{
-    color:#ff0033;
-    margin-right:10px;
-}
-
-/* INPUT */
-.search-input{
-    flex:1;
-    background:transparent;
-    border:none;
-    outline:none;
-    color:white;
-    font-size:15px;
-}
-
-/* BUTTON */
-.search-button{
-    background:#ff0033;
-    border:none;
-    color:white;
-    padding:8px 14px;
-    border-radius:20px;
-    cursor:pointer;
-    transition:.3s;
-}
-
-.search-button:hover{
-    box-shadow:0 0 15px #ff0033;
-}
-
-/* SUGGESTIONS */
-.suggestions-dropdown{
-    max-width:700px;
-    margin:10px auto 0;
-    background:#111;
-    border-radius:10px;
-    overflow:hidden;
-    border:1px solid #222;
-}
-
-.suggestions-dropdown div{
-    padding:10px 15px;
-    color:#ccc;
-    cursor:pointer;
-}
-
-.suggestions-dropdown div:hover{
-    background:#1a1a1a;
-    color:#ff0033;
-}
-
-</style>
-
+        <!-- Search Wrapper with Suggestions -->
+        <div class="search-wrapper" id="searchWrapper">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search videos, creators, and more..." autocomplete="off">
+                <button class="search-button" id="searchButton">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+            
+            <!-- Suggestions Dropdown -->
+            <div class="suggestions-dropdown" id="suggestionsDropdown">
+                <!-- Suggestions will be populated dynamically -->
+            </div>
+        </div> 
 
         <div class="header-actions">
             <button class="action-button tooltip" data-tooltip="Upload" id="uploadButton">
@@ -2094,9 +1954,7 @@ function exitSite(){
                     <!-- Additional ads can be placed here -->
                 </div>
             </div>
-
-
-            <!-- Loading State -->
+           <!-- Loading State -->
             <div class="loading" id="loadingState">
                 <div class="spinner"></div>
                 <p>Loading amazing content...</p>
