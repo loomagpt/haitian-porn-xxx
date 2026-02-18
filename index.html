@@ -2095,63 +2095,12 @@ function exitSite(){
                 </div>
             </div>
 
-<!-- ===== LOADING SCREEN (ADULT STYLE) ===== -->
-<style>
 
-.loading{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:#050505;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    z-index:999999;
-}
-
-/* SPINNER NEON */
-.spinner{
-    width:60px;
-    height:60px;
-    border:4px solid #222;
-    border-top:4px solid #ff0033;
-    border-radius:50%;
-    animation:spin 1s linear infinite;
-    box-shadow:0 0 20px #ff0033;
-}
-
-@keyframes spin{
-    0%{transform:rotate(0deg);}
-    100%{transform:rotate(360deg);}
-}
-
-/* TEXT */
-.loading p{
-    margin-top:20px;
-    color:#fff;
-    font-size:16px;
-    letter-spacing:1px;
-    text-shadow:0 0 10px #ff0033;
-}
-
-</style>
-
-<div class="loading" id="loadingState">
-    <div class="spinner"></div>
-    <p>Loading hot videos...</p>
-</div>
-
-<script>
-/* Example: hide loading after page ready */
-window.addEventListener("load", function(){
-    document.getElementById("loadingState").style.display="none";
-});
-</script>
-<!-- ===== END LOADING ===== -->
-
+            <!-- Loading State -->
+            <div class="loading" id="loadingState">
+                <div class="spinner"></div>
+                <p>Loading amazing content...</p>
+            </div>
 
             <!-- No Videos State -->
             <div class="no-videos" id="noVideos" style="display: none;">
