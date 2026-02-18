@@ -1652,119 +1652,57 @@
     </style>
 </head>
 <body>
-    <!-- ===== AGE VERIFICATION (NEON RED) ===== -->
+
 <style>
-.age-modal{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.95);
-    backdrop-filter:blur(10px);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:999999;
-    animation:fadeIn .4s ease;
+#ageModal{
+ position:fixed;
+ inset:0;
+ background:rgba(0,0,0,.95);
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ z-index:9999;
 }
 
-@keyframes fadeIn{
-    from{opacity:0;}
-    to{opacity:1;}
+#ageModal div{
+ background:#0b0b0b;
+ padding:25px;
+ text-align:center;
+ border:1px solid #ff0033;
+ box-shadow:0 0 15px #ff0033;
+ color:#fff;
 }
 
-.age-box{
-    background:#080808;
-    border:2px solid #ff0033;
-    padding:40px;
-    width:90%;
-    max-width:400px;
-    text-align:center;
-    border-radius:12px;
-    box-shadow:0 0 20px #ff0033,0 0 60px rgba(255,0,51,.7);
-    animation:pop .35s ease;
+#ageModal button{
+ margin:8px;
+ padding:10px 18px;
+ border:none;
+ cursor:pointer;
 }
 
-@keyframes pop{
-    from{transform:scale(.8);opacity:0;}
-    to{transform:scale(1);opacity:1;}
-}
-
-.age-logo{
-    font-size:45px;
-    color:#ff0033;
-    font-weight:bold;
-    text-shadow:0 0 15px #ff0033,0 0 35px #ff0033;
-    margin-bottom:10px;
-}
-
-.age-box h2{
-    color:#fff;
-    margin-bottom:10px;
-}
-
-.age-box p{
-    color:#bbb;
-    font-size:14px;
-    margin-bottom:25px;
-}
-
-.age-btn{
-    padding:12px 20px;
-    border:none;
-    cursor:pointer;
-    font-weight:bold;
-    border-radius:6px;
-    margin:5px;
-    transition:.3s;
-}
-
-.enter{
-    background:#ff0033;
-    color:#fff;
-    box-shadow:0 0 15px #ff0033;
-}
-
-.enter:hover{
-    transform:scale(1.07);
-    box-shadow:0 0 30px #ff0033;
-}
-
-.exit{
-    background:#222;
-    color:#aaa;
-}
-
-.exit:hover{
-    background:#333;
-}
+.enter{background:#ff0033;color:#fff;}
+.exit{background:#222;color:#aaa;}
 </style>
 
-<div class="age-modal" id="ageModal">
-    <div class="age-box">
-        <div class="age-logo">18+</div>
-        <h2>Adults Only</h2>
-        <p>
-            This website contains adult content.
-            You must be 18 years or older to enter.
-        </p>
-
-        <button class="age-btn enter" onclick="enterSite()">ENTER SITE</button>
-        <button class="age-btn exit" onclick="exitSite()">EXIT</button>
-    </div>
+<div id="ageModal">
+  <div>
+    <h3>18+ Adults Only</h3>
+    <p>You must be 18+ to enter.</p>
+    <button class="enter" onclick="enterSite()">ENTER</button>
+    <button class="exit" onclick="exitSite()">EXIT</button>
+  </div>
 </div>
 
 <script>
 function enterSite(){
-    document.getElementById("ageModal").style.display="none";
+ document.getElementById("ageModal").remove(); // retire popup nèt
 }
 
 function exitSite(){
-    window.location.href="https://google.com";
+ location.href="https://google.com";
 }
 </script>
-<!-- ===== END AGE VERIFICATION ===== -->
+
     <!-- Header -->
     <header>
         <button class="menu-button" id="menuToggle">
