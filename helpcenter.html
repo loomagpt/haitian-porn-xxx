@@ -1,1 +1,1791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  
+  <!-- Favicon (Modern Play Icon) - Visible in browser tabs and search results -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'%3E%3Cpath d='M2 2.5L22 14L2 25.5V2.5Z' fill='%230b0e14' stroke='%23e11d48' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'%3E%3Cpath d='M2 2.5L22 14L2 25.5V2.5Z' fill='%230b0e14' stroke='%23e11d48' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="shortcut icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 28'%3E%3Cpath d='M2 2.5L22 14L2 25.5V2.5Z' fill='%230b0e14' stroke='%23e11d48' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E">
+  
+  <!-- SEO Primary Meta -->
+  <title>Haitian Tube Help Center • Creator Support, Monetization & Technical Guides</title>
+  <meta name="description" content="Official help center for Haitian Tube creators. Find answers on monetization, copyright, channel verification, algorithm tips, live streaming, Shorts, community guidelines, and technical troubleshooting.">
+  <meta name="keywords" content="Haitian Tube, help, monetization, subscribers, views, creator studio, copyright, algorithm, verification, FAQ, support, live streaming, shorts, community, analytics, api">
+  <meta name="author" content="Haitian Tube">
+  <link rel="canonical" href="https://help.haitiantube.com/">
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:title" content="Haitian Tube Help Center">
+  <meta property="og:description" content="Everything you need to grow and manage your Haitian Tube channel. Creator support, monetization guides, and technical resources.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://help.haitiantube.com/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Haitian Tube Help Center">
+  <meta name="twitter:description" content="Creator support, monetization guides, and technical resources.">
 
+  <!-- Structured Data / Schema.org for SEO -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Haitian Tube Help Center",
+    "url": "https://help.haitiantube.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://help.haitiantube.com/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+  <style>
+    /* ----- RESET & BASE (Modern App UI) ----- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f8fafc;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      color: #0b0e14;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px 48px;
+    }
+
+    /* ----- Header with Auth Section ----- */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .play-icon {
+      width: 48px;
+      height: 48px;
+      background: #0b0e14;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.12);
+      transition: transform 0.2s ease;
+    }
+
+    .play-icon:hover {
+      transform: scale(1.02);
+    }
+
+    .play-icon svg {
+      width: 26px;
+      height: 26px;
+      margin-left: 3px;
+    }
+
+    .brand-text {
+      font-size: 30px;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      color: #0b0e14;
+    }
+
+    .brand-text .accent {
+      color: #e11d48;
+      font-weight: 700;
+    }
+
+    .auth-section {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .auth-btn {
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: 550;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: none;
+      background: white;
+      color: #0f172a;
+      border: 1px solid #e2e8f0;
+      font-family: inherit;
+    }
+
+    .auth-btn.primary {
+      background: #0f172a;
+      color: white;
+      border: none;
+    }
+
+    .auth-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 40px;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .report-btn, .history-btn, .bookmark-btn {
+      padding: 10px 18px;
+      background: #e11d48;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-weight: 550;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .history-btn {
+      background: #475569;
+    }
+
+    .bookmark-btn {
+      background: #0f172a;
+    }
+
+    .report-btn:hover, .history-btn:hover, .bookmark-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .badge-help {
+      font-size: 14px;
+      font-weight: 500;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-top: 4px;
+    }
+
+    /* ----- Stats Bar ----- */
+    .stats-bar {
+      display: flex;
+      gap: 24px;
+      margin: 16px 0;
+      padding: 16px 20px;
+      background: white;
+      border-radius: 20px;
+      border: 1px solid #eef2f6;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #64748b;
+    }
+
+    /* ----- Quick Actions ----- */
+    .quick-actions {
+      display: flex;
+      gap: 12px;
+      margin: 16px 0;
+      flex-wrap: wrap;
+    }
+
+    .quick-action {
+      padding: 12px 20px;
+      background: white;
+      border: 1px solid #eef2f6;
+      border-radius: 40px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #0f172a;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quick-action:hover {
+      background: #0f172a;
+      color: white;
+      border-color: #0f172a;
+    }
+
+    /* ----- Navigation Tabs (Multi-page feel) ----- */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      margin: 28px 0 16px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 4px;
+      flex-wrap: wrap;
+    }
+
+    .nav-tab {
+      padding: 10px 20px;
+      font-size: 15px;
+      font-weight: 550;
+      color: #475569;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: transparent;
+      border: none;
+      font-family: inherit;
+    }
+
+    .nav-tab:hover {
+      background: #eef2f6;
+      color: #0f172a;
+    }
+
+    .nav-tab.active {
+      background: #0f172a;
+      color: white;
+    }
+
+    /* ----- Hero Section ----- */
+    .hero {
+      margin: 20px 0 24px;
+    }
+
+    .hero h1 {
+      font-size: 38px;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      color: #475569;
+      max-width: 640px;
+    }
+
+    /* ----- Search Bar ----- */
+    .search-container {
+      position: relative;
+      width: 100%;
+      margin: 24px 0 16px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 16px 20px 16px 56px;
+      font-size: 16px;
+      border: none;
+      border-radius: 32px;
+      background: #ffffff;
+      box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s;
+      color: #0f172a;
+      font-family: inherit;
+    }
+
+    .search-input:focus {
+      outline: none;
+      box-shadow: 0 12px 28px -8px rgba(15, 23, 42, 0.12), 0 0 0 2px rgba(225, 29, 72, 0.2);
+    }
+
+    .search-input::placeholder {
+      color: #94a3b8;
+    }
+
+    /* ----- Filter Chips ----- */
+    .filter-chips {
+      display: flex;
+      gap: 8px;
+      margin: 16px 0;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      padding: 8px 16px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #475569;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-chip.active {
+      background: #0f172a;
+      color: white;
+      border-color: #0f172a;
+    }
+
+    .filter-chip:hover {
+      background: #eef2f6;
+    }
+
+    /* ----- FAQ Grid ----- */
+    .faq-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .faq-card {
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.03);
+      border: 1px solid #eef2f6;
+      transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .faq-card:hover {
+      box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.08);
+      border-color: #e2e8f0;
+      transform: translateY(-1px);
+    }
+
+    .faq-card.bookmarked {
+      border-left: 4px solid #e11d48;
+    }
+
+    .faq-question {
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      background: #ffffff;
+      transition: background 0.15s;
+    }
+
+    .faq-question:hover {
+      background: #fafcff;
+    }
+
+    .question-text {
+      font-weight: 600;
+      font-size: 17px;
+      color: #0b1e33;
+      letter-spacing: -0.01em;
+      flex: 1;
+      padding-right: 16px;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-right: 12px;
+    }
+
+    .card-action {
+      width: 32px;
+      height: 32px;
+      border-radius: 40px;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: none;
+    }
+
+    .card-action:hover {
+      background: #e2e8f0;
+    }
+
+    .card-action.bookmarked-active {
+      background: #e11d48;
+    }
+
+    .card-action.bookmarked-active svg {
+      stroke: white;
+      fill: white;
+    }
+
+    .indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 40px;
+      background: #f1f5f9;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .indicator svg {
+      width: 18px;
+      height: 18px;
+      stroke: #475569;
+      stroke-width: 2.2;
+      transition: transform 0.25s ease;
+    }
+
+    .faq-card.active .indicator {
+      background: #0f172a;
+    }
+
+    .faq-card.active .indicator svg {
+      stroke: white;
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      padding: 0 24px;
+      transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.2s;
+      color: #334155;
+      border-top: 1px solid transparent;
+    }
+
+    .faq-card.active .faq-answer {
+      max-height: 1000px;
+      opacity: 1;
+      padding: 8px 24px 24px 24px;
+      border-top: 1px solid #edf2f7;
+    }
+
+    .answer-content {
+      font-size: 16px;
+      line-height: 1.7;
+      color: #1e293b;
+    }
+
+    .answer-content p {
+      margin-bottom: 16px;
+    }
+
+    .answer-content ul, .answer-content ol {
+      margin: 12px 0 16px 24px;
+    }
+
+    .answer-content li {
+      margin-bottom: 8px;
+    }
+
+    .answer-meta {
+      margin-top: 20px;
+      font-size: 13px;
+      color: #64748b;
+      border-top: 1px dashed #e2e8f0;
+      padding-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .helpful-section {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .helpful-btn {
+      padding: 6px 16px;
+      background: #f1f5f9;
+      border: none;
+      border-radius: 30px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .helpful-btn:hover {
+      background: #e2e8f0;
+    }
+
+    .helpful-btn.voted {
+      background: #0f172a;
+      color: white;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 48px 20px;
+      background: #ffffffd6;
+      border-radius: 32px;
+      color: #475569;
+      font-size: 17px;
+      border: 1px solid #eef2f6;
+    }
+
+    /* ----- Pagination ----- */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 32px;
+    }
+
+    .page-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 40px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-weight: 500;
+    }
+
+    .page-btn:hover {
+      background: #0f172a;
+      color: white;
+      border-color: #0f172a;
+    }
+
+    .page-btn.active {
+      background: #0f172a;
+      color: white;
+      border-color: #0f172a;
+    }
+
+    /* ----- Related Articles ----- */
+    .related-section {
+      margin-top: 40px;
+      padding: 24px;
+      background: white;
+      border-radius: 24px;
+      border: 1px solid #eef2f6;
+    }
+
+    .related-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #0f172a;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 12px;
+    }
+
+    .related-card {
+      padding: 16px;
+      background: #f8fafc;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .related-card:hover {
+      background: #eef2f6;
+    }
+
+    /* ----- Modals ----- */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      background: white;
+      max-width: 500px;
+      width: 90%;
+      border-radius: 28px;
+      padding: 32px;
+      max-height: 85vh;
+      overflow: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .modal-content.large {
+      max-width: 700px;
+    }
+
+    .modal-content h3 {
+      margin-bottom: 24px;
+      font-size: 24px;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #334155;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      font-size: 15px;
+      transition: border 0.15s;
+      font-family: inherit;
+      background: #fafcff;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #e11d48;
+      background: white;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: #0f172a;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .submit-btn:hover {
+      background: #1e293b;
+      transform: translateY(-1px);
+    }
+
+    .close-icon {
+      float: right;
+      font-size: 28px;
+      cursor: pointer;
+      color: #94a3b8;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+
+    .close-icon:hover {
+      color: #0f172a;
+    }
+
+    .auth-toggle {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 14px;
+      color: #64748b;
+    }
+
+    .auth-toggle a {
+      color: #e11d48;
+      margin-left: 4px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .auth-toggle a:hover {
+      text-decoration: underline;
+    }
+
+    /* ----- History List ----- */
+    .history-list, .bookmark-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .history-item, .bookmark-item {
+      padding: 16px;
+      border-bottom: 1px solid #eef2f6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .history-item:hover, .bookmark-item:hover {
+      background: #f8fafc;
+    }
+
+    .history-title, .bookmark-title {
+      font-weight: 500;
+      color: #0f172a;
+      cursor: pointer;
+    }
+
+    .history-time {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    /* ----- Footer ----- */
+    .footer-note {
+      margin-top: 48px;
+      text-align: center;
+      color: #6b7a8f;
+      font-size: 14px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer-links a {
+      color: #64748b;
+      text-decoration: none;
+    }
+
+    .footer-links a:hover {
+      color: #0f172a;
+    }
+
+    /* ----- Toast Notification ----- */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #0f172a;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 14px;
+      z-index: 2000;
+      display: none;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    /* ----- Utilities ----- */
+    .hide {
+      display: none !important;
+    }
+
+    /* ----- Custom Scrollbar ----- */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="app-wrapper">
+  
+  <!-- Top Bar with Brand and Auth -->
+  <div class="top-bar">
+    <div class="brand">
+      <div class="play-icon">
+        <svg viewBox="0 0 24 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 2.5L22 14L2 25.5V2.5Z" fill="white" stroke="white" stroke-width="1.2" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        Haitian<span class="accent">Tube</span>
+      </div>
+    </div>
+    <div class="auth-section" id="authSection">
+      <!-- Dynamic auth buttons injected via JavaScript -->
+    </div>
+  </div>
+  <div class="badge-help">Help Center • Knowledge Base • v3.0</div>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <span class="stat-value" id="totalArticles">52</span>
+      <span class="stat-label">Help Articles</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value" id="helpfulCount">1,247</span>
+      <span class="stat-label">People Helped Today</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-value">24/7</span>
+      <span class="stat-label">Support Available</span>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <div class="quick-action" id="gettingStartedAction">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Getting Started
+    </div>
+    <div class="quick-action" id="monetizationAction">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Monetization Guide
+    </div>
+    <div class="quick-action" id="troubleshootingAction">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+      Troubleshooting
+    </div>
+    <div class="quick-action" id="contactAction">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      Contact Support
+    </div>
+  </div>
+
+  <!-- Navigation Tabs -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-category="all">All Topics</button>
+    <button class="nav-tab" data-category="getting-started">Getting Started</button>
+    <button class="nav-tab" data-category="monetization">Monetization</button>
+    <button class="nav-tab" data-category="technical">Technical & Studio</button>
+    <button class="nav-tab" data-category="legal">Legal & Policies</button>
+    <button class="nav-tab" data-category="shorts">Shorts</button>
+    <button class="nav-tab" data-category="live">Live Streaming</button>
+  </div>
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <h1>Answers, clarity, and<br>creator support.</h1>
+    <div class="hero-sub">Everything you need to grow, monetize, and navigate Haitian Tube with confidence.</div>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-container">
+    <span class="search-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </span>
+    <input type="text" id="searchInput" class="search-input" placeholder="Search topics, monetization, views, policies, live streaming, shorts…" autocomplete="off">
+  </div>
+
+  <!-- Filter Chips -->
+  <div class="filter-chips">
+    <span class="filter-chip active" data-filter="all">All Articles</span>
+    <span class="filter-chip" data-filter="popular">Most Popular</span>
+    <span class="filter-chip" data-filter="recent">Recently Updated</span>
+    <span class="filter-chip" data-filter="unread">Unread</span>
+  </div>
+
+  <!-- Action Buttons Row -->
+  <div style="display: flex; gap: 12px; margin-bottom: 16px; justify-content: flex-end;">
+    <button class="history-btn" id="historyBtn" style="display: none;">View History</button>
+    <button class="bookmark-btn" id="bookmarkBtn" style="display: none;">Bookmarks</button>
+    <button class="report-btn" id="reportProblemBtn" style="display: none;">Report a Problem</button>
+  </div>
+
+  <!-- FAQ Container -->
+  <div class="faq-grid" id="faqContainer"></div>
+
+  <!-- Pagination -->
+  <div class="pagination" id="pagination"></div>
+
+  <!-- Related Articles Section -->
+  <div class="related-section">
+    <div class="related-title">Trending Help Articles</div>
+    <div class="related-grid" id="trendingGrid"></div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer-note">
+    <span>Haitian Tube Creator Support • Always evolving.</span>
+    <div class="footer-links">
+      <a href="#" id="sitemapTrigger">Sitemap</a>
+      <a href="#" id="privacyPolicy">Privacy</a>
+      <a href="#" id="termsOfService">Terms</a>
+      <a href="#" id="apiDocs">API Docs</a>
+    </div>
+  </div>
+</div>
+
+<!-- Authentication Modal -->
+<div class="modal" id="authModal">
+  <div class="modal-content">
+    <span class="close-icon" id="closeAuthModal">&times;</span>
+    <h3 id="authModalTitle">Sign In</h3>
+    <form id="authForm">
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="authEmail" placeholder="creator@example.com" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="authPassword" placeholder="••••••••" required minlength="6">
+      </div>
+      <button type="submit" class="submit-btn" id="authSubmitBtn">Sign In</button>
+    </form>
+    <div class="auth-toggle">
+      <span id="authToggleText">Don't have an account?</span>
+      <a href="#" id="authToggleLink">Sign Up</a>
+    </div>
+  </div>
+</div>
+
+<!-- Report Problem Modal -->
+<div class="modal" id="reportModal">
+  <div class="modal-content" style="max-width: 500px;">
+    <span class="close-icon" id="closeReportModal">&times;</span>
+    <h3>Report a Problem</h3>
+    <form id="reportForm">
+      <div class="form-group">
+        <label>Issue Type</label>
+        <select id="issueType" required>
+          <option value="">Select an issue type...</option>
+          <option value="bug">Bug / Technical Issue</option>
+          <option value="account">Account Problem</option>
+          <option value="monetization">Monetization Question</option>
+          <option value="content">Content / Copyright</option>
+          <option value="live">Live Streaming Issue</option>
+          <option value="shorts">Shorts Problem</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Priority</label>
+        <select id="priority" required>
+          <option value="low">Low - General Question</option>
+          <option value="medium">Medium - Need Help Soon</option>
+          <option value="high">High - Urgent Issue</option>
+          <option value="critical">Critical - Account at Risk</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Subject</label>
+        <input type="text" id="issueSubject" placeholder="Brief description of the issue" required>
+      </div>
+      <div class="form-group">
+        <label>Detailed Description</label>
+        <textarea id="issueDescription" rows="5" placeholder="Please provide as much detail as possible..." required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Channel URL (optional)</label>
+        <input type="text" id="channelUrl" placeholder="https://haitiantube.com/@yourchannel">
+      </div>
+      <div class="form-group">
+        <label>Attach Screenshot (optional)</label>
+        <input type="file" id="screenshot" accept="image/*">
+      </div>
+      <button type="submit" class="submit-btn">Submit Report</button>
+    </form>
+  </div>
+</div>
+
+<!-- History Modal -->
+<div class="modal" id="historyModal">
+  <div class="modal-content large">
+    <span class="close-icon" id="closeHistoryModal">&times;</span>
+    <h3>Recently Viewed Articles</h3>
+    <div class="history-list" id="historyList"></div>
+    <button class="submit-btn" id="clearHistoryBtn" style="margin-top: 16px;">Clear History</button>
+  </div>
+</div>
+
+<!-- Bookmarks Modal -->
+<div class="modal" id="bookmarkModal">
+  <div class="modal-content large">
+    <span class="close-icon" id="closeBookmarkModal">&times;</span>
+    <h3>Bookmarked Articles</h3>
+    <div class="bookmark-list" id="bookmarkList"></div>
+  </div>
+</div>
+
+<!-- Sitemap Modal -->
+<div class="modal" id="sitemapModal">
+  <div class="modal-content large">
+    <span class="close-icon" id="closeSitemapModal">&times;</span>
+    <h3>Sitemap XML Structure</h3>
+    <pre style="background:#f1f5f9; padding:16px; border-radius:16px; overflow-x:auto; font-size:13px; line-height:1.6;">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"&gt;
+  &lt;url&gt;&lt;loc&gt;https://help.haitiantube.com/&lt;/loc&gt;&lt;priority&gt;1.0&lt;/priority&gt;&lt;changefreq&gt;daily&lt;/changefreq&gt;&lt;/url&gt;
+  &lt;url&gt;&lt;loc&gt;https://help.haitiantube.com/getting-started&lt;/loc&gt;&lt;priority&gt;0.9&lt;/priority&gt;&lt;/url&gt;
+  &lt;url&gt;&lt;loc&gt;https://help.haitiantube.com/monetization&lt;/loc&gt;&lt;priority&gt;0.9&lt;/priority&gt;&lt;/url&gt;
+  &lt;url&gt;&lt;loc&gt;https://help.haitiantube.com/technical&lt;/loc&gt;&lt;priority&gt;0.8&lt;/priority&gt;&lt;/url&gt;
+  &lt;url&gt;&lt;loc&gt;https://help.haitiantube.com/legal&lt;/loc&gt;&lt;priority&gt;0.8&lt;/priority&gt;&lt;/url&gt;
+  &lt;url&gt;&lt;loc&gt;https://help.haitiantube.com/shorts&lt;/loc&gt;&lt;priority&gt;0.8&lt;/priority&gt;&lt;/url&gt;
+  &lt;url&gt;&lt;loc&gt;https://help.haitiantube.com/live&lt;/loc&gt;&lt;priority&gt;0.8&lt;/priority&gt;&lt;/url&gt;
+  &lt;url&gt;&lt;loc&gt;https://help.haitiantube.com/api-docs&lt;/loc&gt;&lt;priority&gt;0.7&lt;/priority&gt;&lt;/url&gt;
+&lt;/urlset&gt;</pre>
+    <p style="margin-top: 16px; color: #64748b; font-size: 14px;">This sitemap is automatically generated and submitted to search engines daily.</p>
+  </div>
+</div>
+
+<!-- API Docs Modal -->
+<div class="modal" id="apiModal">
+  <div class="modal-content large">
+    <span class="close-icon" id="closeApiModal">&times;</span>
+    <h3>Haitian Tube API Documentation</h3>
+    <div style="margin-top: 20px;">
+      <h4 style="margin-bottom: 12px;">Authentication</h4>
+      <pre style="background:#f1f5f9; padding:12px; border-radius:12px; overflow-x:auto; margin-bottom: 20px;">POST https://api.haitiantube.com/v1/auth
+Content-Type: application/json
+{
+  "api_key": "your_api_key_here"
+}</pre>
+      
+      <h4 style="margin-bottom: 12px;">Endpoints</h4>
+      <ul style="margin-bottom: 20px; line-height: 2;">
+        <li><strong>GET /v1/channel</strong> - Get channel information</li>
+        <li><strong>GET /v1/videos</strong> - List channel videos</li>
+        <li><strong>GET /v1/analytics</strong> - Retrieve analytics data</li>
+        <li><strong>POST /v1/upload</strong> - Upload a new video</li>
+        <li><strong>GET /v1/comments</strong> - Get video comments</li>
+        <li><strong>GET /v1/live</strong> - Live stream management</li>
+      </ul>
+      
+      <h4 style="margin-bottom: 12px;">Rate Limits</h4>
+      <p>10,000 requests per day for verified applications. Contact developer support for increased limits.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase and Back4App Integration -->
+<script type="module">
+  // Import Firebase modules
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCkJiJEh5XbIBNpkbSOF11wAUJRZeglbgc",
+    authDomain: "haitiantube-help-center.firebaseapp.com",
+    projectId: "haitiantube-help-center",
+    storageBucket: "haitiantube-help-center.firebasestorage.app",
+    messagingSenderId: "1065559107530",
+    appId: "1:1065559107530:web:65700bf9654418d608d133",
+    measurementId: "G-TB2PXYSN27"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // Initialize Back4App (Parse)
+  Parse.initialize("n4a5vFbTd3Yd0sEWaGs7RT7FwCT2OEiUpXsyp1nU", "B6wT1ptuug1vqHwm1GidYiXAdhVVoEBV1kkFowRy");
+  Parse.serverURL = 'https://parseapi.back4app.com';
+
+  // Make services available globally
+  window.auth = auth;
+  window.db = db;
+  window.Parse = Parse;
+
+  // Extended FAQ Database (50+ articles)
+  const faqDatabase = [
+    // Getting Started (8)
+    { question: "How do I create my first Haitian Tube channel?", category: "getting-started", popular: true, date: "January 5, 2026", answer: `<p>Creating your first Haitian Tube channel is simple and free. Click the profile icon in the top-right corner and select "Create a channel." Choose a memorable channel name that reflects your content niche.</p><p>After creation, customize your channel with a profile picture, banner image, and channel description. Complete the "About" section to help viewers understand what content to expect. We recommend uploading a channel trailer to introduce yourself to new visitors.</p><p>Your channel is now ready for your first upload. Click the camera icon with a "+" to start uploading videos.</p>` },
+    { question: "What equipment do I need to start creating content?", category: "getting-started", popular: true, date: "January 8, 2026", answer: `<p>You can start creating content with just a smartphone. Modern phones record high-quality 1080p or 4K video suitable for Haitian Tube. The most important factor is audio quality—consider an affordable lavalier microphone for clear voice recording.</p><p>As you grow, consider upgrading to:<ul><li>Entry-level DSLR or mirrorless camera</li><li>Ring light or softbox lighting</li><li>USB microphone or XLR setup</li><li>Basic video editing software (many free options available)</li></ul></p><p>Remember, content quality matters more than equipment quality. Many successful creators started with just their phone.</p>` },
+    { question: "How do I upload my first video?", category: "getting-started", date: "January 10, 2026", answer: `<p>To upload your first video, click the camera icon with a "+" in the top navigation bar. Select your video file from your device. While uploading, you can fill in:<ul><li>Title (use keywords viewers might search for)</li><li>Description (include relevant information and links)</li><li>Thumbnail (choose an eye-catching frame or upload custom)</li><li>Playlist (organize your content)</li><li>Audience (indicate if content is made for kids)</li></ul></p><p>You can publish immediately or schedule for later. Once published, share your video link on social media to drive initial views.</p>` },
+    { question: "What are the Community Guidelines I should know?", category: "getting-started", date: "January 12, 2026", answer: `<p>Haitian Tube's Community Guidelines protect creators and viewers. Key policies include:<ul><li>No hate speech, harassment, or cyberbullying</li><li>No violent or graphic content intended to shock</li><li>No nudity or sexual content (educational exceptions may apply)</li><li>No spam, scams, or deceptive practices</li><li>Respect copyright and intellectual property</li><li>No impersonation or misleading metadata</li></ul></p><p>Violations can result in strikes. Three strikes within 90 days leads to channel termination. Review the full guidelines in our Policy Center.</p>` },
+    { question: "How do I customize my channel layout?", category: "getting-started", date: "January 15, 2026", answer: `<p>Visit your channel page and click "Customize Channel." You can arrange sections including:<ul><li>Featured video (for new visitors)</li><li>Uploads (chronological feed)</li><li>Popular uploads</li><li>Playlists (curated collections)</li><li>Shorts shelf</li><li>Live section</li></ul></p><p>Drag and drop sections to reorder. You can also add a channel trailer that auto-plays for non-subscribers, introducing your content.</p>` },
+    { question: "What are hashtags and how should I use them?", category: "getting-started", date: "January 18, 2026", answer: `<p>Hashtags help viewers discover your content through search. Add relevant hashtags in your video description or title. Best practices:<ul><li>Use 3-5 specific hashtags per video</li><li>Include your niche (e.g., #CookingTutorial)</li><li>Use branded hashtags for your channel</li><li>Avoid misleading or irrelevant tags</li><li>Don't use excessive hashtags (appears spammy)</li></ul></p><p>The first three hashtags in your description appear above your video title, so choose them strategically.</p>` },
+    { question: "How do I create playlists?", category: "getting-started", date: "January 20, 2026", answer: `<p>Playlists organize your content and encourage binge-watching. To create one, go to Creator Studio > Playlists > New Playlist. Give it a descriptive title and set privacy (public, unlisted, or private).</p><p>Add videos by clicking "Add videos" and selecting from your uploads. You can also add other creators' videos. Playlists appear on your channel page and in search results. Well-organized playlists improve watch time and channel authority.</p>` },
+    { question: "What analytics should I pay attention to as a beginner?", category: "getting-started", date: "January 22, 2026", answer: `<p>Focus on these key metrics in Creator Studio Analytics:<ul><li><strong>Click-Through Rate (CTR):</strong> Percentage of impressions that become views. Aim for 4-10%.</li><li><strong>Average View Duration (AVD):</strong> How long viewers watch. Higher is better.</li><li><strong>Audience Retention:</strong> Shows where viewers drop off.</li><li><strong>Traffic Sources:</strong> How viewers find your videos.</li><li><strong>Subscriber Growth:</strong> Track what content drives subscriptions.</li></ul></p><p>Don't obsess over total views early on. Focus on improving retention and CTR through better thumbnails and engaging intros.</p>` },
+
+    // Monetization (10)
+    { question: "How many subscribers do I need to monetize my videos?", category: "monetization", popular: true, date: "February 8, 2026", answer: `<p>To activate monetization on Haitian Tube, you must reach <strong>10,000 subscribers</strong> and accumulate <strong>4,000 valid public watch hours</strong> within the last 12 months, or <strong>10 million Shorts views</strong> in 90 days.</p><p>Once eligible, apply via Creator Studio > Monetization. Our team reviews content originality and compliance within 30 days. Focus on genuine connection and consistency.</p>` },
+    { question: "Why are ads displayed on my videos if I am not yet monetized?", category: "monetization", date: "February 10, 2026", answer: `<p>Haitian Tube may display ads on any video to support platform infrastructure. You only earn revenue after Partner Program acceptance. Historical views prior to approval are not eligible for back-payment.</p><p>This system ensures the platform remains free and sustainable while giving creators the opportunity to earn once qualified.</p>` },
+    { question: "When and how do I get paid from Haitian Tube?", category: "monetization", date: "March 5, 2026", answer: `<p>Payments are processed monthly via AdSense for Haitian Tube. You must reach the $100 threshold to receive a payout. Payment methods include direct deposit, wire transfer, and check (location-dependent).</p><p>Earnings are finalized around the 15th of each month for the previous month's activity. Ensure your tax information and payment details are complete in the Payments section.</p>` },
+    { question: "What are Super Thanks and Channel Memberships?", category: "monetization", date: "April 1, 2026", answer: `<p>Super Thanks allows viewers to tip on individual videos. Memberships offer recurring monthly payments for exclusive perks like badges, custom emojis, and members-only content.</p><p>Both features become available to channels with 5,000+ subscribers and no active community guideline strikes.</p>` },
+    { question: "Can I monetize content that uses royalty-free music?", category: "monetization", date: "February 20, 2026", answer: `<p>Yes, provided the license permits commercial use. Use the Haitian Tube Audio Library to avoid copyright claims entirely. Music from the library is pre-cleared for monetization.</p><p>If using third-party royalty-free music, ensure you have documentation proving commercial rights.</p>` },
+    { question: "What happens if my monetization application is rejected?", category: "monetization", date: "March 10, 2026", answer: `<p>You may reapply after 30 days. Review the rejection reason carefully—common issues include reused content, misleading metadata, or guideline violations.</p><p>During the waiting period, focus on creating original content and building authentic engagement.</p>` },
+    { question: "How does revenue sharing work for Haitian Tube Premium?", category: "monetization", date: "March 15, 2026", answer: `<p>When Premium members watch your content, you earn a share of their subscription fee based on watch time. This is separate from ad revenue and often provides higher earnings per view.</p><p>No additional action is needed—you automatically earn from Premium viewers once monetized.</p>` },
+    { question: "What is the Shopping feature and how do I enable it?", category: "monetization", date: "March 20, 2026", answer: `<p>The Shopping feature lets you showcase products directly below videos. Requirements: 20,000+ subscribers OR official brand channel. Connect your store (Shopify, etc.) in Creator Studio > Shopping.</p><p>Tag products in videos and live streams. You earn commission on sales made through your storefront.</p>` },
+    { question: "How do taxes work for Haitian Tube earnings?", category: "monetization", date: "March 25, 2026", answer: `<p>Haitian Tube may withhold U.S. taxes unless you submit a valid tax form (W-9 for U.S. creators, W-8BEN for non-U.S.). Tax withholding rates vary by country based on tax treaties.</p><p>Consult a tax professional for your specific situation. You're responsible for reporting earnings to your local tax authority.</p>` },
+    { question: "Can I monetize videos with copyrighted content under Fair Use?", category: "monetization", date: "March 30, 2026", answer: `<p>Fair Use is a legal defense evaluated case-by-case in court, not automatic protection. Haitian Tube's Content ID system may still claim or block such videos regardless of Fair Use arguments.</p><p>We recommend using original content or properly licensed material. If you receive a claim you believe is invalid, you can dispute it through the formal process.</p>` },
+
+    // Technical & Studio (10)
+    { question: "Why are my views not updating in Creator Studio?", category: "technical", popular: true, date: "February 8, 2026", answer: `<p>Views undergo validation to filter bots and spam. Allow 24-48 hours for accurate counts. Sudden spikes trigger additional auditing to ensure authenticity.</p><p>Real-time analytics are available for live streams, but standard video metrics are batch-processed for accuracy.</p>` },
+    { question: "Can I create multiple channels under the same account?", category: "technical", date: "February 8, 2026", answer: `<p>No. Haitian Tube maintains a strict one channel per verified identity policy to prevent spam and manipulation.</p><p>Violations may result in account restrictions or permanent suspension of all associated accounts.</p>` },
+    { question: "How do I enable two-factor authentication (2FA)?", category: "technical", date: "January 15, 2026", answer: `<p>Go to Account Settings > Security > 2-Step Verification. Choose an authenticator app (recommended) or SMS verification.</p><p>2FA significantly reduces the risk of account compromise. We strongly recommend enabling it.</p>` },
+    { question: "Why did my video get age-restricted?", category: "technical", date: "March 22, 2026", answer: `<p>Our automated systems flag content that may not be suitable for all audiences. Age-restricted videos have limited visibility and are not monetizable.</p><p>You can appeal the restriction if you believe it was applied incorrectly.</p>` },
+    { question: "How can I change my channel URL or handle?", category: "technical", date: "April 5, 2026", answer: `<p>Visit Customization > Basic info. You may change your handle twice every 14 days. Custom URLs become available after reaching 100 subscribers and channel age over 30 days.</p>` },
+    { question: "What video formats and sizes are supported?", category: "technical", date: "February 1, 2026", answer: `<p>We support MP4, MOV, AVI, WMV, FLV, WebM, and MKV. Maximum file size is 256GB. Recommended: 1080p or 4K at 60fps with H.264 video and AAC audio codecs.</p>` },
+    { question: "How do I appeal a Community Guidelines strike?", category: "technical", date: "March 28, 2026", answer: `<p>Navigate to Studio Dashboard > Content > Appeals. Select the affected video and provide a clear explanation with evidence.</p><p>Appeals are reviewed by human moderators within 48-72 hours.</p>` },
+    { question: "How do I schedule a video for later publication?", category: "technical", date: "April 10, 2026", answer: `<p>During upload, under "Visibility," select "Schedule." Choose your desired date and time, then click "Schedule."</p><p>You can manage scheduled videos in Creator Studio > Content. Premieres are a special type of scheduled video that creates a live watch party experience.</p>` },
+    { question: "Why is my video processing taking so long?", category: "technical", date: "April 12, 2026", answer: `<p>Processing time depends on video length, resolution, and format. HD and 4K videos take longer. Current queue status is visible in Creator Studio.</p><p>If processing exceeds 8 hours, try re-uploading with a different format or contact support.</p>` },
+    { question: "How do I add subtitles and closed captions?", category: "technical", date: "April 15, 2026", answer: `<p>In Creator Studio, select your video and go to "Subtitles." You can upload a file (SRT, SUB, etc.), auto-generate captions (accuracy varies), or type manually.</p><p>Captions improve accessibility and SEO. We recommend reviewing auto-generated captions for accuracy.</p>` },
+
+    // Legal & Policies (8)
+    { question: "What are the content guidelines regarding music and copyright?", category: "legal", popular: true, date: "March 12, 2026", answer: `<p>Use only licensed music or tracks from the Audio Library. Content ID automatically detects copyrighted material and may mute, block, or place ads on your video.</p><p>When in doubt, use the free library. Fair Use is evaluated case-by-case in court, not automatically on the platform.</p>` },
+    { question: "What is the process for verifying my Haitian Tube channel?", category: "legal", date: "April 2, 2026", answer: `<p>Verification confirms authenticity for prominent channels at risk of impersonation. There is no specific subscriber requirement—our team evaluates based on notability.</p><p>Requirements: active channel, complete profile, guideline adherence, and 2FA enabled. Apply under Channel Status in settings.</p>` },
+    { question: "Are there restrictions on using Haitian Tube content on other websites?", category: "legal", date: "April 10, 2026", answer: `<p>Embedding is permitted using the official player embed code. Downloading, re-uploading, or redistributing video files violates our Terms of Service.</p>` },
+    { question: "How does Haitian Tube handle user data and privacy?", category: "legal", date: "January 30, 2026", answer: `<p>We comply with global privacy regulations including GDPR and CCPA. Review our Privacy Center for details on data collection and controls.</p>` },
+    { question: "What is the policy on hate speech and harassment?", category: "legal", date: "February 14, 2026", answer: `<p>Zero tolerance. Content promoting violence, hatred, or harassment will be removed. Repeat violations result in channel termination.</p>` },
+    { question: "Can I use AI-generated content on Haitian Tube?", category: "legal", date: "April 18, 2026", answer: `<p>Yes, but you must disclose altered or synthetic content using the "Altered Content" checkbox during upload.</p><p>Failure to disclose may result in content removal or monetization restrictions.</p>` },
+    { question: "How do I report a channel or video?", category: "legal", date: "March 1, 2026", answer: `<p>Use the flag icon below the video or on the channel page. Reports are confidential and reviewed within 24 hours.</p>` },
+    { question: "What is the appeals process for a terminated channel?", category: "legal", date: "April 20, 2026", answer: `<p>If your channel is terminated, you'll receive an email with the reason. You can appeal once through the link provided.</p><p>Provide evidence addressing the specific violation. Decisions are final after the appeals process concludes.</p>` },
+
+    // Shorts (6)
+    { question: "What are Haitian Tube Shorts and how do I create them?", category: "shorts", popular: true, date: "January 25, 2026", answer: `<p>Shorts are vertical videos up to 60 seconds designed for mobile viewing. Create them using the Shorts camera in the mobile app or upload a vertical video with #Shorts in the title.</p><p>Shorts appear in the Shorts shelf, feed, and can reach new audiences quickly. Use trending audio and eye-catching visuals for best results.</p>` },
+    { question: "How do I monetize Shorts?", category: "shorts", date: "February 5, 2026", answer: `<p>Shorts monetization requires 10 million Shorts views in the last 90 days and 1,000 subscribers. Revenue comes from ads between Shorts in the feed.</p><p>The Shorts Fund also rewards top-performing Shorts creators monthly, separate from ad revenue.</p>` },
+    { question: "What's the best aspect ratio for Shorts?", category: "shorts", date: "February 10, 2026", answer: `<p>Shorts must be vertical with aspect ratio 9:16 (1080x1920 pixels). Square or horizontal videos won't appear in the Shorts feed.</p><p>Keep important content centered and avoid text near edges that may be cropped.</p>` },
+    { question: "Can I use copyrighted music in Shorts?", category: "shorts", date: "February 15, 2026", answer: `<p>Yes, you can use music from the Shorts audio library without copyright issues. For commercial music, Shorts under 60 seconds generally fall under special licensing agreements.</p><p>However, long-form videos with the same music may still receive claims.</p>` },
+    { question: "How do I add text and filters to Shorts?", category: "shorts", date: "February 20, 2026", answer: `<p>Use the Shorts creation tools in the mobile app: timeline editor for text placement, filters for color grading, and speed controls. You can also align cuts to music beats automatically.</p>` },
+    { question: "Why aren't my Shorts getting views?", category: "shorts", date: "February 25, 2026", answer: `<p>Shorts algorithm tests content with small audiences first. If engagement is strong (high completion rate, likes), it expands reach. Common issues: slow pacing, unclear hook, or low retention.</p><p>Experiment with different styles, use trending sounds, and ensure the first 2 seconds grab attention.</p>` },
+
+    // Live Streaming (8)
+    { question: "How do I start a live stream on Haitian Tube?", category: "live", popular: true, date: "March 1, 2026", answer: `<p>To go live, you need 50+ subscribers and no live stream restrictions. Click the camera icon > Go Live. Choose between mobile streaming (instant) or encoder streaming (advanced software).</p><p>Set your title, description, and privacy before going live. You can schedule streams in advance to build anticipation.</p>` },
+    { question: "What equipment do I need for professional live streaming?", category: "live", date: "March 5, 2026", answer: `<p>For quality streams, consider:<ul><li>Stable high-speed internet (5+ Mbps upload)</li><li>Good camera (webcam, DSLR, or camcorder)</li><li>External microphone</li><li>Lighting (ring light or softbox)</li><li>Streaming software (OBS Studio - free, or paid options)</li></ul></p>` },
+    { question: "How do I monetize live streams?", category: "live", date: "March 8, 2026", answer: `<p>Enable Super Chat and Super Stickers for viewer donations. Channel Members can access members-only chats. Ads can run during streams once monetized.</p><p>Premium viewers watching your stream also contribute to revenue through their subscription.</p>` },
+    { question: "How do I moderate my live chat?", category: "live", date: "March 12, 2026", answer: `<p>Assign trusted viewers as moderators. Enable "Slow mode" to limit message frequency. Use blocked words list to filter unwanted terms.</p><p>You can also hold potentially inappropriate messages for review before they appear publicly.</p>` },
+    { question: "What are Premieres and how do they differ from live streams?", category: "live", date: "March 15, 2026", answer: `<p>Premieres are pre-recorded videos that debut at a scheduled time with a live chat. Unlike streams, you're not on camera live, but you can participate in chat.</p><p>Premieres are great for building hype around important video releases.</p>` },
+    { question: "Can I stream from my gaming console?", category: "live", date: "March 18, 2026", answer: `<p>Yes, Haitian Tube supports direct streaming from PlayStation and Xbox consoles. Link your account in console settings and select "Broadcast Gameplay."</p><p>You can add a webcam overlay and manage chat through the console interface.</p>` },
+    { question: "How long can I stream for?", category: "live", date: "March 20, 2026", answer: `<p>There's no maximum duration, but streams are archived up to 12 hours. Longer streams are split into multiple archives. Ensure stable internet for extended broadcasts.</p><p>Take regular breaks to maintain energy and engagement.</p>` },
+    { question: "Why was my live stream interrupted or terminated?", category: "live", date: "March 25, 2026", answer: `<p>Common causes: internet disconnection, copyright claims (especially music), or Community Guidelines violations detected during stream.</p><p>Always monitor your stream health dashboard and have backup internet if possible. Review guidelines before streaming sensitive topics.</p>` },
+
+    // More General (5)
+    { question: "How does the algorithm recommend my videos to new viewers?", category: "all", popular: true, date: "March 18, 2026", answer: `<p>Recommendations are based on viewer satisfaction: Average View Duration, CTR, and Session Time. The algorithm prioritizes videos that keep viewers engaged on the platform.</p><p>Create compelling thumbnails, maintain consistent uploads, and focus on retention. High-engagement videos from smaller channels often outperform low-engagement content from larger channels.</p>` },
+    { question: "I forgot my password. How can I recover my account?", category: "all", date: "January 10, 2026", answer: `<p>Use the "Forgot password" link on the sign-in page. Ensure your recovery email and phone number are up to date in Account Settings.</p><p>If you've lost access to recovery methods, contact support with proof of identity. Recovery may take 3-5 business days.</p>` },
+    { question: "How do I collaborate with other creators?", category: "all", date: "April 1, 2026", answer: `<p>Reach out to creators in your niche through social media or email. Propose a mutually beneficial collaboration idea.</p><p>Use the "Collaborations" feature in Creator Studio to invite another channel. Their name appears on the video, and it appears on both channels.</p>` },
+    { question: "What are YouTube Handles and how do I get one?", category: "all", date: "April 5, 2026", answer: `<p>Handles are unique identifiers (@username) that appear on your channel and Shorts. They're automatically assigned but can be customized in Settings > Channel > Handle.</p><p>Handles make it easier to mention and find channels across the platform.</p>` },
+    { question: "How do I deal with negative comments or trolls?", category: "all", date: "April 8, 2026", answer: `<p>Use comment moderation tools: block specific users, hide users from your channel, or set filters for inappropriate words. You can also hold potentially harmful comments for review.</p><p>Focus on engaging with positive community members. Don't feed trolls with responses.</p>` }
+  ];
+
+  // Global state
+  let currentCategory = 'all';
+  let currentQuery = '';
+  let currentFilter = 'all';
+  let currentUser = null;
+  let isLoginMode = true;
+  let currentPage = 1;
+  const itemsPerPage = 10;
+  let viewHistory = JSON.parse(localStorage.getItem('viewHistory') || '[]');
+  let bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+  let helpfulVotes = JSON.parse(localStorage.getItem('helpfulVotes') || '{}');
+  let readArticles = JSON.parse(localStorage.getItem('readArticles') || '[]');
+
+  // DOM Elements
+  const container = document.getElementById('faqContainer');
+  const searchInput = document.getElementById('searchInput');
+  const tabs = document.querySelectorAll('.nav-tab');
+  const filterChips = document.querySelectorAll('.filter-chip');
+  const authSection = document.getElementById('authSection');
+  const reportBtn = document.getElementById('reportProblemBtn');
+  const historyBtn = document.getElementById('historyBtn');
+  const bookmarkBtn = document.getElementById('bookmarkBtn');
+  const authModal = document.getElementById('authModal');
+  const reportModal = document.getElementById('reportModal');
+  const historyModal = document.getElementById('historyModal');
+  const bookmarkModal = document.getElementById('bookmarkModal');
+  const sitemapModal = document.getElementById('sitemapModal');
+  const apiModal = document.getElementById('apiModal');
+  const toast = document.getElementById('toast');
+  const pagination = document.getElementById('pagination');
+  const trendingGrid = document.getElementById('trendingGrid');
+  const totalArticlesSpan = document.getElementById('totalArticles');
+
+  // Update stats
+  totalArticlesSpan.textContent = faqDatabase.length;
+
+  // Toast notification
+  function showToast(message, duration = 3000) {
+    toast.textContent = message;
+    toast.style.display = 'block';
+    setTimeout(() => toast.style.display = 'none', duration);
+  }
+
+  // Save to history
+  function addToHistory(article) {
+    const historyItem = {
+      id: article.question,
+      title: article.question,
+      category: article.category,
+      timestamp: new Date().toISOString()
+    };
+    viewHistory = viewHistory.filter(h => h.id !== article.question);
+    viewHistory.unshift(historyItem);
+    viewHistory = viewHistory.slice(0, 50);
+    localStorage.setItem('viewHistory', JSON.stringify(viewHistory));
+  }
+
+  // Toggle bookmark
+  function toggleBookmark(article) {
+    const exists = bookmarks.find(b => b.id === article.question);
+    if (exists) {
+      bookmarks = bookmarks.filter(b => b.id !== article.question);
+      showToast('Bookmark removed');
+    } else {
+      bookmarks.push({
+        id: article.question,
+        title: article.question,
+        category: article.category,
+        timestamp: new Date().toISOString()
+      });
+      showToast('Article bookmarked');
+    }
+    localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+    return !exists;
+  }
+
+  // Mark as helpful
+  function markHelpful(articleId) {
+    if (!helpfulVotes[articleId]) {
+      helpfulVotes[articleId] = true;
+      localStorage.setItem('helpfulVotes', JSON.stringify(helpfulVotes));
+      showToast('Thanks for your feedback!');
+      return true;
+    }
+    return false;
+  }
+
+  // Mark as read
+  function markAsRead(articleId) {
+    if (!readArticles.includes(articleId)) {
+      readArticles.push(articleId);
+      localStorage.setItem('readArticles', JSON.stringify(readArticles));
+    }
+  }
+
+  // Update Auth UI
+  function updateAuthUI(user) {
+    currentUser = user;
+    if (user) {
+      const initial = user.email ? user.email[0].toUpperCase() : 'U';
+      authSection.innerHTML = `
+        <div class="user-profile">
+          <span style="color:#475569; font-size:14px;">${user.email}</span>
+          <div class="user-avatar">${initial}</div>
+          <button class="auth-btn" id="signOutBtn">Sign Out</button>
+        </div>
+      `;
+      reportBtn.style.display = 'inline-block';
+      historyBtn.style.display = 'inline-block';
+      bookmarkBtn.style.display = 'inline-block';
+      document.getElementById('signOutBtn').addEventListener('click', handleSignOut);
+    } else {
+      authSection.innerHTML = `
+        <button class="auth-btn" id="signInBtn">Sign In</button>
+        <button class="auth-btn primary" id="signUpBtn">Create Account</button>
+      `;
+      reportBtn.style.display = 'none';
+      historyBtn.style.display = 'none';
+      bookmarkBtn.style.display = 'none';
+      document.getElementById('signInBtn').addEventListener('click', () => openAuthModal('signin'));
+      document.getElementById('signUpBtn').addEventListener('click', () => openAuthModal('signup'));
+    }
+  }
+
+  function openAuthModal(mode) {
+    isLoginMode = mode === 'signin';
+    document.getElementById('authModalTitle').textContent = isLoginMode ? 'Sign In' : 'Create Account';
+    document.getElementById('authSubmitBtn').textContent = isLoginMode ? 'Sign In' : 'Sign Up';
+    document.getElementById('authToggleText').textContent = isLoginMode ? "Don't have an account?" : "Already have an account?";
+    document.getElementById('authToggleLink').textContent = isLoginMode ? 'Sign Up' : 'Sign In';
+    authModal.style.display = 'flex';
+  }
+
+  async function handleSignOut() {
+    try {
+      await signOut(auth);
+      showToast('Signed out successfully');
+    } catch (error) {
+      showToast('Error signing out: ' + error.message);
+    }
+  }
+
+  // Auth observer
+  onAuthStateChanged(auth, (user) => updateAuthUI(user));
+
+  // Auth form
+  document.getElementById('authForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+
+    try {
+      if (isLoginMode) {
+        await signInWithEmailAndPassword(auth, email, password);
+        showToast('Signed in successfully!');
+        authModal.style.display = 'none';
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password);
+        showToast('Account created successfully!');
+        authModal.style.display = 'none';
+      }
+    } catch (error) {
+      showToast('Error: ' + error.message);
+    }
+  });
+
+  // Auth toggle
+  document.getElementById('authToggleLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    isLoginMode = !isLoginMode;
+    document.getElementById('authModalTitle').textContent = isLoginMode ? 'Sign In' : 'Create Account';
+    document.getElementById('authSubmitBtn').textContent = isLoginMode ? 'Sign In' : 'Sign Up';
+    document.getElementById('authToggleText').textContent = isLoginMode ? "Don't have an account?" : "Already have an account?";
+    document.getElementById('authToggleLink').textContent = isLoginMode ? 'Sign Up' : 'Sign In';
+  });
+
+  // Report form
+  document.getElementById('reportForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!currentUser) {
+      showToast('Please sign in to report a problem');
+      reportModal.style.display = 'none';
+      openAuthModal('signin');
+      return;
+    }
+
+    const reportData = {
+      userId: currentUser.uid,
+      userEmail: currentUser.email,
+      issueType: document.getElementById('issueType').value,
+      priority: document.getElementById('priority').value,
+      subject: document.getElementById('issueSubject').value.trim(),
+      description: document.getElementById('issueDescription').value.trim(),
+      channelUrl: document.getElementById('channelUrl').value.trim() || null,
+      status: 'pending',
+      createdAt: new Date().toISOString()
+    };
+
+    try {
+      await addDoc(collection(db, 'reports'), { ...reportData, createdAt: serverTimestamp() });
+      
+      const Report = Parse.Object.extend('Report');
+      const report = new Report();
+      Object.keys(reportData).forEach(key => report.set(key, reportData[key]));
+      await report.save();
+
+      showToast('Report submitted successfully!');
+      reportModal.style.display = 'none';
+      document.getElementById('reportForm').reset();
+    } catch (error) {
+      showToast('Error submitting report: ' + error.message);
+    }
+  });
+
+  // Render FAQs
+  function renderFAQs() {
+    let filtered = faqDatabase.filter(item => {
+      const matchesCategory = currentCategory === 'all' || item.category === currentCategory;
+      const matchesSearch = !currentQuery || 
+        item.question.toLowerCase().includes(currentQuery) || 
+        item.answer.toLowerCase().includes(currentQuery);
+      return matchesCategory && matchesSearch;
+    });
+
+    // Apply filters
+    if (currentFilter === 'popular') {
+      filtered = filtered.filter(item => item.popular);
+    } else if (currentFilter === 'recent') {
+      filtered = filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    } else if (currentFilter === 'unread') {
+      filtered = filtered.filter(item => !readArticles.includes(item.question));
+    }
+
+    // Pagination
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    const start = (currentPage - 1) * itemsPerPage;
+    const paginatedItems = filtered.slice(start, start + itemsPerPage);
+
+    if (paginatedItems.length === 0) {
+      container.innerHTML = `<div class="no-results">No matching articles found. Try a different category or search term.</div>`;
+      pagination.innerHTML = '';
+      return;
+    }
+
+    let html = '';
+    paginatedItems.forEach((item) => {
+      const isBookmarked = bookmarks.some(b => b.id === item.question);
+      const hasVoted = helpfulVotes[item.question];
+      
+      html += `
+        <div class="faq-card ${isBookmarked ? 'bookmarked' : ''}" data-id="${item.question}">
+          <div class="faq-question">
+            <span class="question-text">${item.question}</span>
+            <div class="card-actions">
+              <button class="card-action bookmark-action ${isBookmarked ? 'bookmarked-active' : ''}" data-id="${item.question}" title="${isBookmarked ? 'Remove bookmark' : 'Bookmark'}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="${isBookmarked ? 'white' : 'none'}" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                </svg>
+              </button>
+            </div>
+            <span class="indicator">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </span>
+          </div>
+          <div class="faq-answer">
+            <div class="answer-content">${item.answer}</div>
+            <div class="answer-meta">
+              <span>Published: ${item.date} • Category: ${item.category}</span>
+              <div class="helpful-section">
+                <button class="helpful-btn ${hasVoted ? 'voted' : ''}" data-id="${item.question}" ${hasVoted ? 'disabled' : ''}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                  </svg>
+                  Helpful
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+    
+    container.innerHTML = html;
+    
+    // Render pagination
+    let paginationHtml = '';
+    for (let i = 1; i <= totalPages; i++) {
+      paginationHtml += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+    }
+    pagination.innerHTML = paginationHtml;
+    
+    // Attach events
+    document.querySelectorAll('.faq-card').forEach(card => {
+      const question = card.querySelector('.faq-question');
+      const bookmarkBtn = card.querySelector('.bookmark-action');
+      const helpfulBtn = card.querySelector('.helpful-btn');
+      const id = card.dataset.id;
+      
+      question.addEventListener('click', (e) => {
+        if (!e.target.closest('.card-action') && !e.target.closest('.helpful-btn')) {
+          card.classList.toggle('active');
+          if (card.classList.contains('active')) {
+            const article = faqDatabase.find(f => f.question === id);
+            if (article) {
+              addToHistory(article);
+              markAsRead(id);
+            }
+          }
+        }
+      });
+      
+      bookmarkBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const article = faqDatabase.find(f => f.question === id);
+        if (article) {
+          const isNowBookmarked = toggleBookmark(article);
+          bookmarkBtn.classList.toggle('bookmarked-active', isNowBookmarked);
+          card.classList.toggle('bookmarked', isNowBookmarked);
+          bookmarkBtn.querySelector('svg').setAttribute('fill', isNowBookmarked ? 'white' : 'none');
+        }
+      });
+      
+      helpfulBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (markHelpful(id)) {
+          helpfulBtn.classList.add('voted');
+          helpfulBtn.disabled = true;
+        }
+      });
+    });
+    
+    document.querySelectorAll('.page-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentPage = parseInt(btn.dataset.page);
+        renderFAQs();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  }
+
+  // Render trending
+  function renderTrending() {
+    const trending = faqDatabase.filter(f => f.popular).slice(0, 4);
+    trendingGrid.innerHTML = trending.map(item => `
+      <div class="related-card" data-id="${item.question}">
+        <div style="font-weight: 600; margin-bottom: 8px;">${item.question}</div>
+        <div style="font-size: 13px; color: #64748b;">${item.category}</div>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll('.related-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const id = card.dataset.id;
+        currentQuery = id;
+        searchInput.value = id;
+        currentPage = 1;
+        renderFAQs();
+        const article = faqDatabase.find(f => f.question === id);
+        if (article) {
+          addToHistory(article);
+          markAsRead(id);
+        }
+      });
+    });
+  }
+
+  // Render history modal
+  function renderHistoryModal() {
+    const list = document.getElementById('historyList');
+    if (viewHistory.length === 0) {
+      list.innerHTML = '<p style="color: #64748b; text-align: center; padding: 20px;">No viewing history yet.</p>';
+      return;
+    }
+    list.innerHTML = viewHistory.map(item => `
+      <div class="history-item">
+        <span class="history-title" data-id="${item.id}">${item.title}</span>
+        <span class="history-time">${new Date(item.timestamp).toLocaleDateString()}</span>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll('.history-title').forEach(title => {
+      title.addEventListener('click', () => {
+        currentQuery = title.dataset.id;
+        searchInput.value = title.dataset.id;
+        currentPage = 1;
+        renderFAQs();
+        historyModal.style.display = 'none';
+      });
+    });
+  }
+
+  // Render bookmarks modal
+  function renderBookmarkModal() {
+    const list = document.getElementById('bookmarkList');
+    if (bookmarks.length === 0) {
+      list.innerHTML = '<p style="color: #64748b; text-align: center; padding: 20px;">No bookmarked articles yet.</p>';
+      return;
+    }
+    list.innerHTML = bookmarks.map(item => `
+      <div class="bookmark-item">
+        <span class="bookmark-title" data-id="${item.id}">${item.title}</span>
+        <button class="card-action" data-id="${item.id}" style="background: none;">✕</button>
+      </div>
+    `).join('');
+    
+    document.querySelectorAll('.bookmark-title').forEach(title => {
+      title.addEventListener('click', () => {
+        currentQuery = title.dataset.id;
+        searchInput.value = title.dataset.id;
+        currentPage = 1;
+        renderFAQs();
+        bookmarkModal.style.display = 'none';
+      });
+    });
+    
+    document.querySelectorAll('.bookmark-item .card-action').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.id;
+        bookmarks = bookmarks.filter(b => b.id !== id);
+        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+        renderBookmarkModal();
+        renderFAQs();
+        showToast('Bookmark removed');
+      });
+    });
+  }
+
+  // Event listeners
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      currentCategory = tab.dataset.category;
+      currentPage = 1;
+      renderFAQs();
+    });
+  });
+
+  filterChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      filterChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      currentFilter = chip.dataset.filter;
+      currentPage = 1;
+      renderFAQs();
+    });
+  });
+
+  searchInput.addEventListener('input', (e) => {
+    currentQuery = e.target.value.trim().toLowerCase();
+    currentPage = 1;
+    renderFAQs();
+  });
+
+  // Quick actions
+  document.getElementById('gettingStartedAction').addEventListener('click', () => {
+    currentCategory = 'getting-started';
+    tabs.forEach(t => {
+      t.classList.toggle('active', t.dataset.category === 'getting-started');
+    });
+    renderFAQs();
+  });
+
+  document.getElementById('monetizationAction').addEventListener('click', () => {
+    currentCategory = 'monetization';
+    tabs.forEach(t => {
+      t.classList.toggle('active', t.dataset.category === 'monetization');
+    });
+    renderFAQs();
+  });
+
+  document.getElementById('troubleshootingAction').addEventListener('click', () => {
+    currentCategory = 'technical';
+    tabs.forEach(t => {
+      t.classList.toggle('active', t.dataset.category === 'technical');
+    });
+    renderFAQs();
+  });
+
+  document.getElementById('contactAction').addEventListener('click', () => {
+    if (!currentUser) {
+      openAuthModal('signin');
+    } else {
+      reportModal.style.display = 'flex';
+    }
+  });
+
+  // Modal controls
+  reportBtn.addEventListener('click', () => reportModal.style.display = 'flex');
+  historyBtn.addEventListener('click', () => {
+    renderHistoryModal();
+    historyModal.style.display = 'flex';
+  });
+  bookmarkBtn.addEventListener('click', () => {
+    renderBookmarkModal();
+    bookmarkModal.style.display = 'flex';
+  });
+
+  document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+    viewHistory = [];
+    localStorage.removeItem('viewHistory');
+    renderHistoryModal();
+    showToast('History cleared');
+  });
+
+  document.getElementById('sitemapTrigger').addEventListener('click', (e) => {
+    e.preventDefault();
+    sitemapModal.style.display = 'flex';
+  });
+
+  document.getElementById('apiDocs').addEventListener('click', (e) => {
+    e.preventDefault();
+    apiModal.style.display = 'flex';
+  });
+
+  document.getElementById('privacyPolicy').addEventListener('click', (e) => {
+    e.preventDefault();
+    showToast('Privacy Policy: We respect your data. Full policy available at haitiantube.com/privacy');
+  });
+
+  document.getElementById('termsOfService').addEventListener('click', (e) => {
+    e.preventDefault();
+    showToast('Terms of Service: By using Haitian Tube, you agree to our community guidelines.');
+  });
+
+  // Close modals
+  document.querySelectorAll('.close-icon').forEach(btn => {
+    btn.addEventListener('click', () => {
+      authModal.style.display = 'none';
+      reportModal.style.display = 'none';
+      historyModal.style.display = 'none';
+      bookmarkModal.style.display = 'none';
+      sitemapModal.style.display = 'none';
+      apiModal.style.display = 'none';
+    });
+  });
+
+  window.addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal')) {
+      e.target.style.display = 'none';
+    }
+  });
+
+  // Initialize
+  renderFAQs();
+  renderTrending();
+</script>
+
+<noscript>
+  <div style="padding: 20px; text-align: center; background: #fee; color: #c00;">
+    JavaScript is required for the full functionality of this help center.
+  </div>
+</noscript>
+
+</body>
+</html>
